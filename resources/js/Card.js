@@ -5,7 +5,7 @@ const WidthBase = -30
 // const direction  = 1
 
 export default class Card {
-    constructor(scene, parent, cardInfo, player, x, y, cardDirection) {
+    constructor(scene, parent, objectManager, cardInfo, player, x, y, cardDirection) {
         this.scene = scene
         this.player = player
 
@@ -16,7 +16,6 @@ export default class Card {
         this.cardTextPoint = scene.add.text(-20, -55, cardInfo.p, { fontSize: '24px', fill: '#000' });
         this.cardTextTitle = scene.add.text(-40, -28, cardInfo.name, { fontSize: '12px', fill: '#000' });
         this.card = scene.add.container(x, y, [
-            this.cardShadow,
             this.cardBg,
             this.cardChara,
             this.cardTextPoint,
@@ -24,7 +23,10 @@ export default class Card {
         ])
         this.card.angle = Bevel + (180 * cardDirection)
 
+        parent.add(this.cardShadow)
         parent.add(this.card)
+
+        objectManager.append(this)
 
         this.cardInfo = cardInfo
     }
@@ -171,37 +173,11 @@ export default class Card {
 
     }
 
-}
-
-class CardStack {
-    constructor(scene) {
-        this.scene = scene
-        this.cards = []
+    onUpdate() {
+        this.cardShadow.x = this.card.x + 2
+        this.cardShadow.y = this.card.y + 2
+        this.cardShadow.scale = this.card.scale
+        this.cardShadow.angle = this.card.angle
     }
 
-    addCard(card) {
-        this.cards.push(card)
-    }
-
-    getTotalPower() {
-        //
-        let power = 0
-        this.cards.forEach((c) => {
-            power += c.cardInfo.p
-        })
-        return power
-    }
-
-    getTopCard() {
-        if (!this.cards.length) {
-            return null
-        }
-        return this.cards[this.cards.length - 1]
-    }
-
-    takeAll() {
-        const cards = this.cards
-        this.cards = []
-        return cards
-    }
 }
