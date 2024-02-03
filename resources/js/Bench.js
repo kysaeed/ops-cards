@@ -18,13 +18,19 @@ export default class Bench {
         cardList.forEach((c, i) => {
             const benchIndex = this.cards.length
 
-            // this.cards.push([c])
             this.addCardElement(playerId, c)
         })
 
     }
 
     addCardElement(playerId, card) {
+
+        const getBenchX = (benchIndex, playerId) => {
+            if (playerId == 0) {
+                return 200 + (benchIndex * 20)
+            }
+            return -200 - (benchIndex * 20)
+        }
 
         const getBenchY = (benchIndex, playerId) => {
             if (playerId == 0) {
@@ -37,7 +43,7 @@ export default class Bench {
             const list = this.cards[i]
             if (list.length < 1) {
                 list.push(card)
-                card.moveToBench(-200 + ((1 - playerId) * 400), getBenchY(i, playerId));
+                card.moveToBench(getBenchX(i, playerId), getBenchY(i, playerId));
 
                 return
             } else {
@@ -45,7 +51,7 @@ export default class Bench {
                     const stackCount = list.length
                     list.push(card)
                     card.moveToBench(
-                        -200 + ((1 - playerId) * 400) - (stackCount * 4),
+                        getBenchX(i, playerId) - (stackCount * 4),
                         getBenchY(i, playerId) - (stackCount * 4)
                     );
                     return
@@ -57,7 +63,7 @@ export default class Bench {
         this.cards.push([
             card
         ])
-        card.moveToBench(-200 + ((1 - playerId) * 400), getBenchY(benchIndex, playerId));
+        card.moveToBench(getBenchX(benchIndex, playerId), getBenchY(benchIndex, playerId));
 
     }
 }

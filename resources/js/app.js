@@ -12,6 +12,7 @@ import Card from './Card.js'
 import Flag from './Flag.js'
 import DamageMark from './DamageMark.js'
 import Bench from './Bench.js'
+import CardStack from './CardStack.js'
 
 
 
@@ -25,38 +26,6 @@ let direction = 1
 
 
 
-class CardStack {
-    constructor(scene) {
-        this.scene = scene
-        this.cards = []
-    }
-
-    addCard(card) {
-        this.cards.push(card)
-    }
-
-    getTotalPower() {
-        //
-        let power = 0
-        this.cards.forEach((c) => {
-            power += c.cardInfo.p
-        })
-        return power
-    }
-
-    getTopCard() {
-        if (!this.cards.length) {
-            return null
-        }
-        return this.cards[this.cards.length - 1]
-    }
-
-    takeAll() {
-        const cards = this.cards
-        this.cards = []
-        return cards
-    }
-}
 
 const setTurnPlayer = (player) => {
     DuelInfo.turnPlayer = player
@@ -165,7 +134,7 @@ const AttackPhase = {
 
                     if (total >= enemyCard.cardInfo.p) {
                         enemyCard.damaged(() => {
-                            console.log('かった！' + turnPlayer, DuelInfo.player[turnPlayer].cardStack)
+                            // console.log('かった！' + turnPlayer, DuelInfo.player[turnPlayer].cardStack)
 
                             DuelInfo.player[turnPlayer].cardStack.cards.forEach((c) => {
                                 c.angle = Bevel + (180 * turnPlayer)
@@ -329,9 +298,9 @@ const scene = {
         this.deckSprite = this.add.sprite(180, 520, 'card_back').setInteractive();
         this.deckSprite.on('pointerdown', function (pointer) {
             AttackPhase.enter(scene, self.cardBoard, flag, DuelInfo, () => {
+                //
             })
         });
-
 
 
         const flag = new Flag(scene, 480, 170)

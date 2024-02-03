@@ -150,7 +150,7 @@ export default class Card {
 
     moveToBench(x, y, onEnd) {
         const max = 6
-        const angle = Math.floor(90 + (Math.random() * max) - (max / 2))
+        const angle = Math.floor((90 + 12) + (Math.random() * max) - (max / 2))
 
         this.scene.tweens.chain({
             targets: this.card,
