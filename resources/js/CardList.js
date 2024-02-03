@@ -4,8 +4,8 @@
 const CardList = [
     {
       p: 1,
-      name: '新入り',
-      image: 'chara',
+      name: '影',
+      image: 'ch_kage',
     },
     {
       p: 2,

@@ -13,8 +13,8 @@ export default class Card {
 
         this.cardBg = scene.add.sprite(0, 0, 'card')
         this.cardChara = scene.add.sprite(0, 22, cardInfo.image)
-        this.cardTextPoint = scene.add.text(-20, -55, cardInfo.p, { fontSize: '24px', fill: '#000' });
-        this.cardTextTitle = scene.add.text(-40, -28, cardInfo.name, { fontSize: '12px', fill: '#000' });
+        this.cardTextPoint = scene.add.text(-64, -85, cardInfo.p, { fontSize: '34px', fill: '#000' });
+        this.cardTextTitle = scene.add.text(-34, -78, cardInfo.name, { fontSize: '18px', fill: '#000' });
         this.card = scene.add.container(x, y, [
             this.cardBg,
             this.cardChara,
@@ -41,7 +41,7 @@ export default class Card {
                     x: x,
                     y: y,
                     angle: angle + 90 + Bevel,
-                    scale: 0.3,
+                    scale: 0.3 * 0.6,
                     duration: 300,
                 },
                 {
@@ -55,7 +55,7 @@ export default class Card {
                     x: x,
                     y: y,
                     angle: angle + Bevel,
-                    scale: 1.0,
+                    scale: 0.6,
                     duration: 200,
                 },
             ],
@@ -79,14 +79,14 @@ export default class Card {
                     // angle: 180 * (turnPlayer) + 9,
                     x: 0 - stackCount * 8,
                     y: 0, //enemyY,
-                    scale: 1.0,
+                    scale: 0.6,
                     duration: 100,
                     ease: 'power1',
                 },
                 {
                     // angle: 180 * (turnPlayer) + 9,
                     x: x - stackCount * 8,
-                    scale: 1.2,
+                    scale: 1.2 * 0.6,
                     y: this.card.y,
                     ease: 'power1',
                     duration: 300,
@@ -95,7 +95,7 @@ export default class Card {
                     x: x - stackCount * 8,
                     y: y - stackCount * 8,
                     // angle: '+=8',
-                    scale: 1.0,
+                    scale: 0.6,
                     duration: 200,
                     ease: 'power1',
                 },
@@ -122,7 +122,7 @@ export default class Card {
                     x: x,
                     y: y,
                     //angle: 270,
-                    scale: 1.3,
+                    scale: 1.3 * 0.6,
                     duration: 100,
                 },
                 {
@@ -136,7 +136,7 @@ export default class Card {
                     x: x,
                     y: y,
                     //angle: 180,
-                    scale: 1.0,
+                    scale: 0.6,
                     duration: 200,
                 },
             ],
@@ -159,7 +159,7 @@ export default class Card {
                     x: x,
                     y: y,
                     angle: angle,
-                    scale: 0.5,
+                    scale: 0.5 * 0.6,
                     duration: 400,
                     ease: 'power1',
                 },

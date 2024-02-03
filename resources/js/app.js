@@ -96,13 +96,13 @@ const AttackPhase = {
                     {
                         x: -100,
                         y: -10,
-                        scale: 2.5,
+                        scale: 1.5,
                         duration: 100,
                         angle: 0,
                     },
                     {
                         delay: 1000,
-                        scale: 1.0,
+                        scale: 0.6,
                         x: x,
                         y: y - (stackCount * 8),
                         ease: 'power1',
@@ -112,7 +112,7 @@ const AttackPhase = {
                     {
                         x: x,
                         y: y - (stackCount * 8),
-                        scale: 1.0,
+                        scale: 0.6,
                         duration: 100,
                     },
                 ],
@@ -272,6 +272,7 @@ const scene = {
         this.load.image('card_back', 'assets/card_back.png');
         this.load.image('card_shadow', 'assets/card_shadow.png');
         this.load.image('chara', 'assets/chara.png');
+        this.load.image('ch_kage', 'assets/ch_kage.png');
         this.load.image('cat', 'assets/cat.png');
         this.load.image('sky', 'assets/sky2.png');
         this.load.image('modal', 'assets/modal.png');
