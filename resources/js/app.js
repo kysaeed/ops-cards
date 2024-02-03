@@ -7,13 +7,15 @@ import Phaser from 'phaser'
 import _ from 'lodash'
 
 import CardList from './CardList'
+import Card from './Card.js'
 
 
 
 
-const Bebel = 8
+const Bevel = 8
 const HeightBase = 100
 const WidthBase = -30
+
 let y = HeightBase
 let enemyY = -HeightBase
 let direction = 1
@@ -47,7 +49,7 @@ class DamageMark {
         {
           // x: x,
           // y: y,
-          //angle: angle + 90 + Bebel,
+          //angle: angle + 90 + Bevel,
           ease: 'power1',
           scale: 2.0,
           duration: 100,
@@ -55,7 +57,7 @@ class DamageMark {
         {
           // x: x,
           // y: y,
-          //angle: angle + Bebel,
+          //angle: angle + Bevel,
           ease: 'power1',
           //alpha: 0,
           duration: 150,
@@ -133,172 +135,6 @@ class Bench {
   }
 }
 
-class Card {
-  constructor(scene, parent, cardInfo, x, y, cardDirection) {
-    this.scene = scene
-
-    this.cardShadow = scene.add.sprite(0 + 2, 0 + 2, 'card_shadow')
-
-    this.cardBg = scene.add.sprite(0, 0, 'card')
-    this.cardChara = scene.add.sprite(0, 22, cardInfo.image)
-    this.cardTextPoint = scene.add.text(-20, -55, cardInfo.p, { fontSize: '24px', fill: '#000' });
-    this.cardTextTitle = scene.add.text(-40, -28, cardInfo.name, { fontSize: '12px', fill: '#000' });
-    this.card = scene.add.container(x, y, [
-      this.cardShadow,
-      this.cardBg,
-      this.cardChara,
-      this.cardTextPoint,
-      this.cardTextTitle,
-    ])
-    this.card.angle = Bebel + (180 * cardDirection)
-
-    parent.add(this.card)
-
-    this.cardInfo = cardInfo
-  }
-
-  enterTo(x, y, turnPlayer) {
-
-    const angle = turnPlayer * 180
-    this.scene.tweens.chain({
-      targets: this.card,
-      tweens: [
-        {
-          x: x,
-          y: y,
-          angle: angle + 90 + Bebel,
-          scale: 0.3,
-          duration: 300,
-        },
-        {
-          angle: angle + Bebel,
-          x: x,
-          y: y,
-          ease: 'power1',
-          duration: 300,
-        },
-        {
-          x: x,
-          y: y,
-          angle: angle + Bebel,
-          scale: 1.0,
-          duration: 200,
-        },
-      ],
-      onComplete() {
-        console.log('diffence-card: OK!')
-      },
-    })
-
-  }
-
-  attack(stackCount, onEnd) {
-    // console.log('attack..')
-
-    const x = WidthBase * direction
-    this.scene.tweens.chain({
-      targets: this.card,
-      tweens: [
-        {
-          delay: stackCount * 40,
-          // angle: '-=8',
-          // angle: 180 * (turnPlayer) + 9,
-          x: 0 - stackCount * 8,
-          y: 0, //enemyY,
-          scale: 1.0,
-          duration: 100,
-          ease: 'power1',
-        },
-        {
-          // angle: 180 * (turnPlayer) + 9,
-          x: x - stackCount * 8,
-          scale: 1.2,
-          y: this.card.y,
-          ease: 'power1',
-          duration: 300,
-        },
-        {
-          x: x - stackCount * 8,
-          y: y - stackCount * 8,
-          // angle: '+=8',
-          scale: 1.0,
-          duration: 200,
-          ease: 'power1',
-        },
-      ],
-      onComplete() {
-        console.log('OK!')
-        if (onEnd) {
-          onEnd()
-        }
-      },
-    })
-
-  }
-
-  damaged(onEnd) {
-    const x = this.card.x
-    const y = this.card.y
-
-    this.scene.tweens.chain({
-      targets: this.card,
-      tweens: [
-        {
-          x: x,
-          y: y,
-          //angle: 270,
-          scale: 1.3,
-          duration: 100,
-        },
-        {
-          //angle: 180,
-          x: x,
-          y: y - (40 * direction),
-          ease: 'power1',
-          duration: 100,
-        },
-        {
-          x: x,
-          y: y,
-          //angle: 180,
-          scale: 1.0,
-          duration: 200,
-        },
-      ],
-      onComplete() {
-        if (onEnd) {
-          onEnd();
-        }
-      },
-    })
-  }
-
-  moveToBench(x, y, onEnd) {
-    const max = 6
-    const angle = Math.floor(90 + (Math.random() * max) - (max / 2))
-
-    this.scene.tweens.chain({
-      targets: this.card,
-      tweens: [
-        {
-          x: x,
-          y: y,
-          angle: angle,
-          scale: 0.5,
-          duration: 400,
-          ease: 'power1',
-        },
-      ],
-      onComplete() {
-        if (onEnd) {
-          onEnd();
-        }
-      },
-    })
-
-  }
-
-}
 
 class CardStack {
   constructor(scene) {
@@ -398,16 +234,18 @@ class Flag {
 const SetupPhase = {
   enter(scene, cardBoard, flag, DuelInfo, onEnd) {
     const turnPlayer = DuelInfo.turnPlayer
+
+    DuelInfo.player = []
+    DuelInfo.player.push(new Player(0, 1))
+    DuelInfo.player.push(new Player(1, -1))
+
     const player = DuelInfo.player[1 - turnPlayer]
 
-    DuelInfo.player[0].id = 0
-    DuelInfo.player[1].id = 1
-
     DuelInfo.player.forEach((player) => {
-      player.deck = new Deck()
-      player.deck.setCardList([1, 1, 1, 2, 2 ,3, 4])
-      player.deck.shuffle()
+      player.getDeck().setCardList([1, 1, 1, 2, 2 ,3, 4])
+      player.getDeck().shuffle()
 
+      // todo !!!
       const x = 0
       const y = 0
       player.bench = new Bench(scene, player.id, x, y)
@@ -417,7 +255,7 @@ const SetupPhase = {
     })
 
     const diffenceCardInfo = player.deck.draw(scene, cardBoard, 400, turnPlayer)
-    diffenceCardInfo.card.angle = Bebel + (180 * (1 - turnPlayer))
+    diffenceCardInfo.card.angle = Bevel + (180 * (1 - turnPlayer))
 
     ///////
     player.cardStack.addCard(diffenceCardInfo)
@@ -460,7 +298,7 @@ const AttackPhase = {
             y: y - (stackCount * 8),
             ease: 'power1',
             duration: 200,
-            angle: Bebel + (180 * turnPlayer),
+            angle: Bevel + (180 * turnPlayer),
           },
           {
             x: x,
@@ -490,7 +328,7 @@ const AttackPhase = {
               console.log('かった！'  + turnPlayer, DuelInfo.player[turnPlayer].cardStack)
 
               DuelInfo.player[turnPlayer].cardStack.cards.forEach((c) => {
-                c.angle = Bebel + (180 * turnPlayer)
+                c.angle = Bevel + (180 * turnPlayer)
 
                 // console.log(c.card)
                 // scene.tweens.chain({
@@ -557,8 +395,9 @@ const DamagePhase = {
 
 
 class Deck {
-  constructor() {
+  constructor(player) {
     this.cards = []
+    this.player = player
   }
 
   setCardList(cardList) {
@@ -574,7 +413,7 @@ class Deck {
     }
     const cardId = this.cards.shift()
     const cardInfo = CardList[cardId - 1]
-    const card = new Card(scene, cardBoard, cardInfo, stackCount * 8, y + stackCount * 8, turnPlayer)
+    const card = new Card(scene, cardBoard, cardInfo, this.player, stackCount * 8, y + stackCount * 8, turnPlayer)
     return card
   }
 
@@ -587,16 +426,29 @@ class Deck {
 
 }
 
+class Player {
+    constructor(id, direction) {
+        this.id = id
+        this.direction = direction
+        this.deck = new Deck(this)
+    }
+
+    getPlayerId() {
+        return this.id
+    }
+
+    getBaseY() {
+        return 100 * this.direction
+    }
+
+    getDeck() {
+        return this.deck
+    }
+}
+
 const DuelInfo = {
   turnPlayer: 0,
-  player: [
-    {
-      deck: null,
-    },
-    {
-      deck:  null,
-    },
-  ],
+  player: [],
   scene: null,
   cardBoard: null,
 }
@@ -647,7 +499,7 @@ const scene = {
     const toNextPhase = (next) => {
       currentPhase = next
       currentPhase.enter(scene, this.cardBoard, flag, DuelInfo, (next) => {
-        // toNextPhase(next)
+        toNextPhase(next)
       })
     }
 
