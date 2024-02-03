@@ -9,7 +9,9 @@ import _ from 'lodash'
 import ObjectManager from './ObjectManager.js'
 import CardList from './CardList'
 import Card from './Card.js'
-
+import Flag from './Flag.js'
+import DamageMark from './DamageMark.js'
+import Bench from './Bench.js'
 
 
 
@@ -21,120 +23,6 @@ let y = HeightBase
 let enemyY = -HeightBase
 let direction = 1
 
-class DamageMark {
-    constructor(scene, x, y) {
-        this.scene = scene
-        this.damage = scene.add.sprite(0, 0, 'damage')
-
-        this.sprite = scene.add.container(x, y, [
-            this.damage,
-        ])
-
-
-        this.sprite.setBlendMode(Phaser.BlendModes.MULTIPLY);
-
-        this.sprite.alpha = 0.8
-        this.sprite.visible = false
-
-    }
-
-    setDamage(damage) {
-        this.sprite.scale = 0
-        this.sprite.visible = true
-        // this.sprite.alpha = 0.5
-
-        const self = this;
-        this.scene.tweens.chain({
-            targets: this.sprite,
-            tweens: [
-                {
-                    // x: x,
-                    // y: y,
-                    //angle: angle + 90 + Bevel,
-                    ease: 'power1',
-                    scale: 2.0,
-                    duration: 100,
-                },
-                {
-                    // x: x,
-                    // y: y,
-                    //angle: angle + Bevel,
-                    ease: 'power1',
-                    //alpha: 0,
-                    duration: 150,
-                },
-            ],
-            onComplete: () => {
-                console.log('dm: OK!')
-                self.sprite.visible = false
-            },
-        })
-        //
-    }
-
-}
-
-class Bench {
-    constructor(scene, playerId, x, y) {
-        this.playerId = playerId
-        this.scene = scene
-        this.cards = []
-        this.x = x
-        this.y = y
-    }
-
-    addCards(playerId, cardList) {
-
-        playerId = this.playerId
-
-
-        const currentPlayer = DuelInfo.player[playerId]
-        cardList.forEach((c, i) => {
-            const benchIndex = this.cards.length
-
-            // this.cards.push([c])
-            this.addCardElement(playerId, c)
-        })
-
-    }
-
-    addCardElement(playerId, card) {
-
-        const getBenchY = (benchIndex, playerId) => {
-            if (playerId == 0) {
-                return 200 - (benchIndex * 70)
-            }
-            return (-200 + (benchIndex * 70));
-        }
-
-        for (let i = 0; i < this.cards.length; i++) {
-            const list = this.cards[i]
-            if (list.length < 1) {
-                list.push(card)
-                card.moveToBench(-200 + ((1 - playerId) * 400), getBenchY(i, playerId));
-
-                return
-            } else {
-                if (list[0].cardInfo.name == card.cardInfo.name) {
-                    const stackCount = list.length
-                    list.push(card)
-                    card.moveToBench(
-                        -200 + ((1 - playerId) * 400) - (stackCount * 4),
-                        getBenchY(i, playerId) - (stackCount * 4)
-                    );
-                    return
-                }
-            }
-        }
-
-        const benchIndex = this.cards.length
-        this.cards.push([
-            card
-        ])
-        card.moveToBench(-200 + ((1 - playerId) * 400), getBenchY(benchIndex, playerId));
-
-    }
-}
 
 
 class CardStack {
@@ -183,54 +71,6 @@ const setTurnPlayer = (player) => {
     }
 }
 
-class Flag {
-    constructor(scene, x, y) {
-        this.scene = scene
-        this.sprite = scene.add.sprite(x, y, 'flag')
-
-    }
-
-    moveTo(x, y, onEnd) {
-        const basePosition = {
-            x: this.sprite.x,
-            y: this.sprite.y,
-        }
-        this.scene.tweens.chain({
-            targets: this.sprite,
-            tweens: [
-                {
-                    // x: x,
-                    // y: y,
-                    angle: 0,
-                    scale: 1.0,
-                    duration: 300,
-                },
-                {
-                    angle: 0,
-                    // x: x,
-                    // y: y,
-                    scale: 1.4,
-                    ease: 'power1',
-                    duration: 300,
-                },
-                {
-                    x: x,
-                    y: y,
-                    angle: 0,
-                    scale: 1.0,
-                    duration: 200,
-                },
-            ],
-            onComplete() {
-                console.log('flag: OK!')
-                if (onEnd) {
-                    onEnd()
-                }
-            },
-        });
-    }
-}
-
 
 const SetupPhase = {
     enter(scene, cardBoard, flag, DuelInfo, onEnd) {
@@ -249,7 +89,7 @@ const SetupPhase = {
             // todo !!!
             const x = 0
             const y = 0
-            player.bench = new Bench(scene, player.id, x, y)
+            player.bench = new Bench(DuelInfo, scene, player.id, x, y)
 
 
         })
