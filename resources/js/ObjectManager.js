@@ -1,6 +1,11 @@
 export default class ObjectManager {
-    constructor() {
+    constructor(scene) {
+        this.scene = scene
         this.objecList = []
+    }
+
+    getScene() {
+        return this.scene
     }
 
     append(object) {

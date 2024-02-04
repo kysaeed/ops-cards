@@ -14,7 +14,7 @@ export default class Bench {
         playerId = this.playerId
 
 
-        const currentPlayer = this.duelInfo.player[playerId]
+        const currentPlayer = this.duelInfo.playerList[playerId]
         cardList.forEach((c, i) => {
             const benchIndex = this.cards.length
 
