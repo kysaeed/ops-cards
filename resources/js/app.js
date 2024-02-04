@@ -7,13 +7,12 @@ import Phaser from 'phaser'
 import _ from 'lodash'
 import Axios from 'axios'
 
-import ObjectManager from './ObjectManager.js'
+import Duel from './Duel.js'
 import CardList from './CardList'
 import Card from './Card.js'
 import Flag from './Flag.js'
 import DamageMark from './DamageMark.js'
 import Bench from './Bench.js'
-import CardStack from './CardStack.js'
 
 
 
@@ -234,57 +233,6 @@ class Deck {
 
 }
 
-class Player {
-    constructor(scene, id, direction) {
-        this.id = id
-        this.direction = direction
-        this.deck = new Deck(this)
-        this.cardStack = new CardStack(scene)
-    }
-
-    getPlayerId() {
-        return this.id
-    }
-
-    getBaseY() {
-        return 100 * this.direction
-    }
-
-    getDeck() {
-        return this.deck
-    }
-}
-
-
-class Duel {
-    constructor(scene) {
-        this.scene = scene
-        this.turnPlayerId = 0
-
-        this.playerList = []
-        this.playerList.push(new Player(scene, 0, 1))
-        this.playerList.push(new Player(scene, 1, -1))
-
-        this.objectManager = new ObjectManager(scene)
-
-    }
-
-    getScene() {
-        this.scene
-    }
-
-    getPlayer(playerId) {
-        return this.playerList[playerId]
-    }
-
-    getObjectManager() {
-        return this.objectManager
-    }
-
-    onUpdate() {
-        this.objectManager.onUpdate()
-    }
-}
 
 
 
