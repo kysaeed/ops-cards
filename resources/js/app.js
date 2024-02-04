@@ -8,8 +8,8 @@ import _ from 'lodash'
 import Axios from 'axios'
 
 import Duel from './Duel.js'
-import CardList from './CardList'
-import Card from './Card.js'
+// import CardList from './CardList'
+// import Card from './Card.js'
 import Flag from './Flag.js'
 import DamageMark from './DamageMark.js'
 import Bench from './Bench.js'
@@ -207,6 +207,7 @@ const scene = {
         this.load.image('card_shadow', 'assets/card_shadow.png');
         this.load.image('chara', 'assets/chara.png');
         this.load.image('ch_kage', 'assets/ch_kage.png');
+        this.load.image('ch_magi', 'assets/ch_magi.png');
         this.load.image('cat', 'assets/cat.png');
         this.load.image('sky', 'assets/sky2.png');
         this.load.image('modal', 'assets/modal.png');
@@ -237,8 +238,10 @@ const scene = {
         });
 
         const flag = new Flag(scene, 480, 170)
-        this.cardBoard = scene.add.container(400, 280, [])
-        this.DuelInfo.cardBoard = this.cardBoard
+
+
+        this.cardBoard = this.DuelInfo.cardBoard  //scene.add.container(400, 280, [])
+        // this.DuelInfo.cardBoard = this.cardBoard
 
         this.damageMark = new DamageMark(scene, 400, 280)
 

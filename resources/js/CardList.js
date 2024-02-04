@@ -15,15 +15,15 @@ const CardList = [
       type: 0,
     },
     {
-      p: 3,
-      name: 'ねこ',
-      image: 'cat',
+      p: 4,
+      name: '魔術師',
+      image: 'ch_magi',
       type: 0,
     },
     {
       p: 4,
-      name: 'チャンピオン',
-      image: 'chara',
+      name: 'ねこ',
+      image: 'cat',
       type: 0,
     },
 

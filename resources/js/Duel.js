@@ -11,6 +11,8 @@ export default class Duel {
         this.playerList.push(new Player(scene, 0, 1))
         this.playerList.push(new Player(scene, 1, -1))
 
+        this.cardBoard = scene.add.container(400, 280, [])
+
         this.objectManager = new ObjectManager(scene)
 
     }
