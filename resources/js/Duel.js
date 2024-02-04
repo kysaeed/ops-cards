@@ -8,8 +8,8 @@ export default class Duel {
         this.turnPlayerId = 0
 
         this.playerList = []
-        this.playerList.push(new Player(scene, 0, 1))
-        this.playerList.push(new Player(scene, 1, -1))
+        this.playerList.push(new Player(this, 0, 1))
+        this.playerList.push(new Player(this, 1, -1))
 
         this.cardBoard = scene.add.container(400, 280, [])
 
@@ -18,7 +18,11 @@ export default class Duel {
     }
 
     getScene() {
-        this.scene
+        return this.scene
+    }
+
+    getCardBoard() {
+        return this.cardBoard
     }
 
     getPlayer(playerId) {

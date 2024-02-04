@@ -23,7 +23,7 @@ export default class Deck {
         this.cards = _.shuffle(this.cards)
     }
 
-    draw(scene, cardBoard, objectManager, stackCount, turnPlayerId) {
+    draw(duel, /* scene, cardBoard, objectManager,*/ stackCount, turnPlayerId) {
         if (this.isEmpty()) {
             return null
         }
@@ -34,7 +34,8 @@ export default class Deck {
 
         const cardId = this.cards.shift()
         const cardInfo = CardList[cardId - 1]
-        const card = new Card(scene, cardBoard, objectManager, cardInfo, this.player, stackCount * 8, y + stackCount * 8, turnPlayerId)
+
+        const card = new Card(duel,/* scene, cardBoard, objectManager,*/ cardInfo, this.player, stackCount * 8, y + stackCount * 8, turnPlayerId)
 
         return card
     }

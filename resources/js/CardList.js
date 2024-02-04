@@ -15,7 +15,7 @@ const CardList = [
       type: 0,
     },
     {
-      p: 4,
+      p: 3,
       name: '魔術師',
       image: 'ch_magi',
       type: 0,

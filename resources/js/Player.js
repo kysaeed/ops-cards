@@ -4,11 +4,12 @@ import Deck from './Deck.js'
 
 export default
 class Player {
-    constructor(scene, id, direction) {
+    constructor(duel, id, direction) {
+        this.duel = duel
         this.id = id
         this.direction = direction
         this.deck = new Deck(this)
-        this.cardStack = new CardStack(scene)
+        this.cardStack = new CardStack(duel.getScene())
     }
 
     getPlayerId() {

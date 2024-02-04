@@ -5,8 +5,10 @@ const WidthBase = -30
 // const direction  = 1
 
 export default class Card {
-    constructor(scene, parent, objectManager, cardInfo, player, x, y, cardDirection) {
-        this.scene = scene
+    constructor(duel, /*scene, parent, objectManager,*/ cardInfo, player, x, y, cardDirection) {
+        this.duel = duel
+
+        const scene = duel.getScene()
         this.player = player
 
         this.cardShadow = scene.add.sprite(0 + 2, 0 + 2, 'card_shadow')
@@ -23,10 +25,11 @@ export default class Card {
         ])
         this.card.angle = Bevel + (180 * cardDirection)
 
+        const parent = duel.getCardBoard()
         parent.add(this.cardShadow)
         parent.add(this.card)
 
-        objectManager.append(this)
+        duel.getObjectManager().append(this)
 
         this.cardInfo = cardInfo
     }
@@ -34,7 +37,7 @@ export default class Card {
     enterTo(x, y, turnPlayer) {
 
         const angle = turnPlayer * 180
-        this.scene.tweens.chain({
+        this.duel.getScene().tweens.chain({
             targets: this.card,
             tweens: [
                 {
@@ -70,7 +73,7 @@ export default class Card {
         // console.log('attack..')
         const y = this.player.getBaseY();
         const x = WidthBase * this.player.direction
-        this.scene.tweens.chain({
+        this.duel.getScene().tweens.chain({
             targets: this.card,
             tweens: [
                 {
@@ -115,7 +118,7 @@ export default class Card {
         const y = this.card.y
         const direction = this.player.direction
 
-        this.scene.tweens.chain({
+        this.duel.getScene().tweens.chain({
             targets: this.card,
             tweens: [
                 {
@@ -152,7 +155,7 @@ export default class Card {
         const max = 6
         const angle = Math.floor((90 + 12) + (Math.random() * max) - (max / 2))
 
-        this.scene.tweens.chain({
+        this.duel.getScene().tweens.chain({
             targets: this.card,
             tweens: [
                 {
