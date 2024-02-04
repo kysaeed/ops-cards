@@ -1,6 +1,7 @@
+
 export default class CardStack {
-    constructor(scene) {
-        this.scene = scene
+    constructor(duel) {
+        this.duel = duel
         this.cards = []
     }
 

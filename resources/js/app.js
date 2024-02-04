@@ -51,15 +51,9 @@ const SetupPhase = {
         duel.playerList.forEach((player) => {
             player.getDeck().setCardList([1, 1, 1, 2, 2, 3, 4])
             player.getDeck().shuffle()
-
-            // todo !!!
-            const x = 0
-            const y = 0
-            player.bench = new Bench(duel, scene, player.id, x, y)
-
         })
 
-        const diffenceCardInfo = player.getDeck().draw(duel, /* scene, cardBoard, duel.objectManager,*/ 400, turnPlayer)
+        const diffenceCardInfo = player.getDeck().draw(duel, 400, turnPlayer)
         diffenceCardInfo.card.angle = Bevel + (180 * (1 - turnPlayer))
 
         ///////
@@ -209,6 +203,7 @@ const scene = {
         this.load.image('chara', 'assets/chara.png');
         this.load.image('ch_kage', 'assets/ch_kage.png');
         this.load.image('ch_magi', 'assets/ch_magi.png');
+        this.load.image('ch_whell', 'assets/ch_whell.png');
         this.load.image('cat', 'assets/cat.png');
         this.load.image('sky', 'assets/sky2.png');
         this.load.image('modal', 'assets/modal.png');

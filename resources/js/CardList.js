@@ -10,8 +10,8 @@ const CardList = [
     },
     {
       p: 2,
-      name: 'タレント',
-      image: 'chara',
+      name: '車輪',
+      image: 'ch_whell',
       type: 0,
     },
     {

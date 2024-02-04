@@ -5,7 +5,7 @@ const WidthBase = -30
 // const direction  = 1
 
 export default class Card {
-    constructor(duel, /*scene, parent, objectManager,*/ cardInfo, player, x, y, cardDirection) {
+    constructor(duel, cardInfo, player, x, y, cardDirection) {
         this.duel = duel
 
         const scene = duel.getScene()
