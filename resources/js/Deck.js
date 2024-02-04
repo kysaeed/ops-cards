@@ -10,9 +10,7 @@ const HeightBase = 100
 const WidthBase = -30
 
 
-
-export default
-class Deck {
+export default class Deck {
     constructor(player) {
         this.cards = []
         this.player = player
