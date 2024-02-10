@@ -10,11 +10,7 @@ export default class Player {
         this.direction = direction
         this.deck = new Deck(this)
 
-        // todo
-        const x = 0
-        const y = 0
-        ///
-        this.bench = new Bench(duel, duel.getScene(), id, x, y)
+        this.bench = new Bench(duel, duel.getScene(), id)
 
         this.cardStack = new CardStack(duel)
 

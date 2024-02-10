@@ -1,12 +1,16 @@
 
+const HeightBase = 100
+const WidthBase = -30
+
+
 export default class Bench {
-    constructor(duelInfo, scene, playerId, x, y) {
+    constructor(duelInfo, scene, playerId /*, x, y*/) {
         this.duelInfo = duelInfo
         this.playerId = playerId
         this.scene = scene
         this.cards = []
-        this.x = x
-        this.y = y
+        // this.x = x
+        // this.y = y
     }
 
     addCards(playerId, cardList) {

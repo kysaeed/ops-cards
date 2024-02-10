@@ -15,8 +15,8 @@ export default class Card {
 
         this.cardBg = scene.add.sprite(0, 0, 'card')
         this.cardChara = scene.add.sprite(0, 22, cardInfo.image)
-        this.cardTextPoint = scene.add.text(-64, -85, cardInfo.p, { fontSize: '34px', fill: '#000' });
-        this.cardTextTitle = scene.add.text(-34, -78, cardInfo.name, { fontSize: '18px', fill: '#000' });
+        this.cardTextPoint = scene.add.text(-62, -95, cardInfo.p, { fontSize: '34px', fill: '#000' });
+        this.cardTextTitle = scene.add.text(-32, -88, cardInfo.name, { fontSize: '18px', fill: '#000' });
         this.card = scene.add.container(x, y, [
             this.cardBg,
             this.cardChara,
@@ -102,6 +102,9 @@ export default class Card {
                     duration: 200,
                     ease: 'power1',
                 },
+                {
+                    delay: 800,
+                }
             ],
             onComplete() {
                 console.log('OK!')
@@ -149,6 +152,29 @@ export default class Card {
                 }
             },
         })
+    }
+
+    showDetial(onEnd) {
+        const scene = this.duel.getScene()
+
+        scene.tweens.chain({
+            targets: this.card,
+            tweens: [
+                {
+                    x: -100,
+                    y: -10,
+                    scale: 1.5,
+                    duration: 100,
+                    angle: 0,
+                },
+            ],
+            onComplete() {
+                if (onEnd) {
+                    onEnd()
+                }
+            }
+    })
+
     }
 
     moveToBench(x, y, onEnd) {
