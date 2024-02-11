@@ -8,7 +8,7 @@ export default class Player {
         this.duel = duel
         this.id = id
         this.direction = direction
-        this.deck = new Deck(this)
+        this.deck = new Deck(duel, this)
 
         this.bench = new Bench(duel, duel.getScene(), id)
 

@@ -196,6 +196,7 @@ const scene = {
         this.load.image('card', 'assets/card.png');
         this.load.image('card_back', 'assets/card_back.png');
         this.load.image('card_shadow', 'assets/card_shadow.png');
+        this.load.image('deck_shadow', 'assets/deck_shadow.png');
         this.load.image('chara', 'assets/chara.png');
         this.load.image('ch_kage', 'assets/ch_kage.png');
         this.load.image('ch_magi', 'assets/ch_magi.png');
@@ -211,6 +212,8 @@ const scene = {
 
     },
     create() {
+        const DefaultScale = 0.4
+        const DefaultAngle = 60
 
         this.add.image(400, 300, 'sky');
 
@@ -222,14 +225,8 @@ const scene = {
         this.objectManager = this.duel.getObjectManager()
 
         const self = this;
-        this.deckSprite = this.add.sprite(180, 520, 'card_back').setInteractive();
-        this.deckSprite.on('pointerdown', function (pointer) {
-            AttackPhase.enter(scene, self.cardBoard, flag, this.duel, () => {
-                //
-            })
-        });
 
-        const flag = new Flag(scene, 480, 170)
+        const flag = new Flag(scene, 580, 170)
 
 
         this.cardBoard = this.duel.getCardBoard()
