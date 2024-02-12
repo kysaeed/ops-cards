@@ -10,7 +10,6 @@ import Axios from 'axios'
 import Duel from './Duel.js'
 // import CardList from './CardList'
 // import Card from './Card.js'
-import Flag from './Flag.js'
 import DamageMark from './DamageMark.js'
 // import Bench from './Bench.js'
 
@@ -147,7 +146,7 @@ const AttackPhase = {
                                         // })
                                     })
 
-                                    flag.moveTo(520, 170 + (200 * (1 - turnPlayer)))
+                                    duel.getFlag().moveTo(520, 170 + (200 * (1 - turnPlayer)))
 
                                     // 攻撃側から見た敵プレイヤー
                                     const enemyPlayer = duel.playerList[1 - turnPlayer]
@@ -221,8 +220,6 @@ const scene = {
 
     },
     create() {
-        const DefaultScale = 0.4
-        const DefaultAngle = 60
 
         this.add.image(400, 300, 'sky');
 
@@ -236,24 +233,19 @@ const scene = {
 
         const self = this;
 
-        const flag = new Flag(scene, 580, 170)
-
-
 
         this.damageMark = new DamageMark(scene, 400, 280)
 
 
         const toNextPhase = (next) => {
             currentPhase = next
-            currentPhase.enter(scene, this.cardBoard, flag, this.duel, (next) => {
+            currentPhase.enter(scene, this.cardBoard, this.duel.getFlag(), this.duel, (next) => {
                 toNextPhase(next)
             })
         }
 
-        currentPhase.enter(scene, this.cardBoard, flag, this.duel, toNextPhase)
+        currentPhase.enter(scene, this.cardBoard, this.duel.getFlag(), this.duel, toNextPhase)
 
-
-        //this.scoreText = this.add.text(16, 16, 'ちゃれんじゃ', { fontSize: '32px', fill: '#000' });
     },
     update() {
         this.duel.onUpdate()

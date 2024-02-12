@@ -24,7 +24,7 @@ export default class Flag {
                     angle: 0,
                     // x: x,
                     // y: y,
-                    scale: 1.4,
+                    scale: 2.0,
                     ease: 'power1',
                     duration: 300,
                 },

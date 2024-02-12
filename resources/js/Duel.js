@@ -1,6 +1,8 @@
 
 import ObjectManager from './ObjectManager.js'
 import Player from './Player.js'
+import Flag from './Flag.js'
+
 
 export default class Duel {
     constructor(scene) {
@@ -14,6 +16,8 @@ export default class Duel {
         this.playerList.push(new Player(this, 0, 1))
         this.playerList.push(new Player(this, 1, -1))
 
+        this.flag = new Flag(this.scene, 580, 170)
+
     }
 
     getScene() {
@@ -22,6 +26,10 @@ export default class Duel {
 
     getCardBoard() {
         return this.cardBoard
+    }
+
+    getFlag() {
+        return this.flag
     }
 
     getPlayer(playerId) {

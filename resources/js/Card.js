@@ -40,20 +40,20 @@ export default class Card {
         this.duel.getScene().tweens.chain({
             targets: this.card,
             tweens: [
-                {
-                    x: x,
-                    y: y,
-                    angle: angle + 90 + Bevel,
-                    scale: 0.3 * 0.6,
-                    duration: 300,
-                },
-                {
-                    angle: angle + Bevel,
-                    x: x,
-                    y: y,
-                    ease: 'power1',
-                    duration: 300,
-                },
+                // {
+                //     x: x,
+                //     y: y,
+                //     angle: angle + 90 + Bevel,
+                //     scale: 0.3 * 0.6,
+                //     duration: 300,
+                // },
+                // {
+                //     angle: angle + Bevel,
+                //     x: x,
+                //     y: y,
+                //     ease: 'power1',
+                //     duration: 300,
+                // },
                 {
                     x: x,
                     y: y,
@@ -81,7 +81,7 @@ export default class Card {
                     // angle: '-=8',
                     // angle: 180 * (turnPlayer) + 9,
                     x: 0 - stackCount * 8,
-                    y: 0, //enemyY,
+                    y: 0,
                     scale: 0.6,
                     duration: 100,
                     ease: 'power1',
