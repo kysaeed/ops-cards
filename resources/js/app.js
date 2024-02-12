@@ -216,6 +216,7 @@ const scene = {
         this.load.image('ch_kage', 'assets/ch_kage.png');
         this.load.image('ch_magi', 'assets/ch_magi.png');
         this.load.image('ch_whell', 'assets/ch_whell.png');
+        this.load.image('ch_eye', 'assets/ch_eye.png');
         this.load.image('cat', 'assets/cat.png');
         this.load.image('sky', 'assets/sky2.png');
         this.load.image('modal', 'assets/modal.png');

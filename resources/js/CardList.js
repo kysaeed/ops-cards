@@ -22,11 +22,19 @@ const CardList = [
     },
     {
       p: 4,
+      name: '目玉',
+      image: 'ch_eye',
+      type: 0,
+    },
+
+/*
+    {
+      p: 4,
       name: 'ねこ',
       image: 'cat',
       type: 0,
     },
-
+*/
 ];
 
 export default CardList;
