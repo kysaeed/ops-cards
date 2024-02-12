@@ -7,6 +7,7 @@ import Flag from './Flag.js'
 export default class Duel {
     constructor(scene) {
         this.scene = scene
+        this.currentPhase = null
         this.turnPlayerId = 0
 
         this.cardBoard = scene.add.container(400, 280, [])
@@ -26,6 +27,14 @@ export default class Duel {
 
     getCardBoard() {
         return this.cardBoard
+    }
+
+    setCurrentPhase(phase) {
+        this.currentPhase = phase
+    }
+
+    getCurrentPhase() {
+        return this.currentPhase
     }
 
     getFlag() {

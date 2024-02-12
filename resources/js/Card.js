@@ -5,8 +5,10 @@ const WidthBase = -30
 // const direction  = 1
 
 export default class Card {
-    constructor(duel, cardInfo, player, x, y, cardDirection) {
+    constructor(duel, cardInfo, player, x, y) {
         this.duel = duel
+
+        let cardDirection = player.getPlayerId()
 
         const scene = duel.getScene()
         this.player = player
@@ -119,6 +121,45 @@ export default class Card {
     damaged(onEnd) {
         const x = this.card.x
         const y = this.card.y
+
+        const direction = this.player.getDirection()
+
+        this.duel.getScene().tweens.chain({
+            targets: this.card,
+            tweens: [
+                {
+                    x: x,
+                    y: y,
+                    //angle: 270,
+                    // scale: /*1.3 * */ 0.6,
+                    duration: 100,
+                },
+                {
+                    //angle: 180,
+                    x: x,
+                    y: y - (10 * direction),
+                    ease: 'power1',
+                    duration: 50,
+                },
+                {
+                    x: x,
+                    y: y,
+                    //angle: 180,
+                    // scale: 0.6,
+                    duration: 200,
+                },
+            ],
+            onComplete() {
+                if (onEnd) {
+                    onEnd();
+                }
+            },
+        })
+    }
+
+    criticalDamaged(onEnd) {
+        const x = this.card.x
+        const y = this.card.y
         const direction = this.player.direction
 
         this.duel.getScene().tweens.chain({
@@ -134,16 +175,16 @@ export default class Card {
                 {
                     //angle: 180,
                     x: x,
-                    y: y - (40 * direction),
+                    y: y + (80 * direction),
                     ease: 'power1',
                     duration: 100,
                 },
                 {
                     x: x,
-                    y: y,
+                    y: y + (80 * direction),
                     //angle: 180,
                     scale: 0.6,
-                    duration: 200,
+                    duration: 300,
                 },
             ],
             onComplete() {

@@ -41,6 +41,11 @@ class DeckSprite {
         this.deckSprite.scale = DefaultScale
         this.deckSprite.angle = DefaultAngle
         this.deckSprite.on('pointerdown', (pointer) => {
+            const phase = this.duel.getCurrentPhase()
+
+            if (phase.onEvent) {
+                phase.onEvent('click', this, {})
+            }
             // AttackPhase.enter(scene, self.cardBoard, flag, this.duel, () => {
             //     //
             // })
@@ -170,8 +175,8 @@ export default class Deck {
         this.cards = []
         this.player = player
 
-        const x = -300
-        const y = 200 - (player.getPlayerId() * 400)
+        const x = -320
+        const y = 120 * player.getDirection()
 
         this.sprite = new DeckSprite(duel, x, y, 6)
     }
@@ -195,7 +200,7 @@ export default class Deck {
         const cardId = this.cards.shift()
         const cardInfo = CardList[cardId - 1]
 
-        const card = new Card(duel, cardInfo, this.player, stackCount * 8, y + stackCount * 8, turnPlayerId)
+        const card = new Card(duel, cardInfo, this.player, stackCount * 8, y + stackCount * 8)
 
         this.sprite.setCount(this.cards.length)
         this.sprite.setDrawCardPosition(card, () => {

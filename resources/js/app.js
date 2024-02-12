@@ -8,10 +8,7 @@ import _ from 'lodash'
 import Axios from 'axios'
 
 import Duel from './Duel.js'
-// import CardList from './CardList'
-// import Card from './Card.js'
 import DamageMark from './DamageMark.js'
-// import Bench from './Bench.js'
 
 
 
@@ -76,6 +73,7 @@ const SetupPhase = {
 
 const AttackPhase = {
     enter(scene, duel, onEnd) {
+        this.onEnd = onEnd
 
         const turnPlayer = duel.turnPlayerId
         const enemyCard = duel.playerList[1 - turnPlayer].cardStack.getTopCard()
@@ -83,12 +81,12 @@ const AttackPhase = {
         const newAttackCard = duel.playerList[turnPlayer].deck.draw(duel, 0, turnPlayer, (newAttackCard) => {
             if (newAttackCard) {
 
-                const stackCount = duel.playerList[turnPlayer].cardStack.cards.length
+                const stackCount = duel.getPlayer(turnPlayer).cardStack.cards.length
                 const x = (WidthBase * direction) - (stackCount * 8)
                 const y = (-HeightBase) + (HeightBase * 2 * (1 - turnPlayer))
 
                 newAttackCard.showDetial(() => {
-                    const stackCount = duel.playerList[turnPlayer].cardStack.cards.length
+                    const stackCount = duel.getPlayer(turnPlayer).getCardStack().getStackCount()
                     const x = (WidthBase * direction) - (stackCount * 8)
                     const y = (-HeightBase) + (HeightBase * 2 * (1 - turnPlayer))
 
@@ -112,22 +110,21 @@ const AttackPhase = {
                             },
                         ],
                         onComplete() {
-
-                            console.log('diffence-card: OK!')
-
-                            duel.getPlayer(turnPlayer).cardStack.addCard(newAttackCard)
+                            const player = duel.getPlayer(turnPlayer)
+                            player.cardStack.addCard(newAttackCard)
 
                             const total = duel.playerList[turnPlayer].cardStack.getTotalPower()
 
-                            duel.playerList[turnPlayer].cardStack.cards.forEach((c, i) => {
+                            player.cardStack.cards.forEach((c, i) => {
                                 const stackCount = i
                                 c.attack(stackCount, () => {
                                     //
                                 })
                             })
-                            scene.damageMark.setDamage(1) // dummy parama
+                            scene.damageMark.setDamage(1) // dummy param
+
                             if (total >= enemyCard.cardInfo.p) {
-                                enemyCard.damaged(() => {
+                                enemyCard.criticalDamaged(() => {
                                     // console.log('かった！' + turnPlayer, duel.playerList[turnPlayer].cardStack)
 
                                     duel.playerList[turnPlayer].cardStack.cards.forEach((c) => {
@@ -173,12 +170,13 @@ const AttackPhase = {
 
                                     setTurnPlayer(duel, 1 - turnPlayer)
 
-                                    onEnd(AttackPhase);
+                                    // onEnd(AttackPhase);
                                 })
                             } else {
-                                onEnd(AttackPhase);
+                                enemyCard.damaged(() => {
+                                    // onEnd(AttackPhase);
+                                })
                             }
-
                         },
                     })
                 })
@@ -187,6 +185,15 @@ const AttackPhase = {
 
     },
 
+    onEvent(event, sender, params) {
+        //
+        console.log('******* ' + event + ' *****', sender, params)
+
+        if (this.onEnd) {
+            this.onEnd(AttackPhase)
+        }
+
+    }
 }
 
 const DamagePhase = {
@@ -228,6 +235,8 @@ const scene = {
 
         let currentPhase = SetupPhase
 
+        this.duel.setCurrentPhase(currentPhase)
+
         const scene = this;
         this.objectManager = this.duel.getObjectManager()
 
@@ -236,9 +245,9 @@ const scene = {
 
         this.damageMark = new DamageMark(scene, 400, 280)
 
-
         const toNextPhase = (next) => {
             currentPhase = next
+            this.duel.setCurrentPhase(currentPhase)
             currentPhase.enter(scene, this.duel, (next) => {
                 toNextPhase(next)
             })

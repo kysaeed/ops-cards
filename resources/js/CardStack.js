@@ -25,6 +25,10 @@ export default class CardStack {
         return this.cards[this.cards.length - 1]
     }
 
+    getStackCount() {
+        return this.cards.length
+    }
+
     takeAll() {
         const cards = this.cards
         this.cards = []

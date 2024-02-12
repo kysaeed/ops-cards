@@ -16,6 +16,10 @@ export default class Player {
 
     }
 
+    getDirection() {
+        return this.direction
+    }
+
     getPlayerId() {
         return this.id
     }
@@ -31,4 +35,9 @@ export default class Player {
     getDeck() {
         return this.deck
     }
+
+    getCardStack() {
+        return this.cardStack
+    }
+
 }
