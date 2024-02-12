@@ -40,7 +40,7 @@ const setTurnPlayer = (duel, playerId) => {
 
 
 const SetupPhase = {
-    enter(scene, cardBoard, flag, duel, onEnd) {
+    enter(scene, cardBoard, duel, onEnd) {
 
         const turnPlayer = duel.turnPlayerId
 
@@ -75,7 +75,7 @@ const SetupPhase = {
 }
 
 const AttackPhase = {
-    enter(scene, cardBoard, flag, duel, onEnd) {
+    enter(scene, cardBoard, duel, onEnd) {
 
         const turnPlayer = duel.turnPlayerId
         const enemyCard = duel.playerList[1 - turnPlayer].cardStack.getTopCard()
@@ -190,7 +190,7 @@ const AttackPhase = {
 }
 
 const DamagePhase = {
-    enter(scene, cardBoard, flag, duel, onEnd) {
+    enter(scene, cardBoard, duel, onEnd) {
 
         onEnd();
     },
@@ -239,12 +239,12 @@ const scene = {
 
         const toNextPhase = (next) => {
             currentPhase = next
-            currentPhase.enter(scene, this.cardBoard, this.duel.getFlag(), this.duel, (next) => {
+            currentPhase.enter(scene, this.cardBoard, this.duel, (next) => {
                 toNextPhase(next)
             })
         }
 
-        currentPhase.enter(scene, this.cardBoard, this.duel.getFlag(), this.duel, toNextPhase)
+        currentPhase.enter(scene, this.cardBoard, this.duel, toNextPhase)
 
     },
     update() {
