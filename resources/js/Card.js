@@ -157,9 +157,29 @@ export default class Card {
     showDetial(onEnd) {
         const scene = this.duel.getScene()
 
+        const x = this.card.x
+        const y = this.card.y
+
         scene.tweens.chain({
             targets: this.card,
             tweens: [
+/*
+                {
+                    x: x - 10,
+                    y: y - 25,
+                    // angle: ,
+                    scale: 0.5,
+                    duration: 400,
+                    ease: 'power1',
+                },
+                {
+                    // angle: ,
+                    scale: 0.5,
+                    duration: 400,
+                    ease: 'power1',
+                },
+*/
+
                 {
                     x: -100,
                     y: -10,
@@ -207,6 +227,7 @@ export default class Card {
         this.cardShadow.y = this.card.y + 2
         this.cardShadow.scale = this.card.scale
         this.cardShadow.angle = this.card.angle
+        this.cardShadow.alpha = this.card.alpha
     }
 
 }

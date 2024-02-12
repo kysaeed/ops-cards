@@ -9,14 +9,15 @@ const Bevel = 8
 const HeightBase = 100
 const WidthBase = -30
 
+const DefaultScale = 0.4
+const DefaultAngle = 60
+
+
 class DeckSprite {
     constructor(duel, x, y, count) {
-        this.scene = duel.getScene()
         this.duel = duel
+        this.scene = duel.getScene()
         this.count = count
-
-        const DefaultScale = 0.4
-        const DefaultAngle = 60
 
 
         const spriteList = []
@@ -40,13 +41,26 @@ class DeckSprite {
         this.deckSprite.scale = DefaultScale
         this.deckSprite.angle = DefaultAngle
         this.deckSprite.on('pointerdown', (pointer) => {
-            AttackPhase.enter(scene, self.cardBoard, flag, this.duel, () => {
-                //
-            })
+            // AttackPhase.enter(scene, self.cardBoard, flag, this.duel, () => {
+            //     //
+            // })
         });
         spriteList.push(this.deckSprite)
 
+
+        //
+        this.drawCard = this.scene.add.sprite(0, -(this.count * 4), 'card_back')
+        this.drawCard.scale = DefaultScale
+        this.drawCard.angle = DefaultAngle
+        this.drawCard.alpha = 0
+        spriteList.push(this.drawCard)
+
+
         this.sprite = this.scene.add.container(x, y, spriteList)
+
+        const board = duel.getCardBoard()
+        board.add(this.sprite)
+
 
     }
 
@@ -54,8 +68,10 @@ class DeckSprite {
         this.count = count
         if (this.count <= 0) {
             this.deckSprite.visible = false
+            this.deckShadow.visible = false
         } else {
             this.deckSprite.visible = true
+            this.deckShadow.visible = true
         }
         this.deckSprite.y = -(this.count * 4)
 
@@ -68,6 +84,84 @@ class DeckSprite {
             }
         })
     }
+
+    setDrawCardPosition(card, onEnd) {
+        this.drawCard.visible = true
+        this.drawCard.scale = DefaultScale
+        this.drawCard.alpha = 1
+        this.drawCard.x = 0
+        this.drawCard.y = -(this.count * 4)
+
+        card.card.alpha = 0
+        card.card.x = this.sprite.x + this.drawCard.x - 10
+        card.card.y = this.sprite.y + this.drawCard.y - 50
+        card.card.angle = this.drawCard.angle
+        card.card.scale = 0.5
+
+        const x = card.card.x
+        const y = card.card.y
+
+        this.duel.getScene().tweens.chain({
+            targets: card.card,
+            tweens: [
+                {
+                    x: x,
+                    y: y,
+                    duration: 300,
+                    alpha: 0.0,
+                    ease: 'power1',
+                },
+                {
+                    x: x,
+                    y: y,
+                    duration: 600,
+                    alpha: 1.0,
+                    scale: 0.5,
+                    ease: 'power1',
+                },
+            ],
+            onComplete: () => {
+                card.card.x = this.sprite.x + this.deckSprite.x
+                card.card.y = this.sprite.y + this.deckSprite.y
+                card.card.angle = this.deckSprite.angle
+                card.card.scale = this.deckSprite.scale
+
+                this.drawCard.visible = false
+
+                if (onEnd) {
+                    onEnd()
+                }
+            },
+        })
+
+        this.duel.getScene().tweens.chain({
+            targets: this.drawCard,
+            tweens: [
+                {
+                    x: this.drawCard.x - 10,
+                    y: this.drawCard.y - 50,
+                    alpha: 1.0,
+                    scale: 0.5,
+                    duration: 300,
+                    ease: 'power1',
+                },
+                {
+                    // alpha: 0.0,
+                    duration: 600,
+                    ease: 'power1',
+                },
+
+                // *********
+                // {
+                //     alpha: 0.0,
+                //     duration: 400,
+                //     ease: 'power1',
+                // },
+            ],
+
+        })
+    }
+
 }
 
 
@@ -76,8 +170,8 @@ export default class Deck {
         this.cards = []
         this.player = player
 
-        const x = 90
-        const y = 500 - (player.getPlayerId() * 400)
+        const x = -300
+        const y = 200 - (player.getPlayerId() * 400)
 
         this.sprite = new DeckSprite(duel, x, y, 6)
     }
@@ -89,7 +183,7 @@ export default class Deck {
         this.cards = _.shuffle(this.cards)
     }
 
-    draw(duel, stackCount, turnPlayerId) {
+    draw(duel, stackCount, turnPlayerId, onEnd) {
         if (this.isEmpty()) {
             return null
         }
@@ -104,6 +198,12 @@ export default class Deck {
         const card = new Card(duel, cardInfo, this.player, stackCount * 8, y + stackCount * 8, turnPlayerId)
 
         this.sprite.setCount(this.cards.length)
+        this.sprite.setDrawCardPosition(card, () => {
+            if (onEnd) {
+                onEnd(card)
+            }
+        })
+
 
         return card
     }
