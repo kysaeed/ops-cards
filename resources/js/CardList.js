@@ -3,25 +3,31 @@
  */
 const CardList = [
     {
-      p: 1,
+      power: 1,
       name: '影',
       image: 'ch_kage',
       type: 0,
     },
     {
-      p: 2,
+      power: 2,
       name: '車輪',
       image: 'ch_whell',
       type: 0,
     },
     {
-      p: 3,
+      power: 3,
       name: '魔術師',
       image: 'ch_magi',
       type: 0,
     },
     {
-      p: 4,
+      power: 4,
+      name: 'カカシ',
+      image: 'ch_scarecrow',
+      type: 0,
+    },
+    {
+      power: 4,
       name: '目玉',
       image: 'ch_eye',
       type: 0,
@@ -29,7 +35,7 @@ const CardList = [
 
 /*
     {
-      p: 4,
+      power: 4,
       name: 'ねこ',
       image: 'cat',
       type: 0,

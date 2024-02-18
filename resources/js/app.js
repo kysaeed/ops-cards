@@ -76,9 +76,10 @@ const AttackPhase = {
         this.onEnd = onEnd
 
         const turnPlayer = duel.turnPlayerId
-        const enemyCard = duel.playerList[1 - turnPlayer].cardStack.getTopCard()
 
-        const newAttackCard = duel.playerList[turnPlayer].deck.draw(duel, 0, turnPlayer, (newAttackCard) => {
+        const enemyCard = duel.getPlayer(1 - turnPlayer).cardStack.getTopCard()
+
+        const newAttackCard = duel.getPlayer(turnPlayer).deck.draw(duel, 0, turnPlayer, (newAttackCard) => {
             if (newAttackCard) {
 
                 const stackCount = duel.getPlayer(turnPlayer).cardStack.cards.length
@@ -111,9 +112,10 @@ const AttackPhase = {
                         ],
                         onComplete() {
                             const player = duel.getPlayer(turnPlayer)
+                            const ohterPlayer = duel.getPlayer(1 - turnPlayer)
                             player.cardStack.addCard(newAttackCard)
 
-                            const total = duel.playerList[turnPlayer].cardStack.getTotalPower()
+                            const total = duel.getPlayer(turnPlayer).cardStack.getTotalPower()
 
                             player.cardStack.cards.forEach((c, i) => {
                                 const stackCount = i
@@ -123,11 +125,11 @@ const AttackPhase = {
                             })
                             scene.damageMark.setDamage(1) // dummy param
 
-                            if (total >= enemyCard.cardInfo.p) {
-                                enemyCard.criticalDamaged(() => {
+                            if (total >= enemyCard.cardInfo.power) {
+                                ohterPlayer.getCardStack().criticalDamaged(() => {
                                     // console.log('かった！' + turnPlayer, duel.playerList[turnPlayer].cardStack)
 
-                                    duel.playerList[turnPlayer].cardStack.cards.forEach((c) => {
+                                    duel.getPlayer(turnPlayer).cardStack.cards.forEach((c) => {
                                         c.angle = Bevel + (180 * turnPlayer)
 
                                         // console.log(c.card)
@@ -146,7 +148,7 @@ const AttackPhase = {
                                     duel.getFlag().moveTo(520, 170 + (200 * (1 - turnPlayer)))
 
                                     // 攻撃側から見た敵プレイヤー
-                                    const enemyPlayer = duel.playerList[1 - turnPlayer]
+                                    const enemyPlayer = duel.getPlayer(1 - turnPlayer)
 
                                     // ディフェンス側のカードを横へ
                                     const deffenceCards = enemyPlayer.cardStack.takeAll()
@@ -169,12 +171,19 @@ const AttackPhase = {
                                     }
 
                                     setTurnPlayer(duel, 1 - turnPlayer)
-
-                                    // onEnd(AttackPhase);
+                                    if (player.getPlayerId() === 0) {
+                                        onEnd(AttackPhase)
+                                    } else {
+                                        enemyPlayer.getDeck().setClickableState(true)
+                                    }
                                 })
                             } else {
                                 enemyCard.damaged(() => {
-                                    // onEnd(AttackPhase);
+                                    if (player.getPlayerId() === 1) {
+                                        onEnd(AttackPhase);
+                                    } else {
+                                        player.getDeck().setClickableState(true)
+                                    }
                                 })
                             }
                         },
@@ -187,7 +196,9 @@ const AttackPhase = {
 
     onEvent(event, sender, params) {
         //
-        console.log('******* ' + event + ' *****', sender, params)
+        // console.log('******* ' + event + ' *****', sender, params)
+
+        sender.setClickableState(false)
 
         if (this.onEnd) {
             this.onEnd(AttackPhase)
@@ -207,18 +218,27 @@ const DamagePhase = {
 
 const scene = {
     preload() {
+
+        /**
+         * todo :
+         *　  表示するカードだけプリロードする
+         */
+
         this.load.image('flag', 'assets/flag.png');
-        this.load.image('card', 'assets/card.png');
+        this.load.image('card', 'assets/card.png'); // (160 * 220) * 0.5
         this.load.image('card_back', 'assets/card_back.png');
         this.load.image('card_shadow', 'assets/card_shadow.png');
         this.load.image('deck_shadow', 'assets/deck_shadow.png');
+        this.load.image('deck_clickable', 'assets/deck_clickable.png');
+
         this.load.image('chara', 'assets/chara.png');
         this.load.image('ch_kage', 'assets/ch_kage.png');
         this.load.image('ch_magi', 'assets/ch_magi.png');
         this.load.image('ch_whell', 'assets/ch_whell.png');
         this.load.image('ch_eye', 'assets/ch_eye.png');
+        this.load.image('ch_scarecrow', 'assets/ch_scarecrow.png');
         this.load.image('cat', 'assets/cat.png');
-        this.load.image('sky', 'assets/sky2.png');
+        this.load.image('sky', 'assets/board.png');
         this.load.image('modal', 'assets/modal.png');
         this.load.image('damage', 'assets/damage.png');
         // this.load.spritesheet('dude',

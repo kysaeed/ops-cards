@@ -17,7 +17,7 @@ export default class Card {
 
         this.cardBg = scene.add.sprite(0, 0, 'card')
         this.cardChara = scene.add.sprite(0, 22, cardInfo.image)
-        this.cardTextPoint = scene.add.text(-62, -95, cardInfo.p, { fontSize: '34px', fill: '#000' });
+        this.cardTextPoint = scene.add.text(-62, -95, cardInfo.power, { fontSize: '32px', fill: '#000' });
         this.cardTextTitle = scene.add.text(-32, -88, cardInfo.name, { fontSize: '18px', fill: '#000' });
         this.card = scene.add.container(x, y, [
             this.cardBg,
@@ -157,10 +157,13 @@ export default class Card {
         })
     }
 
-    criticalDamaged(onEnd) {
+    criticalDamaged(index, onEnd) {
         const x = this.card.x
         const y = this.card.y
         const direction = this.player.direction
+
+        const xAdd = (index * 80)
+        const yMlt = 1.0 * (index * 0.05)
 
         this.duel.getScene().tweens.chain({
             targets: this.card,
@@ -174,14 +177,14 @@ export default class Card {
                 },
                 {
                     //angle: 180,
-                    x: x,
-                    y: y + (80 * direction),
+                    x: x + xAdd,
+                    y: y + ((80 * direction) * yMlt),
                     ease: 'power1',
                     duration: 100,
                 },
                 {
-                    x: x,
-                    y: y + (80 * direction),
+                    x: x + + xAdd,
+                    y: y + ((80 * direction) * yMlt),
                     //angle: 180,
                     scale: 0.6,
                     duration: 300,

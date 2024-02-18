@@ -14,7 +14,7 @@ const DefaultAngle = 60
 
 
 class DeckSprite {
-    constructor(duel, x, y, count) {
+    constructor(duel, isPlayer, x, y, count) {
         this.duel = duel
         this.scene = duel.getScene()
         this.count = count
@@ -60,13 +60,47 @@ class DeckSprite {
         this.drawCard.alpha = 0
         spriteList.push(this.drawCard)
 
+        //
+        this.deckClickable = this.scene.add.sprite(0, -(this.count * 4), 'deck_clickable')
+        this.deckClickable.angle = DefaultAngle
+        this.deckClickable.scale = 0.6
+        spriteList.push(this.deckClickable)
+
+        this.clickableTewwns = this.scene.tweens.chain({
+            targets: this.deckClickable,
+            repeat: -1,
+            yoyo: true,
+            paused: true,
+            tweens: [
+                {
+                    scale: 0.75,
+                    duration: 1000,
+                    ease: 'power1',
+                },
+                {
+                    scale: 0.5,
+                    duration: 1000,
+                    ease: 'power1',
+                },
+            ],
+        })
+        this.deckClickable.visible = false
 
         this.sprite = this.scene.add.container(x, y, spriteList)
 
         const board = duel.getCardBoard()
         board.add(this.sprite)
+    }
 
-
+    setClickableState(isClickable) {
+        if (isClickable) {
+            this.deckClickable.y = -(this.count * 4)
+            this.deckClickable.visible = true
+            this.clickableTewwns.play()
+        } else {
+            this.deckClickable.visible = false
+            this.clickableTewwns.pause()
+        }
     }
 
     setCount(count) {
@@ -178,7 +212,13 @@ export default class Deck {
         const x = -320
         const y = 120 * player.getDirection()
 
-        this.sprite = new DeckSprite(duel, x, y, 6)
+        const isPlyaer = player.getPlayerId() === 0
+
+        this.sprite = new DeckSprite(duel, isPlyaer, x, y, 6)
+    }
+
+    setClickableState(isClickable) {
+        this.sprite.setClickableState(isClickable)
     }
 
     setCardList(cardList) {

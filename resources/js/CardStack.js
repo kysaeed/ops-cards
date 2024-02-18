@@ -13,7 +13,7 @@ export default class CardStack {
         //
         let power = 0
         this.cards.forEach((c) => {
-            power += c.cardInfo.p
+            power += c.cardInfo.power
         })
         return power
     }
@@ -33,5 +33,15 @@ export default class CardStack {
         const cards = this.cards
         this.cards = []
         return cards
+    }
+
+    criticalDamaged(onEnd) {
+        this.cards.forEach((c, i) => {
+            let onEndFirst = null
+            if (i < 1) {
+                onEndFirst = onEnd
+            }
+            c.criticalDamaged(i, onEnd)
+        })
     }
 }
