@@ -4,7 +4,7 @@
  *  https://newdocs.phaser.io/docs/3.70.0/gameobjects
  */
 import Phaser from 'phaser'
-import _ from 'lodash'
+import _, { create } from 'lodash'
 import Axios from 'axios'
 
 import Duel from './Duel.js'
@@ -21,6 +21,14 @@ let enemyY = -HeightBase
 let direction = 1
 
 
+const axios = Axios.create({
+    baseURL: 'http://localhost:8080',
+    headers: {
+        'Content-Type': 'application/json',
+      },
+      //timeout: 2000,
+})
+console.log('axios', axios)
 
 const setTurnPlayer = (duel, playerId) => {
     duel.turnPlayerId = playerId
@@ -41,16 +49,19 @@ const SetupPhase = {
 
         const turnPlayer = duel.turnPlayerId
 
-        // const player = duel.playerList[1 - turnPlayer]
-        const player = duel.getPlayer(1 - turnPlayer)
+        axios.get('api/data/deck').then((res) => {
+            console.log('res', res.data)
+            const data = res.data
 
-        duel.playerList.forEach((player) => {
-            player.getDeck().setCardList([1, 1, 1, 2, 2, 3, 4])
-            player.getDeck().shuffle()
-        })
+            // const player = duel.playerList[1 - turnPlayer]
+            const player = duel.getPlayer(1 - turnPlayer)
 
-        const diffenceCardInfo = player.getDeck().draw(duel, 400, turnPlayer, () => {
+            duel.playerList.forEach((player) => {
+                player.getDeck().setCardList(data.players[player.getPlayerId()].deck)
+                player.getDeck().shuffle()
+            })
 
+            const diffenceCardInfo = player.getDeck().draw(duel, 400, turnPlayer, () => {
 
 
             diffenceCardInfo.card.angle = Bevel + (180 * (1 - turnPlayer)) // todo enterToにマージ
@@ -66,6 +77,10 @@ const SetupPhase = {
 
 
         })
+
+
+        })
+
 
     },
 
@@ -236,6 +251,8 @@ const scene = {
         this.load.image('ch_magi', 'assets/ch_magi.png');
         this.load.image('ch_whell', 'assets/ch_whell.png');
         this.load.image('ch_eye', 'assets/ch_eye.png');
+        this.load.image('ch_snake', 'assets/ch_snake.png');
+        this.load.image('ch_moon', 'assets/ch_moon.png');
         this.load.image('ch_scarecrow', 'assets/ch_scarecrow.png');
         this.load.image('cat', 'assets/cat.png');
         this.load.image('sky', 'assets/board.png');

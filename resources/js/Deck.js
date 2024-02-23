@@ -18,6 +18,7 @@ class DeckSprite {
         this.duel = duel
         this.scene = duel.getScene()
         this.count = count
+        this.isClickable = false
 
 
         const spriteList = []
@@ -41,6 +42,9 @@ class DeckSprite {
         this.deckSprite.scale = DefaultScale
         this.deckSprite.angle = DefaultAngle
         this.deckSprite.on('pointerdown', (pointer) => {
+            if (!this.isClickable) {
+                return
+            }
             const phase = this.duel.getCurrentPhase()
 
             if (phase.onEvent) {
@@ -93,7 +97,8 @@ class DeckSprite {
     }
 
     setClickableState(isClickable) {
-        if (isClickable) {
+        this.isClickable = isClickable
+        if (this.isClickable) {
             this.deckClickable.y = -(this.count * 4)
             this.deckClickable.visible = true
             this.clickableTewwns.play()

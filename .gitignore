@@ -4,3 +4,4 @@ vendor
 
 public/hot
 .env
+public/build

@@ -10,8 +10,8 @@ const CardList = [
     },
     {
       power: 2,
-      name: '車輪',
-      image: 'ch_whell',
+      name: 'ヘビ',
+      image: 'ch_snake',
       type: 0,
     },
     {
@@ -22,25 +22,41 @@ const CardList = [
     },
     {
       power: 4,
-      name: 'カカシ',
-      image: 'ch_scarecrow',
+      name: '月',
+      image: 'ch_moon',
       type: 0,
     },
-    {
-      power: 4,
-      name: '目玉',
-      image: 'ch_eye',
-      type: 0,
-    },
-
-/*
     {
       power: 4,
       name: 'ねこ',
       image: 'cat',
       type: 0,
     },
-*/
+    {
+      power: 5,
+      name: 'カカシ',
+      image: 'ch_scarecrow',
+      type: 0,
+    },
+    {
+      power: 6,
+      name: '目玉',
+      image: 'ch_eye',
+      type: 0,
+    },
+    {
+      power: 2,
+      name: '車輪',
+      image: 'ch_whell',
+      type: 0,
+    },
+    {
+      power: 4,
+      name: '月',
+      image: 'ch_moon',
+      type: 0,
+    },
+
 ];
 
 export default CardList;
