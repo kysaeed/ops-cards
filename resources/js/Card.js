@@ -237,7 +237,49 @@ export default class Card {
                     onEnd()
                 }
             }
-    })
+        })
+    }
+
+    moveToAttackPosition(onEnd) {
+        //
+        const scene = this.duel.getScene()
+
+        let direction = 1
+        if (this.player.getPlayerId()) {
+            direction = -1
+        }
+
+        const stackCount = this.player.getCardStack().getStackCount()
+        const x = (WidthBase * direction) - (stackCount * 8)
+        const y = (-HeightBase) + (HeightBase * 2 * (1 - this.player.getPlayerId()))
+
+
+        scene.tweens.chain({
+            targets: this.card,
+            tweens: [
+                {
+                    delay: 1000,
+                    scale: 0.6,
+                    x: x,
+                    y: y - (stackCount * 8),
+                    ease: 'power1',
+                    duration: 200,
+                    angle: Bevel + (180 * this.player.getPlayerId()),
+                },
+                {
+                    x: x,
+                    y: y - (stackCount * 8),
+                    scale: 0.6,
+                    duration: 100,
+                },
+            ],
+            onComplete() {
+                if (onEnd) {
+                    onEnd()
+                }
+            }
+        })
+
 
     }
 
