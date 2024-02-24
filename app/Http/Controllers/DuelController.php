@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class DuelController extends Controller
 {
@@ -21,10 +22,10 @@ class DuelController extends Controller
             $decks[$i] = $defaultDeck;
             for ($j = 0; $j < 3; $j++) {
                 //
-                $decks[$i][] = 5;
+                $decks[$i][] = 5 + rand(0, 5);
             }
+            $decks[$i] = Arr::shuffle($decks[$i]);
         }
-
 
         return response()->json([
             'players' => [

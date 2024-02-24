@@ -13,21 +13,21 @@ export default class Bench {
         // this.y = y
     }
 
-    addCards(playerId, cardList) {
+    addCards(playerId, cardList, onEnd) {
 
         playerId = this.playerId
 
-
-        const currentPlayer = this.duelInfo.playerList[playerId]
+        // const currentPlayer = this.duelInfo.playerList[playerId]
         cardList.forEach((c, i) => {
-            const benchIndex = this.cards.length
+            // const benchIndex = this.cards.length
 
-            this.addCardElement(playerId, c)
+            this.addCardElement(playerId, c, onEnd)
+            onEnd = null
         })
 
     }
 
-    addCardElement(playerId, card) {
+    addCardElement(playerId, card, onEnd) {
 
         const getBenchX = (benchIndex, playerId) => {
             if (playerId == 0) {
@@ -47,7 +47,7 @@ export default class Bench {
             const list = this.cards[i]
             if (list.length < 1) {
                 list.push(card)
-                card.moveToBench(getBenchX(i, playerId), getBenchY(i, playerId));
+                card.moveToBench(getBenchX(i, playerId), getBenchY(i, playerId), onEnd);
 
                 return
             } else {
@@ -56,7 +56,8 @@ export default class Bench {
                     list.push(card)
                     card.moveToBench(
                         getBenchX(i, playerId) - (stackCount * 4),
-                        getBenchY(i, playerId) - (stackCount * 4)
+                        getBenchY(i, playerId) - (stackCount * 4),
+                        onEnd
                     );
                     return
                 }
@@ -67,7 +68,7 @@ export default class Bench {
         this.cards.push([
             card
         ])
-        card.moveToBench(getBenchX(benchIndex, playerId), getBenchY(benchIndex, playerId));
+        card.moveToBench(getBenchX(benchIndex, playerId), getBenchY(benchIndex, playerId), onEnd);
 
     }
 }

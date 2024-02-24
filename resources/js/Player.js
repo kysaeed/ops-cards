@@ -36,6 +36,10 @@ export default class Player {
         return this.deck
     }
 
+    getBench() {
+        return this.bench
+    }
+
     getCardStack() {
         return this.cardStack
     }

@@ -14,7 +14,7 @@ const DefaultAngle = 60
 
 
 class DeckSprite {
-    constructor(duel, isPlayer, x, y, count) {
+    constructor(duel, x, y, count) {
         this.duel = duel
         this.scene = duel.getScene()
         this.count = count
@@ -58,7 +58,7 @@ class DeckSprite {
 
 
         //
-        this.drawCard = this.scene.add.sprite(0, -((this.count) * 4), 'card')
+        this.drawCard = this.scene.add.sprite(0, -((this.count) * 4), 'card_back')
         this.drawCard.scale = DefaultScale
         this.drawCard.angle = DefaultAngle
         this.drawCard.alpha = 0
@@ -97,12 +97,13 @@ class DeckSprite {
     }
 
     setClickableState(isClickable) {
-        this.isClickable = isClickable
-        if (this.isClickable) {
+        if (isClickable) {
+            this.isClickable = true
             this.deckClickable.y = -(this.count * 4)
             this.deckClickable.visible = true
             this.clickableTewwns.play()
         } else {
+            this.isClickable = false
             this.deckClickable.visible = false
             this.clickableTewwns.pause()
         }
@@ -225,15 +226,21 @@ export default class Deck {
 
         const isPlyaer = player.getPlayerId() === 0
 
-        this.sprite = new DeckSprite(duel, isPlyaer, x, y, 10)
+        this.sprite = new DeckSprite(duel, x, y, 10)
     }
 
     setClickableState(isClickable) {
+        if (!this.cards.length) {
+            this.sprite.setClickableState(false)
+            return
+        }
+
         this.sprite.setClickableState(isClickable)
     }
 
     setCardList(cardList) {
         this.cards = _.cloneDeep(cardList)
+        this.sprite.setCount(cardList.length)
     }
     shuffle() {
         this.cards = _.shuffle(this.cards)
