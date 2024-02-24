@@ -63,25 +63,19 @@ const SetupPhase = {
 
             const diffenceCardInfo = player.getDeck().draw(duel, 400, turnPlayer, () => {
 
+                diffenceCardInfo.card.angle = Bevel + (180 * (1 - turnPlayer)) // todo enterToにマージ
 
-            diffenceCardInfo.card.angle = Bevel + (180 * (1 - turnPlayer)) // todo enterToにマージ
+                ///////
+                player.cardStack.addCard(diffenceCardInfo)
 
-            ///////
-            player.cardStack.addCard(diffenceCardInfo)
+                diffenceCardInfo.enterTo(-WidthBase, enemyY, 1 - turnPlayer)
 
-            diffenceCardInfo.enterTo(-WidthBase, enemyY, 1 - turnPlayer)
+                if (onEnd) {
+                    onEnd(AttackPhase);
+                }
 
-            if (onEnd) {
-                onEnd(AttackPhase);
-            }
-
-
+            })
         })
-
-
-        })
-
-
     },
 
 }
@@ -253,6 +247,7 @@ const scene = {
         this.load.image('ch_eye', 'assets/ch_eye.png');
         this.load.image('ch_snake', 'assets/ch_snake.png');
         this.load.image('ch_moon', 'assets/ch_moon.png');
+        this.load.image('ch_mono', 'assets/ch_mono.png');
         this.load.image('ch_scarecrow', 'assets/ch_scarecrow.png');
         this.load.image('cat', 'assets/cat.png');
         this.load.image('sky', 'assets/board.png');

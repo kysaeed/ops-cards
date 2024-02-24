@@ -29,7 +29,7 @@ class DeckSprite {
         spriteList.push(this.deckShadow)
 
         this.under = []
-        for (let i = 0; i < this.count; i++) {
+        for (let i = 0; i < (this.count); i++) {
             const d = this.scene.add.sprite(0, - (i * 4), 'card_back')
             d.scale = DefaultScale
             d.angle = DefaultAngle
@@ -37,7 +37,7 @@ class DeckSprite {
             spriteList.push(d)
         }
 
-        this.deckSprite = this.scene.add.sprite(0, -(this.count * 4), 'card_back')
+        this.deckSprite = this.scene.add.sprite(0, -((this.count) * 4), 'card_back')
         this.deckSprite.setInteractive()
         this.deckSprite.scale = DefaultScale
         this.deckSprite.angle = DefaultAngle
@@ -58,7 +58,7 @@ class DeckSprite {
 
 
         //
-        this.drawCard = this.scene.add.sprite(0, -(this.count * 4), 'card_back')
+        this.drawCard = this.scene.add.sprite(0, -((this.count) * 4), 'card')
         this.drawCard.scale = DefaultScale
         this.drawCard.angle = DefaultAngle
         this.drawCard.alpha = 0
@@ -117,11 +117,11 @@ class DeckSprite {
             this.deckSprite.visible = true
             this.deckShadow.visible = true
         }
-        this.deckSprite.y = -(this.count * 4)
+        this.deckSprite.y = -((this.count - 1) * 4)
 
         this.under.forEach((u, i) => {
             u.y = -(i * 4)
-            if (i < this.count) {
+            if (i < (this.count - 1)) {
                 u.visible = true
             } else {
                 u.visible = false
@@ -130,17 +130,20 @@ class DeckSprite {
     }
 
     setDrawCardPosition(card, onEnd) {
+        this.deckSprite.visible = false
+
         this.drawCard.visible = true
         this.drawCard.scale = DefaultScale
-        this.drawCard.alpha = 1
         this.drawCard.x = 0
-        this.drawCard.y = -(this.count * 4)
+        this.drawCard.y = -((this.count) * 4)
+        this.drawCard.scale = 0.5
+        this.drawCard.alpha = 1
 
         card.card.alpha = 0
+        card.card.scale = 0.5
         card.card.x = this.sprite.x + this.drawCard.x - 10
         card.card.y = this.sprite.y + this.drawCard.y - 50
         card.card.angle = this.drawCard.angle
-        card.card.scale = 0.5
 
         const x = card.card.x
         const y = card.card.y
@@ -190,7 +193,7 @@ class DeckSprite {
                     ease: 'power1',
                 },
                 {
-                    // alpha: 0.0,
+                    alpha: 0.0,
                     duration: 600,
                     ease: 'power1',
                 },
@@ -202,6 +205,9 @@ class DeckSprite {
                 //     ease: 'power1',
                 // },
             ],
+            onComplete: () => {
+                this.drawCard.visible = false
+            },
 
         })
     }
@@ -219,7 +225,7 @@ export default class Deck {
 
         const isPlyaer = player.getPlayerId() === 0
 
-        this.sprite = new DeckSprite(duel, isPlyaer, x, y, 6)
+        this.sprite = new DeckSprite(duel, isPlyaer, x, y, 10)
     }
 
     setClickableState(isClickable) {
@@ -247,8 +253,8 @@ export default class Deck {
 
         const card = new Card(duel, cardInfo, this.player, stackCount * 8, y + stackCount * 8)
 
-        this.sprite.setCount(this.cards.length)
         this.sprite.setDrawCardPosition(card, () => {
+            this.sprite.setCount(this.cards.length)
             if (onEnd) {
                 onEnd(card)
             }

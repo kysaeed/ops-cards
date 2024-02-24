@@ -1,5 +1,6 @@
 /**
  * https://bodoge.hoobby.net/games/challengers/strategies/41250
+ * https://www.well-boardgame.com/challengers-rule/
  */
 const CardList = [
     {
@@ -10,7 +11,7 @@ const CardList = [
     },
     {
       power: 2,
-      name: 'ヘビ',
+      name: '二匹の蛇',
       image: 'ch_snake',
       type: 0,
     },
@@ -27,15 +28,15 @@ const CardList = [
       type: 0,
     },
     {
-      power: 4,
-      name: 'ねこ',
-      image: 'cat',
-      type: 0,
-    },
-    {
       power: 5,
       name: 'カカシ',
       image: 'ch_scarecrow',
+      type: 0,
+    },
+    {
+      power: 4,
+      name: 'ねこ',
+      image: 'cat',
       type: 0,
     },
     {
@@ -56,6 +57,86 @@ const CardList = [
       image: 'ch_moon',
       type: 0,
     },
+    {
+      power: 4,
+      name: 'モノリス',
+      image: 'ch_mono',
+      type: 0,
+    },
+    {
+      power: 4,
+      name: '彗星',
+      image: 'ch_mono',
+      type: 0,
+    },
+    {
+      power: 4,
+      name: '質量',
+      image: 'ch_mono',
+      type: 0,
+    },
+    {
+      power: 1,
+      name: '道化',
+      image: 'chara',
+      type: 0,
+    },
+    {
+      power: 1,
+      name: '尖兵',
+      image: 'chara',
+      type: 0,
+    },
+    {
+      power: 1,
+      name: '番兵',
+      image: 'chara',
+      type: 0,
+    },
+    {
+      power: 1,
+      name: 'オドラデク',
+      image: 'chara',
+      type: 0,
+    },
+    {
+      power: 1,
+      name: 'フラスコ',
+      image: 'chara',
+      type: 0,
+    },
+    {
+      power: 1,
+      name: '動く森',
+      image: 'chara',
+      type: 0,
+    },
+    {
+      power: 1,
+      name: '井戸',
+      image: 'chara',
+      type: 0,
+    },
+    {
+      power: 1,
+      name: '凹凸',
+      image: 'chara',
+      type: 0,
+    },
+    {
+      power: 1,
+      name: '機械仕掛け',
+      image: 'chara',
+      type: 0,
+    },
+    {
+      power: 1,
+      name: '風車',
+      image: 'chara',
+      type: 0,
+    },
+
+
 
 ];
 

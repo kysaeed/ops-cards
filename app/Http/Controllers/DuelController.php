@@ -11,13 +11,28 @@ class DuelController extends Controller
      */
     public function index()
     {
+
+        $defaultDeck = [
+            1, 1, 1, 2, 3, 4,
+        ];
+
+        $decks = [];
+        for ($i = 0; $i < 2; $i++) {
+            $decks[$i] = $defaultDeck;
+            for ($j = 0; $j < 3; $j++) {
+                //
+                $decks[$i][] = 5;
+            }
+        }
+
+
         return response()->json([
             'players' => [
                 [
-                    'deck' => [1, 1, 1, 2, 2, 3, 4],
+                    'deck' => $decks[0],
                 ],
                 [
-                    'deck' => [1, 1, 1, 2, 2, 3, 4],
+                    'deck' => $decks[1],
                 ]
             ],
         ]);
