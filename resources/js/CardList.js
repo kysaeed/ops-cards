@@ -64,6 +64,12 @@ const CardList = [
       type: 0,
     },
     {
+      power: 1,
+      name: '道化',
+      image: 'ch_clown',
+      type: 0,
+    },
+    {
       power: 4,
       name: '彗星',
       image: 'ch_mono',
@@ -73,12 +79,6 @@ const CardList = [
       power: 4,
       name: '質量',
       image: 'ch_mono',
-      type: 0,
-    },
-    {
-      power: 1,
-      name: '道化',
-      image: 'chara',
       type: 0,
     },
     {
@@ -135,6 +135,31 @@ const CardList = [
       image: 'chara',
       type: 0,
     },
+    {
+      power: 1,
+      name: '動く森',
+      image: 'chara',
+      type: 0,
+    },
+    {
+      power: 1,
+      name: 'バク',
+      image: 'chara',
+      type: 0,
+    },
+    {
+      power: 1,
+      name: 'フォーク',
+      image: 'chara',
+      type: 0,
+    },
+    {
+      power: 1,
+      name: '蜉蝣',
+      image: 'chara',
+      type: 0,
+    },
+
 
 
 

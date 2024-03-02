@@ -22,7 +22,7 @@ class DuelController extends Controller
             $decks[$i] = $defaultDeck;
             for ($j = 0; $j < 3; $j++) {
                 //
-                $decks[$i][] = 5 + rand(0, 5);
+                $decks[$i][] = 5 + rand(0, 6);
             }
             $decks[$i] = Arr::shuffle($decks[$i]);
         }

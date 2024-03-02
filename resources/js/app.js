@@ -4,7 +4,7 @@
  *  https://newdocs.phaser.io/docs/3.70.0/gameobjects
  */
 import Phaser from 'phaser'
-import _, { create } from 'lodash'
+import _ from 'lodash'
 import Axios from 'axios'
 
 import Duel from './Duel.js'
@@ -27,7 +27,7 @@ const axios = Axios.create({
 
 
 const SetupPhase = {
-    enter(scene, duel, onEnd) {
+    enter(duel, onEnd) {
 
         const turnPlayerId = duel.turnPlayerId
 
@@ -63,7 +63,7 @@ const SetupPhase = {
 }
 
 const DrawPhase = {
-    enter(scene, duel, onEnd) {
+    enter(duel, onEnd) {
         this.isDrawProcessing = false
 
         this.duel = duel
@@ -112,7 +112,7 @@ const DrawPhase = {
 }
 
 const AttackPhase = {
-    enter(scene, duel, onEnd) {
+    enter(duel, onEnd) {
         this.onEnd = onEnd
 
         const turnPlayer = duel.getTrunPlayerId()
@@ -130,7 +130,7 @@ const AttackPhase = {
                 //
             })
         })
-        scene.damageMark.setDamage(null) // dummy param
+        duel.getScene().damageMark.setDamage(null) // dummy param
 
         if (total >= enemyCard.cardInfo.power) {
             ohterPlayer.getCardStack().criticalDamaged(() => {
@@ -140,7 +140,7 @@ const AttackPhase = {
                     c.angle = Bevel + (180 * turnPlayer)
 
                     // console.log(c.card)
-                    // scene.tweens.chain({
+                    // duel.getScene().tweens.chain({
                     //   targets:  c.card,
                     //   tweens: {
                     // //     x: 400,
@@ -164,7 +164,7 @@ const AttackPhase = {
                     if (enemyPlayer.getDeck().isEmpty()) {
 
                         console.log('END!')
-                        const textModal = scene.add.sprite(360, 200, 'modal')
+                        const textModal = duel.getScene().add.sprite(360, 200, 'modal')
                         textModal.displayWidth = 400
 
                         let text = ''
@@ -174,7 +174,7 @@ const AttackPhase = {
                             text = '負け'
                         }
 
-                        const endText = scene.add.text(360, 216, text, { fontSize: '32px', fill: '#000' });
+                        const endText = duel.getScene().add.text(360, 216, text, { fontSize: '32px', fill: '#000' });
                     }
 
                     onEnd(TurnChangePhase)
@@ -198,7 +198,7 @@ const AttackPhase = {
 }
 
 const TurnChangePhase = {
-    enter(scene, duel, onEnd) {
+    enter(duel, onEnd) {
         duel.turnPlayerId = 1 - duel.getTrunPlayerId()
         onEnd(DrawPhase);
     },
@@ -229,6 +229,7 @@ const scene = {
         this.load.image('ch_snake', 'assets/ch_snake.png');
         this.load.image('ch_moon', 'assets/ch_moon.png');
         this.load.image('ch_mono', 'assets/ch_mono.png');
+        this.load.image('ch_clown', 'assets/ch_clown.png');
         this.load.image('ch_scarecrow', 'assets/ch_scarecrow.png');
         this.load.image('cat', 'assets/cat.png');
         this.load.image('sky', 'assets/board.png');
@@ -262,12 +263,12 @@ const scene = {
         const toNextPhase = (next) => {
             currentPhase = next
             this.duel.setCurrentPhase(currentPhase)
-            currentPhase.enter(scene, this.duel, (next) => {
+            currentPhase.enter(this.duel, (next) => {
                 toNextPhase(next)
             })
         }
 
-        currentPhase.enter(scene, this.duel, toNextPhase)
+        currentPhase.enter(this.duel, toNextPhase)
 
     },
     update() {
