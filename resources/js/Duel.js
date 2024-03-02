@@ -41,6 +41,14 @@ export default class Duel {
         return this.flag
     }
 
+    getTrunPlayerId() {
+        return this.turnPlayerId
+    }
+
+    getTrunPlayer() {
+        return this.playerList[this.getTrunPlayerId()]
+    }
+
     getPlayer(playerId) {
         return this.playerList[playerId]
     }

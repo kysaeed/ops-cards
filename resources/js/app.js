@@ -43,143 +43,145 @@ const setTurnPlayer = (duel, playerId) => {
 }
 
 
+
 const SetupPhase = {
     enter(scene, duel, onEnd) {
 
-        const turnPlayer = duel.turnPlayerId
+        const turnPlayerId = duel.turnPlayerId
 
         axios.get('api/data/deck').then((res) => {
             console.log('res', res.data)
             const data = res.data
 
-            // const player = duel.playerList[1 - turnPlayer]
-            const player = duel.getPlayer(1 - turnPlayer)
+            const player = duel.getPlayer(1 - turnPlayerId)
 
             duel.playerList.forEach((player) => {
                 player.getDeck().setCardList(data.players[player.getPlayerId()].deck)
             })
 
-            const diffenceCardInfo = player.getDeck().draw(duel, 400, turnPlayer, () => {
+            const diffenceCardInfo = player.getDeck().draw(duel, 400, turnPlayerId, () => {
 
-                diffenceCardInfo.card.angle = Bevel + (180 * (1 - turnPlayer)) // todo enterToにマージ
+                diffenceCardInfo.card.angle = Bevel + (180 * (1 - turnPlayerId)) // todo enterToにマージ
 
                 ///////
                 player.cardStack.addCard(diffenceCardInfo)
 
-                diffenceCardInfo.enterTo(-WidthBase, enemyY, 1 - turnPlayer)
+                diffenceCardInfo.enterTo(-WidthBase, enemyY, 1 - turnPlayerId)
 
                 if (onEnd) {
-                    onEnd(AttackPhase);
+                    onEnd(DrawPhase);
                 }
-
             })
         })
     },
 
 }
 
+const DrawPhase = {
+    enter(scene, duel, onEnd) {
+        const turnPlayer = duel.getTrunPlayerId()
+        duel.getPlayer(turnPlayer).deck.draw(duel, 0, turnPlayer, (newAttackCard) => {
+            if (newAttackCard) {
+                newAttackCard.showDetial(() => {
+                    //const stackCount = duel.getPlayer(turnPlayer).getCardStack().getStackCount()
+                    newAttackCard.moveToAttackPosition(() => {
+
+                        duel.getTrunPlayer().getCardStack().addCard(newAttackCard)
+                        onEnd(AttackPhase)
+                    })
+                })
+            }
+        })
+
+    }
+}
+
 const AttackPhase = {
     enter(scene, duel, onEnd) {
         this.onEnd = onEnd
 
-        const turnPlayer = duel.turnPlayerId
-
+        const turnPlayer = duel.getTrunPlayerId()
         const enemyCard = duel.getPlayer(1 - turnPlayer).cardStack.getTopCard()
 
-        const newAttackCard = duel.getPlayer(turnPlayer).deck.draw(duel, 0, turnPlayer, (newAttackCard) => {
-            if (newAttackCard) {
+        const player = duel.getPlayer(turnPlayer)
+        const ohterPlayer = duel.getPlayer(1 - turnPlayer)
+        //player.getCardStack().addCard(newAttackCard)
 
-                newAttackCard.showDetial(() => {
-                    const stackCount = duel.getPlayer(turnPlayer).getCardStack().getStackCount()
+        const total = duel.getPlayer(turnPlayer).cardStack.getTotalPower()
 
-                    newAttackCard.moveToAttackPosition(() => {
-                        console.log('xxxx')
+        player.cardStack.cards.forEach((c, i) => {
+            const stackCount = i
+            c.attack(stackCount, () => {
+                //
+            })
+        })
+        scene.damageMark.setDamage(null) // dummy param
 
-                        const player = duel.getPlayer(turnPlayer)
-                        const ohterPlayer = duel.getPlayer(1 - turnPlayer)
-                        player.getCardStack().addCard(newAttackCard)
+        if (total >= enemyCard.cardInfo.power) {
+            ohterPlayer.getCardStack().criticalDamaged(() => {
+                // console.log('かった！' + turnPlayer, duel.playerList[turnPlayer].cardStack)
 
-                        const total = duel.getPlayer(turnPlayer).cardStack.getTotalPower()
+                duel.getPlayer(turnPlayer).cardStack.cards.forEach((c) => {
+                    c.angle = Bevel + (180 * turnPlayer)
 
-                        player.cardStack.cards.forEach((c, i) => {
-                            const stackCount = i
-                            c.attack(stackCount, () => {
-                                //
-                            })
-                        })
-                        scene.damageMark.setDamage(null) // dummy param
+                    // console.log(c.card)
+                    // scene.tweens.chain({
+                    //   targets:  c.card,
+                    //   tweens: {
+                    // //     x: 400,
+                    // //     y: 0,
+                    // //     duration: 100,
+                    // //     //scale: 1.0,
+                    // //     // angle: 0,
+                    //   }
+                    // })
+                })
 
-                        if (total >= enemyCard.cardInfo.power) {
-                            ohterPlayer.getCardStack().criticalDamaged(() => {
-                                // console.log('かった！' + turnPlayer, duel.playerList[turnPlayer].cardStack)
+                duel.getFlag().moveTo(520, 170 + (200 * (1 - turnPlayer)))
 
-                                duel.getPlayer(turnPlayer).cardStack.cards.forEach((c) => {
-                                    c.angle = Bevel + (180 * turnPlayer)
+                // 攻撃側から見た敵プレイヤー
+                const enemyPlayer = duel.getPlayer(1 - turnPlayer)
 
-                                    // console.log(c.card)
-                                    // scene.tweens.chain({
-                                    //   targets:  c.card,
-                                    //   tweens: {
-                                    // //     x: 400,
-                                    // //     y: 0,
-                                    // //     duration: 100,
-                                    // //     //scale: 1.0,
-                                    // //     // angle: 0,
-                                    //   }
-                                    // })
-                                })
+                // ディフェンス側のカードを横へ
+                const deffenceCards = enemyPlayer.cardStack.takeAll()
+                enemyPlayer.getBench().addCards(1 - turnPlayer, deffenceCards, () => {
 
-                                duel.getFlag().moveTo(520, 170 + (200 * (1 - turnPlayer)))
+                    if (enemyPlayer.getDeck().isEmpty()) {
 
-                                // 攻撃側から見た敵プレイヤー
-                                const enemyPlayer = duel.getPlayer(1 - turnPlayer)
+                        console.log('END!')
+                        const textModal = scene.add.sprite(360, 200, 'modal')
+                        textModal.displayWidth = 400
 
-                                // ディフェンス側のカードを横へ
-                                const deffenceCards = enemyPlayer.cardStack.takeAll()
-                                enemyPlayer.getBench().addCards(1 - turnPlayer, deffenceCards, () => {
-
-                                    if (enemyPlayer.getDeck().isEmpty()) {
-
-                                        console.log('END!')
-                                        const textModal = scene.add.sprite(360, 200, 'modal')
-                                        textModal.displayWidth = 400
-
-                                        let text = ''
-                                        if (turnPlayer == 0) {
-                                            text = '勝ち'
-                                        } else {
-                                            text = '負け'
-                                        }
-
-                                        const endText = scene.add.text(360, 216, text, { fontSize: '32px', fill: '#000' });
-                                    }
-
-                                    setTurnPlayer(duel, 1 - turnPlayer)
-                                    if (player.getPlayerId() === 0) {
-                                        // todo onEndで次に進める?
-                                        onEnd(AttackPhase)
-                                    } else {
-                                        enemyPlayer.getDeck().setClickableState(true)
-                                    }
-                                })
-
-                            })
+                        let text = ''
+                        if (turnPlayer == 0) {
+                            text = '勝ち'
                         } else {
-                            enemyCard.damaged(() => {
-                                if (player.getPlayerId() === 1) {
-                                    onEnd(AttackPhase);
-                                } else {
-                                    player.getDeck().setClickableState(true)
-                                }
-                            })
+                            text = '負け'
                         }
 
-                    })
+                        const endText = scene.add.text(360, 216, text, { fontSize: '32px', fill: '#000' });
+                    }
 
-
+                    setTurnPlayer(duel, 1 - turnPlayer)
+                    if (player.getPlayerId() === 0) {
+                        // todo onEndで次に進める?
+                        onEnd(DrawPhase)
+                    } else {
+                        enemyPlayer.getDeck().setClickableState(true)
+                    }
                 })
-            }
-        })
+
+            })
+        } else {
+            enemyCard.damaged(() => {
+                if (player.getPlayerId() === 1) {
+                    onEnd(DrawPhase);
+                } else {
+                    player.getDeck().setClickableState(true)
+                }
+            })
+        }
+
 
     },
 
@@ -190,7 +192,7 @@ const AttackPhase = {
         sender.setClickableState(false)
 
         if (this.onEnd) {
-            this.onEnd(AttackPhase)
+            this.onEnd(DrawPhase)
         }
 
     }
