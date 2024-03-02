@@ -198,28 +198,15 @@ const AttackPhase = {
                         const endText = scene.add.text(360, 216, text, { fontSize: '32px', fill: '#000' });
                     }
 
-                    setTurnPlayer(duel, 1 - turnPlayer)
-                    if (player.getPlayerId() === 0) {
-                        // todo onEndで次に進める?
-                        onEnd(DrawPhase)
-                    } else {
-                        //enemyPlayer.getDeck().setClickableState(true)
-                        onEnd(DrawPhase)
-                    }
+                    onEnd(TurnChangePhase)
                 })
 
             })
         } else {
             enemyCard.damaged(() => {
-                if (player.getPlayerId() === 1) {
-                    onEnd(DrawPhase);
-                } else {
-                    player.getDeck().setClickableState(true)
-                }
+                onEnd(DrawPhase)
             })
         }
-
-
     },
 
     onEvent(event, sender, params) {
@@ -238,10 +225,9 @@ const AttackPhase = {
 const TurnChangePhase = {
     enter(scene, duel, onEnd) {
 
+        setTurnPlayer(duel, 1 - duel.getTrunPlayerId())
 
-
-
-        onEnd();
+        onEnd(DrawPhase);
     },
 
 }
