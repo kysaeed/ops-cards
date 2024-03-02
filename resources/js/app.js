@@ -16,10 +16,6 @@ const Bevel = 8
 const HeightBase = 100
 const WidthBase = -30
 
-let y = HeightBase
-let enemyY = -HeightBase
-let direction = 1
-
 
 const axios = Axios.create({
     baseURL: 'http://localhost:8080',
@@ -31,17 +27,7 @@ const axios = Axios.create({
 
 const setTurnPlayer = (duel, playerId) => {
     duel.turnPlayerId = playerId
-    if (!playerId) {
-        y = HeightBase
-        enemyY = -HeightBase
-        direction = 1
-    } else {
-        y = -HeightBase
-        enemyY = HeightBase
-        direction = -1
-    }
 }
-
 
 
 const SetupPhase = {
@@ -61,11 +47,14 @@ const SetupPhase = {
 
             const diffenceCardInfo = player.getDeck().draw(duel, 400, turnPlayerId, () => {
 
+                let enemyY = -HeightBase
+                if (turnPlayerId) {
+                    enemyY = HeightBase
+                }
                 diffenceCardInfo.card.angle = Bevel + (180 * (1 - turnPlayerId)) // todo enterToにマージ
 
                 ///////
                 player.cardStack.addCard(diffenceCardInfo)
-
                 diffenceCardInfo.enterTo(-WidthBase, enemyY, 1 - turnPlayerId)
 
                 if (onEnd) {
@@ -90,20 +79,13 @@ const DrawPhase = {
         } else {
             this.doDraw(duel)
         }
-
     },
 
     onEvent(event, sender, params) {
 
         // console.log('******* ' + event + ' *****', sender, params)
-
         sender.setClickableState(false)
         this.doDraw(this.duel)
-
-        // if (this.onEnd) {
-        //     this.onEnd(AttackPhase)
-        // }
-
     },
 
     doDraw(duel) {
@@ -121,6 +103,7 @@ const DrawPhase = {
                     //const stackCount = duel.getPlayer(turnPlayer).getCardStack().getStackCount()
                     currentDrawCard.moveToAttackPosition(() => {
                         duel.getTrunPlayer().getCardStack().addCard(currentDrawCard)
+                        this.isDrawProcessing = false
                         if (this.onEnd) {
                             this.onEnd(AttackPhase)
                         }
@@ -210,23 +193,17 @@ const AttackPhase = {
     },
 
     onEvent(event, sender, params) {
-
         // console.log('******* ' + event + ' *****', sender, params)
-
         sender.setClickableState(false)
-
         if (this.onEnd) {
             this.onEnd(DrawPhase)
         }
-
     }
 }
 
 const TurnChangePhase = {
     enter(scene, duel, onEnd) {
-
         setTurnPlayer(duel, 1 - duel.getTrunPlayerId())
-
         onEnd(DrawPhase);
     },
 
