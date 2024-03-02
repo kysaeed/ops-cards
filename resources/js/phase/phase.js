@@ -8,17 +8,17 @@ const WidthBase = -30
 //
 const SetupPhase = {
     enter(duel, onEnd) {
-
-        const turnPlayerId = duel.turnPlayerId
-
         window.axios.get('api/data/deck').then((res) => {
             console.log('res', res.data)
             const data = res.data
 
+            const turnPlayerId = duel.getTrunPlayerId()
             const player = duel.getPlayer(1 - turnPlayerId)
 
             duel.playerList.forEach((player) => {
-                player.getDeck().setCardList(data.players[player.getPlayerId()].deck)
+                const playerId = player.getPlayerId()
+                const deckData = data.players[playerId].deck
+                player.getDeck().setCardList(deckData)
             })
 
             const diffenceCardInfo = player.getDeck().draw(duel, 400, turnPlayerId, () => {

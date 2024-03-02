@@ -70,6 +70,12 @@ const CardList = [
       type: 0,
     },
     {
+      power: 1,
+      name: 'フラスコ',
+      image: 'ch_frasco',
+      type: 0,
+    },
+    {
       power: 4,
       name: '彗星',
       image: 'ch_mono',
@@ -99,12 +105,7 @@ const CardList = [
       image: 'chara',
       type: 0,
     },
-    {
-      power: 1,
-      name: 'フラスコ',
-      image: 'chara',
-      type: 0,
-    },
+
     {
       power: 1,
       name: '動く森',
@@ -132,12 +133,6 @@ const CardList = [
     {
       power: 1,
       name: '風車',
-      image: 'chara',
-      type: 0,
-    },
-    {
-      power: 1,
-      name: '動く森',
       image: 'chara',
       type: 0,
     },

@@ -50,6 +50,7 @@ const scene = {
         this.load.image('ch_mono', 'assets/ch_mono.png');
         this.load.image('ch_clown', 'assets/ch_clown.png');
         this.load.image('ch_scarecrow', 'assets/ch_scarecrow.png');
+        this.load.image('ch_frasco', 'assets/ch_frasco.png');
         this.load.image('cat', 'assets/cat.png');
         this.load.image('sky', 'assets/board.png');
         this.load.image('modal', 'assets/modal.png');
