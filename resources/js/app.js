@@ -79,21 +79,57 @@ const SetupPhase = {
 
 const DrawPhase = {
     enter(scene, duel, onEnd) {
-        const turnPlayer = duel.getTrunPlayerId()
-        duel.getPlayer(turnPlayer).deck.draw(duel, 0, turnPlayer, (newAttackCard) => {
-            if (newAttackCard) {
-                newAttackCard.showDetial(() => {
-                    //const stackCount = duel.getPlayer(turnPlayer).getCardStack().getStackCount()
-                    newAttackCard.moveToAttackPosition(() => {
+        this.isDrawProcessing = false
 
-                        duel.getTrunPlayer().getCardStack().addCard(newAttackCard)
-                        onEnd(AttackPhase)
+        this.duel = duel
+        this.onEnd = onEnd
+
+        const player = duel.getTrunPlayer()
+        if (player.getPlayerId() === 0) {
+            player.getDeck().setClickableState(true)
+        } else {
+            this.doDraw(duel)
+        }
+
+    },
+
+    onEvent(event, sender, params) {
+
+        // console.log('******* ' + event + ' *****', sender, params)
+
+        sender.setClickableState(false)
+        this.doDraw(this.duel)
+
+        // if (this.onEnd) {
+        //     this.onEnd(AttackPhase)
+        // }
+
+    },
+
+    doDraw(duel) {
+        if (this.isDrawProcessing) {
+            return
+        }
+
+        this.isDrawProcessing = true
+
+        const turnPlayer = duel.getTrunPlayerId()
+        const player = duel.getTrunPlayer()
+        player.deck.draw(duel, 0, turnPlayer, (currentDrawCard) => {
+            if (currentDrawCard) {
+                currentDrawCard.showDetial(() => {
+                    //const stackCount = duel.getPlayer(turnPlayer).getCardStack().getStackCount()
+                    currentDrawCard.moveToAttackPosition(() => {
+                        duel.getTrunPlayer().getCardStack().addCard(currentDrawCard)
+                        if (this.onEnd) {
+                            this.onEnd(AttackPhase)
+                        }
                     })
                 })
             }
         })
+    },
 
-    }
 }
 
 const AttackPhase = {
@@ -167,7 +203,8 @@ const AttackPhase = {
                         // todo onEndで次に進める?
                         onEnd(DrawPhase)
                     } else {
-                        enemyPlayer.getDeck().setClickableState(true)
+                        //enemyPlayer.getDeck().setClickableState(true)
+                        onEnd(DrawPhase)
                     }
                 })
 
