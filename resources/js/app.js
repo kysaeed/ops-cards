@@ -25,10 +25,6 @@ const axios = Axios.create({
       //timeout: 2000,
 })
 
-const setTurnPlayer = (duel, playerId) => {
-    duel.turnPlayerId = playerId
-}
-
 
 const SetupPhase = {
     enter(scene, duel, onEnd) {
@@ -203,7 +199,7 @@ const AttackPhase = {
 
 const TurnChangePhase = {
     enter(scene, duel, onEnd) {
-        setTurnPlayer(duel, 1 - duel.getTrunPlayerId())
+        duel.turnPlayerId = 1 - duel.getTrunPlayerId()
         onEnd(DrawPhase);
     },
 
