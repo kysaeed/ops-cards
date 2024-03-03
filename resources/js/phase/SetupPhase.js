@@ -1,0 +1,44 @@
+// constants
+const Bevel = 8
+const HeightBase = 100
+const WidthBase = -30
+
+
+//
+const SetupPhase = {
+    enter(duel, onEnd) {
+        window.axios.get('api/data/deck').then((res) => {
+            console.log('res', res.data)
+            const data = res.data
+
+            const turnPlayerId = duel.getTrunPlayerId()
+            const player = duel.getPlayer(1 - turnPlayerId)
+
+            duel.playerList.forEach((player) => {
+                const playerId = player.getPlayerId()
+                const deckData = data.players[playerId].deck
+                player.getDeck().setCardList(deckData)
+            })
+
+            const diffenceCardInfo = player.getDeck().draw(duel, 400, turnPlayerId, () => {
+
+                let enemyY = -HeightBase
+                if (turnPlayerId) {
+                    enemyY = HeightBase
+                }
+                diffenceCardInfo.sprite.angle = Bevel + (180 * (1 - turnPlayerId)) // todo enterToにマージ
+
+                ///////
+                player.cardStack.addCard(diffenceCardInfo)
+                diffenceCardInfo.enterTo(-WidthBase, enemyY, 1 - turnPlayerId)
+
+                if (onEnd) {
+                    onEnd('DrawPhase');
+                }
+            })
+        })
+    },
+
+}
+
+export default SetupPhase;

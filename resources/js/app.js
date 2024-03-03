@@ -10,7 +10,8 @@ import Axios from 'axios'
 import Duel from './game/Duel.js'
 import DamageMark from './game/DamageMark.js'
 
-import SetupPhase from './phase/phase.js'
+import phase from './phase/phase.js'
+// import SetupPhase from './phase/phase.js'
 
 const BaseUrl = import.meta.env.VITE_BASE_URL || 'http://localhost:8080'
 
@@ -68,7 +69,7 @@ const scene = {
         this.duel = new Duel(this)
         this.cardBoard = this.duel.getCardBoard()
 
-        let currentPhase = SetupPhase
+        let currentPhase = phase['SetupPhase']
 
         this.duel.setCurrentPhase(currentPhase)
 
@@ -81,7 +82,7 @@ const scene = {
         this.damageMark = new DamageMark(scene, 400, 280)
 
         const toNextPhase = (next) => {
-            currentPhase = next
+            currentPhase = phase[next]
             this.duel.setCurrentPhase(currentPhase)
             currentPhase.enter(this.duel, (next) => {
                 toNextPhase(next)
