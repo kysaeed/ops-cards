@@ -140,17 +140,17 @@ class DeckSprite {
         this.drawCard.scale = 0.5
         this.drawCard.alpha = 1
 
-        card.card.alpha = 0
-        card.card.scale = 0.5
-        card.card.x = this.sprite.x + this.drawCard.x - 10
-        card.card.y = this.sprite.y + this.drawCard.y - 50
-        card.card.angle = this.drawCard.angle
+        card.sprite.alpha = 0
+        card.sprite.scale = 0.5
+        card.sprite.x = this.sprite.x + this.drawCard.x - 10
+        card.sprite.y = this.sprite.y + this.drawCard.y - 50
+        card.sprite.angle = this.drawCard.angle
 
-        const x = card.card.x
-        const y = card.card.y
+        const x = card.sprite.x
+        const y = card.sprite.y
 
         this.duel.getScene().tweens.chain({
-            targets: card.card,
+            targets: card.sprite,
             tweens: [
                 {
                     x: x,
@@ -169,10 +169,10 @@ class DeckSprite {
                 },
             ],
             onComplete: () => {
-                card.card.x = this.sprite.x + this.deckSprite.x
-                card.card.y = this.sprite.y + this.deckSprite.y
-                card.card.angle = this.deckSprite.angle
-                card.card.scale = this.deckSprite.scale
+                card.sprite.x = this.sprite.x + this.deckSprite.x
+                card.sprite.y = this.sprite.y + this.deckSprite.y
+                card.sprite.angle = this.deckSprite.angle
+                card.sprite.scale = this.deckSprite.scale
 
                 this.drawCard.visible = false
 

@@ -27,7 +27,7 @@ const SetupPhase = {
                 if (turnPlayerId) {
                     enemyY = HeightBase
                 }
-                diffenceCardInfo.card.angle = Bevel + (180 * (1 - turnPlayerId)) // todo enterToにマージ
+                diffenceCardInfo.sprite.angle = Bevel + (180 * (1 - turnPlayerId)) // todo enterToにマージ
 
                 ///////
                 player.cardStack.addCard(diffenceCardInfo)
@@ -121,9 +121,9 @@ const AttackPhase = {
                 duel.getPlayer(turnPlayer).cardStack.cards.forEach((c) => {
                     c.angle = Bevel + (180 * turnPlayer)
 
-                    // console.log(c.card)
+                    // console.log(c.sprite)
                     // duel.getScene().tweens.chain({
-                    //   targets:  c.card,
+                    //   targets:  c.sprite,
                     //   tweens: {
                     // //     x: 400,
                     // //     y: 0,

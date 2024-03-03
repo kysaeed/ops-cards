@@ -50,6 +50,12 @@ const CardList = [
       name: '車輪',
       image: 'ch_whell',
       type: 0,
+      ability: {
+        attack:
+        {
+          power: 1,
+        }
+      },
     },
     {
       power: 4,

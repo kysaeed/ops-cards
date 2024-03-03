@@ -19,17 +19,17 @@ export default class Card {
         this.cardChara = scene.add.sprite(0, 22, cardInfo.image)
         this.cardTextPoint = scene.add.text(-62, -95, cardInfo.power, { fontSize: '32px', fill: '#000' });
         this.cardTextTitle = scene.add.text(-32, -88, cardInfo.name, { fontSize: '18px', fill: '#000' });
-        this.card = scene.add.container(x, y, [
+        this.sprite = scene.add.container(x, y, [
             this.cardBg,
             this.cardChara,
             this.cardTextPoint,
             this.cardTextTitle,
         ])
-        this.card.angle = Bevel + (180 * cardDirection)
+        this.sprite.angle = Bevel + (180 * cardDirection)
 
         const parent = duel.getCardBoard()
         parent.add(this.cardShadow)
-        parent.add(this.card)
+        parent.add(this.sprite)
 
         duel.getObjectManager().append(this)
 
@@ -40,7 +40,7 @@ export default class Card {
 
         const angle = turnPlayer * 180
         this.duel.getScene().tweens.chain({
-            targets: this.card,
+            targets: this.sprite,
             tweens: [
                 // {
                 //     x: x,
@@ -76,7 +76,7 @@ export default class Card {
         const y = this.player.getBaseY();
         const x = WidthBase * this.player.direction
         this.duel.getScene().tweens.chain({
-            targets: this.card,
+            targets: this.sprite,
             tweens: [
                 {
                     delay: stackCount * 40,
@@ -92,7 +92,7 @@ export default class Card {
                     // angle: 180 * (turnPlayer) + 9,
                     x: x - stackCount * 8,
                     scale: 1.2 * 0.6,
-                    y: this.card.y,
+                    y: this.sprite.y,
                     ease: 'power1',
                     duration: 300,
                 },
@@ -119,13 +119,13 @@ export default class Card {
     }
 
     damaged(onEnd) {
-        const x = this.card.x
-        const y = this.card.y
+        const x = this.sprite.x
+        const y = this.sprite.y
 
         const direction = this.player.getDirection()
 
         this.duel.getScene().tweens.chain({
-            targets: this.card,
+            targets: this.sprite,
             tweens: [
                 {
                     x: x,
@@ -158,15 +158,15 @@ export default class Card {
     }
 
     criticalDamaged(index, onEnd) {
-        const x = this.card.x
-        const y = this.card.y
+        const x = this.sprite.x
+        const y = this.sprite.y
         const direction = this.player.direction
 
         const xAdd = (index * 80)
         const yMlt = 1.0 * (index * 0.05)
 
         this.duel.getScene().tweens.chain({
-            targets: this.card,
+            targets: this.sprite,
             tweens: [
                 {
                     x: x,
@@ -201,11 +201,11 @@ export default class Card {
     showDetial(onEnd) {
         const scene = this.duel.getScene()
 
-        const x = this.card.x
-        const y = this.card.y
+        const x = this.sprite.x
+        const y = this.sprite.y
 
         scene.tweens.chain({
-            targets: this.card,
+            targets: this.sprite,
             tweens: [
 /*
                 {
@@ -255,7 +255,7 @@ export default class Card {
 
 
         scene.tweens.chain({
-            targets: this.card,
+            targets: this.sprite,
             tweens: [
                 {
                     delay: 1000,
@@ -288,7 +288,7 @@ export default class Card {
         const angle = Math.floor((90 + 12) + (Math.random() * max) - (max / 2))
 
         this.duel.getScene().tweens.chain({
-            targets: this.card,
+            targets: this.sprite,
             tweens: [
                 {
                     x: x,
@@ -309,11 +309,11 @@ export default class Card {
     }
 
     onUpdate() {
-        this.cardShadow.x = this.card.x + 2
-        this.cardShadow.y = this.card.y + 2
-        this.cardShadow.scale = this.card.scale
-        this.cardShadow.angle = this.card.angle
-        this.cardShadow.alpha = this.card.alpha
+        this.cardShadow.x = this.sprite.x + 2
+        this.cardShadow.y = this.sprite.y + 2
+        this.cardShadow.scale = this.sprite.scale
+        this.cardShadow.angle = this.sprite.angle
+        this.cardShadow.alpha = this.sprite.alpha
     }
 
 }

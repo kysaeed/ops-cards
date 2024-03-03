@@ -9,7 +9,7 @@ export default class CardDetailPresenter {
     showCard(card, onEnd) {
 
         this.duel.getScene().tweens.chain({
-            targets: card.card,
+            targets: card.sprite,
             tweens: [
                 {
                     delay: 1000,
