@@ -9,9 +9,7 @@ import Axios from 'axios'
 
 import Duel from './game/Duel.js'
 import DamageMark from './game/DamageMark.js'
-
-import phase from './phase/phase.js'
-// import SetupPhase from './phase/phase.js'
+import phase from './phase'
 
 const BaseUrl = import.meta.env.VITE_BASE_URL || 'http://localhost:8080'
 
@@ -29,23 +27,27 @@ window.axios = axios //@
 const scene = {
     preload() {
 
-        /**
-         * todo :
-         *　  表示するカードだけプリロードする
-         */
-
         this.load.image('flag', 'assets/flag.png');
         this.load.image('card', 'assets/card.png'); // (160 * 220) * 0.5
         this.load.image('card_back', 'assets/card_back.png');
         this.load.image('card_shadow', 'assets/card_shadow.png');
         this.load.image('deck_shadow', 'assets/deck_shadow.png');
         this.load.image('deck_clickable', 'assets/deck_clickable.png');
+        this.load.image('board', 'assets/board.png');
+        this.load.image('modal', 'assets/modal.png');
+        this.load.image('damage', 'assets/damage.png');
 
+
+        /**
+         * todo :
+         *　  表示するカードだけプリロードする
+         */
         this.load.image('chara', 'assets/chara.png');
         this.load.image('ch_kage', 'assets/ch_kage.png');
         this.load.image('ch_magi', 'assets/ch_magi.png');
         this.load.image('ch_whell', 'assets/ch_whell.png');
         this.load.image('ch_eye', 'assets/ch_eye.png');
+        this.load.image('ch_oddc', 'assets/ch_oddc.png');
         this.load.image('ch_snake', 'assets/ch_snake.png');
         this.load.image('ch_moon', 'assets/ch_moon.png');
         this.load.image('ch_mono', 'assets/ch_mono.png');
@@ -53,9 +55,7 @@ const scene = {
         this.load.image('ch_scarecrow', 'assets/ch_scarecrow.png');
         this.load.image('ch_frasco', 'assets/ch_frasco.png');
         this.load.image('cat', 'assets/cat.png');
-        this.load.image('sky', 'assets/board.png');
-        this.load.image('modal', 'assets/modal.png');
-        this.load.image('damage', 'assets/damage.png');
+
         // this.load.spritesheet('dude',
         //   'assets/dude.png',
         //   { frameWidth: 32, frameHeight: 48 }
@@ -64,7 +64,7 @@ const scene = {
     },
     create() {
 
-        this.add.image(400, 300, 'sky');
+        this.add.image(400, 300, 'board');
 
         this.duel = new Duel(this)
         this.cardBoard = this.duel.getCardBoard()
@@ -101,7 +101,7 @@ const config = {
     parent: 'app',
     autoCenter: Phaser.Scale.CENTER_BOTH,
     type: Phaser.AUTO, ////Phaser.WEBGL, ///
-    width: 800,
+    width: 1200,
     height: 600,
     scene,
 };

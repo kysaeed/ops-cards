@@ -2,6 +2,8 @@
  * https://bodoge.hoobby.net/games/challengers/strategies/41250
  * https://www.well-boardgame.com/challengers-rule/
  */
+
+
 const CardList = [
     {
       power: 1,
@@ -77,6 +79,12 @@ const CardList = [
     },
     {
       power: 1,
+      name: 'オドラデク',
+      image: 'ch_oddc',
+      type: 0,
+    },
+    {
+      power: 1,
       name: 'フラスコ',
       image: 'ch_frasco',
       type: 0,
@@ -102,12 +110,6 @@ const CardList = [
     {
       power: 1,
       name: '番兵',
-      image: 'chara',
-      type: 0,
-    },
-    {
-      power: 1,
-      name: 'オドラデク',
       image: 'chara',
       type: 0,
     },
