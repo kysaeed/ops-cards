@@ -63,9 +63,10 @@ export default class Card {
 
         // card main
         this.cardBg = scene.add.sprite(0, 0, 'card')
-        this.cardChara = scene.add.sprite(0, 22, cardInfo.image)
-        this.cardTextPoint = scene.add.text(-62, -95, `${cardInfo.power}`, { fontSize: '32px', fill: '#000' });
-        this.cardTextTitle = scene.add.text(-32, -88, `${cardInfo.name}`, { fontSize: '18px', fill: '#000' });
+        this.cardChara = scene.add.sprite(0, 0, cardInfo.image)
+        this.cardPow = scene.add.sprite(-50, -73, 'card_pow')
+        this.cardTextPoint = scene.add.text(-62, -95, `${cardInfo.power}`, { fontSize: '30px', fill: '#000' });
+        this.cardTextTitle = scene.add.text(-30, -88, `${cardInfo.name}`, { fontSize: '14px', fill: '#000' });
 
         // card tip
         this.cardTip = new CardTip(duel, cardInfo, player, 0, -130)
@@ -76,6 +77,7 @@ export default class Card {
         this.sprite = scene.add.container(x, y, [
             this.cardBg,
             this.cardChara,
+            this.cardPow,
             this.cardTextPoint,
             this.cardTextTitle,
             this.cardTip.getSprite(),

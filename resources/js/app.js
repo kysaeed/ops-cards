@@ -30,6 +30,7 @@ const scene = {
 
         this.load.image('flag', 'assets/flag.png');
         this.load.image('card', 'assets/card.png'); // (160 * 220) * 0.5
+        this.load.image('card_pow', 'assets/card_pow.png');
         this.load.image('card_back', 'assets/card_back.png');
         this.load.image('card_shadow', 'assets/card_shadow.png');
         this.load.image('deck_shadow', 'assets/deck_shadow.png');
