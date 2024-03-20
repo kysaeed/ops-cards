@@ -8,20 +8,27 @@ const AttackPhase = {
     enter(duel, onEnd) {
         this.onEnd = onEnd
 
-        const turnPlayer = duel.getTrunPlayerId()
-        const enemyCard = duel.getPlayer(1 - turnPlayer).cardStack.getTopCard()
+        const turnPlayer = duel.getTurnPlayerId()
+        const enemyCard = duel.getOtherPlayer().cardStack.getTopCard()
 
-        const player = duel.getPlayer(turnPlayer)
-        const ohterPlayer = duel.getPlayer(1 - turnPlayer)
+        const player = duel.getTurnPlayer()
+        const ohterPlayer = duel.getOtherPlayer()
         //player.getCardStack().addCard(newAttackCard)
 
-        const total = duel.getPlayer(turnPlayer).cardStack.getTotalPower()
+        const total = duel.getTurnPlayer().cardStack.getTotalPower()
 
         player.cardStack.cards.forEach((c, i) => {
-            const stackCount = i
-            c.attack(stackCount, () => {
-                //
+
+            // @todo TIPの表示アニメーション
+            c.showStatusTip(() => {
+
+                const stackCount = i
+                c.attack(stackCount, () => {
+                    //
+                })
+
             })
+
         })
         duel.getScene().damageMark.setDamage(null) // dummy param
 
@@ -29,7 +36,7 @@ const AttackPhase = {
             ohterPlayer.getCardStack().criticalDamaged(() => {
                 // console.log('かった！' + turnPlayer, duel.playerList[turnPlayer].cardStack)
 
-                duel.getPlayer(turnPlayer).cardStack.cards.forEach((c) => {
+                duel.getTurnPlayer().cardStack.cards.forEach((c) => {
                     c.angle = Bevel + (180 * turnPlayer)
 
                     // console.log(c.sprite)
@@ -48,10 +55,15 @@ const AttackPhase = {
                 duel.getFlag().moveTo(520, 170 + (200 * (1 - turnPlayer)))
 
                 // 攻撃側から見た敵プレイヤー
-                const enemyPlayer = duel.getPlayer(1 - turnPlayer)
+                const enemyPlayer = duel.getOtherPlayer()
 
                 // ディフェンス側のカードを横へ
                 const deffenceCards = enemyPlayer.cardStack.takeAll()
+
+                deffenceCards.forEach((c) => {
+                    c.hideStatusTip()
+                })
+
                 enemyPlayer.getBench().addCards(1 - turnPlayer, deffenceCards, () => {
 
                     if (enemyPlayer.getDeck().isEmpty()) {

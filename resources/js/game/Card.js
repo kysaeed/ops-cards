@@ -4,6 +4,52 @@ const WidthBase = -30
 
 // const direction  = 1
 
+class CardTip {
+    constructor(duel, cardInfo, player, x, y) {
+        const scene = duel.getScene()
+
+
+        this.cardTip = scene.add.sprite(0, 0, 'card_tip')
+        this.cardTipText = scene.add.text(-30, -20, '', { fontSize: '32px', fill: '#000' });
+
+        this.cardTipText.text = ''
+
+        this.sprite = scene.add.container(x, y, [
+            this.cardTip,
+            this.cardTipText,
+        ])
+
+    }
+
+    setText(text) {
+        this.cardTipText.text = text
+    }
+
+    getSprite() {
+        return this.sprite
+    }
+
+    showStatusTip(onEnd) {
+
+        // @todo
+        this.cardTip.visible = true
+        this.cardTipText.visible = true
+
+        if (onEnd) {
+            onEnd()
+        }
+
+
+    }
+
+    hideStatusTip() {
+        this.cardTip.visible = false
+        this.cardTipText.visible = false
+    }
+
+
+}
+
 export default class Card {
     constructor(duel, cardInfo, player, x, y) {
         this.duel = duel
@@ -15,15 +61,24 @@ export default class Card {
 
         this.cardShadow = scene.add.sprite(0 + 2, 0 + 2, 'card_shadow')
 
+        // card main
         this.cardBg = scene.add.sprite(0, 0, 'card')
         this.cardChara = scene.add.sprite(0, 22, cardInfo.image)
-        this.cardTextPoint = scene.add.text(-62, -95, cardInfo.power, { fontSize: '32px', fill: '#000' });
-        this.cardTextTitle = scene.add.text(-32, -88, cardInfo.name, { fontSize: '18px', fill: '#000' });
+        this.cardTextPoint = scene.add.text(-62, -95, `${cardInfo.power}`, { fontSize: '32px', fill: '#000' });
+        this.cardTextTitle = scene.add.text(-32, -88, `${cardInfo.name}`, { fontSize: '18px', fill: '#000' });
+
+        // card tip
+        this.cardTip = new CardTip(duel, cardInfo, player, 0, -130)
+
+        //this.cardTipTextPoint.visible = false
+        //this.cardTip.visible = false
+
         this.sprite = scene.add.container(x, y, [
             this.cardBg,
             this.cardChara,
             this.cardTextPoint,
             this.cardTextTitle,
+            this.cardTip.getSprite(),
         ])
         this.sprite.angle = Bevel + (180 * cardDirection)
 
@@ -34,6 +89,36 @@ export default class Card {
         duel.getObjectManager().append(this)
 
         this.cardInfo = cardInfo
+    }
+
+    showStatusTip(onEnd) {
+        this.cardTip.showStatusTip(onEnd)
+    }
+
+    hideStatusTip() {
+        this.cardTip.hideStatusTip()
+    }
+
+    getPower() {
+        let add = 0
+
+        const ability = this.cardInfo.ability
+        if (ability) {
+            const isTurnPlayerCard = this.duel.isTurnPlayer(this.player)
+            if (isTurnPlayerCard) {
+                if (ability.attack) {
+                    if (ability.attack.power) {
+                        add += ability.attack.power
+                    }
+                }
+            }
+        }
+
+        if (add) {
+            this.cardTip.setText(`+${add}`)
+        }
+
+        return (this.cardInfo.power + add)
     }
 
     enterTo(x, y, turnPlayer) {
@@ -64,7 +149,7 @@ export default class Card {
                     duration: 200,
                 },
             ],
-            onComplete() {
+            onComplete: () => {
                 console.log('diffence-card: OK!')
             },
         })

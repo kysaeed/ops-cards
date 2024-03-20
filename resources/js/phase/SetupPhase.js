@@ -11,7 +11,7 @@ const SetupPhase = {
             console.log('res', res.data)
             const data = res.data
 
-            const turnPlayerId = duel.getTrunPlayerId()
+            const turnPlayerId = duel.getTurnPlayerId()
             const player = duel.getPlayer(1 - turnPlayerId)
 
             duel.playerList.forEach((player) => {

@@ -9,11 +9,11 @@ export default class CardStack {
         this.cards.push(card)
     }
 
-    getTotalPower() {
+    getTotalPower(enemyCard) {
         //
         let power = 0
         this.cards.forEach((c) => {
-            power += c.cardInfo.power
+            power += c.getPower(enemyCard)
         })
         return power
     }

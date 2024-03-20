@@ -41,12 +41,16 @@ export default class Duel {
         return this.flag
     }
 
-    getTrunPlayerId() {
+    getTurnPlayerId() {
         return this.turnPlayerId
     }
 
-    getTrunPlayer() {
-        return this.playerList[this.getTrunPlayerId()]
+    getTurnPlayer() {
+        return this.playerList[this.getTurnPlayerId()]
+    }
+
+    getOtherPlayer() {
+        return this.playerList[1 - this.getTurnPlayerId()]
     }
 
     getPlayer(playerId) {
@@ -55,6 +59,14 @@ export default class Duel {
 
     getObjectManager() {
         return this.objectManager
+    }
+
+    isTurnPlayer(player) {
+        if (this.getTurnPlayerId() === player.getPlayerId()) {
+            return true
+        }
+
+        return false
     }
 
     onUpdate() {

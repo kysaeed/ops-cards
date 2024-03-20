@@ -7,6 +7,7 @@ import Phaser from 'phaser'
 import _ from 'lodash'
 import Axios from 'axios'
 
+import Const from './Const.js'
 import Duel from './game/Duel.js'
 import DamageMark from './game/DamageMark.js'
 import phase from './phase'
@@ -32,6 +33,7 @@ const scene = {
         this.load.image('card_back', 'assets/card_back.png');
         this.load.image('card_shadow', 'assets/card_shadow.png');
         this.load.image('deck_shadow', 'assets/deck_shadow.png');
+        this.load.image('card_tip', 'assets/card_tip.png');
         this.load.image('deck_clickable', 'assets/deck_clickable.png');
         this.load.image('board', 'assets/board.png');
         this.load.image('modal', 'assets/modal.png');
@@ -64,7 +66,13 @@ const scene = {
     },
     create() {
 
-        this.add.image(400, 300, 'board');
+        this.add.image(
+            (Const.Screen.Width * 0.5),
+            (Const.Screen.Height * 0.5),
+            'board'
+        )
+
+        // this.add.image(400, 300, 'board');
 
         this.duel = new Duel(this)
         this.cardBoard = this.duel.getCardBoard()
@@ -101,8 +109,8 @@ const config = {
     parent: 'app',
     autoCenter: Phaser.Scale.CENTER_BOTH,
     type: Phaser.AUTO, ////Phaser.WEBGL, ///
-    width: 1200,
-    height: 600,
+    width: Const.Screen.Width,
+    height: Const.Screen.Height,
     scene,
 };
 

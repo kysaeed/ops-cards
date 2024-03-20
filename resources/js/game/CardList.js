@@ -5,7 +5,19 @@
 
 
 const CardList = [
-    {
+  {
+    power: 2,
+    name: '車輪',
+    image: 'ch_whell',
+    type: 0,
+    ability: {
+      attack:
+      {
+        power: 1,
+      }
+    },
+  },
+  {
       power: 1,
       name: '影',
       image: 'ch_kage',
@@ -46,18 +58,6 @@ const CardList = [
       name: '目玉',
       image: 'ch_eye',
       type: 0,
-    },
-    {
-      power: 2,
-      name: '車輪',
-      image: 'ch_whell',
-      type: 0,
-      ability: {
-        attack:
-        {
-          power: 1,
-        }
-      },
     },
     {
       power: 4,
@@ -162,6 +162,19 @@ const CardList = [
       image: 'chara',
       type: 0,
     },
+    {
+      power: 1,
+      name: '予言の書',
+      image: 'chara',
+      type: 0,
+    },
+    {
+      power: 1,
+      name: 'パレード',
+      image: 'chara',
+      type: 0,
+    },
+
 
 
 

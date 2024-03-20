@@ -7,7 +7,7 @@ const DrawPhase = {
         this.duel = duel
         this.onEnd = onEnd
 
-        const player = duel.getTrunPlayer()
+        const player = duel.getTurnPlayer()
         if (player.getPlayerId() === 0) {
             player.getDeck().setClickableState(true)
         } else {
@@ -29,14 +29,14 @@ const DrawPhase = {
 
         this.isDrawProcessing = true
 
-        const turnPlayer = duel.getTrunPlayerId()
-        const player = duel.getTrunPlayer()
+        const turnPlayer = duel.getTurnPlayerId()
+        const player = duel.getTurnPlayer()
         player.deck.draw(duel, 0, turnPlayer, (currentDrawCard) => {
             if (currentDrawCard) {
                 currentDrawCard.showDetial(() => {
                     //const stackCount = duel.getPlayer(turnPlayer).getCardStack().getStackCount()
                     currentDrawCard.moveToAttackPosition(() => {
-                        duel.getTrunPlayer().getCardStack().addCard(currentDrawCard)
+                        duel.getTurnPlayer().getCardStack().addCard(currentDrawCard)
                         this.isDrawProcessing = false
                         if (this.onEnd) {
                             this.onEnd('AttackPhase')
