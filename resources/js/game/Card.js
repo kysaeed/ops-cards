@@ -6,8 +6,8 @@ const WidthBase = -30
 
 class CardTip {
     constructor(duel, cardInfo, player, x, y) {
+        this.duel = duel
         const scene = duel.getScene()
-
 
         this.cardTip = scene.add.sprite(0, 0, 'card_tip')
         this.cardTipText = scene.add.text(-30, -20, '', { fontSize: '32px', fill: '#000' });
@@ -18,6 +18,7 @@ class CardTip {
             this.cardTip,
             this.cardTipText,
         ])
+        this.sprite.visible = false
 
     }
 
@@ -32,19 +33,29 @@ class CardTip {
     showStatusTip(onEnd) {
 
         // @todo
-        this.cardTip.visible = true
-        this.cardTipText.visible = true
+        this.sprite.visible = true
+        this.sprite.alpha = 0
 
-        if (onEnd) {
-            onEnd()
-        }
-
+        this.duel.getScene().tweens.chain({
+            targets: this.sprite,
+            tweens: [
+                {
+                    duration: 200,
+                    alpha: 1.0,
+                },
+            ],
+            onComplete: () => {
+                if (onEnd) {
+                    onEnd()
+                }
+            }
+        })
 
     }
 
     hideStatusTip() {
-        this.cardTip.visible = false
-        this.cardTipText.visible = false
+        this.sprite.visible = false
+
     }
 
 
