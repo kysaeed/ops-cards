@@ -60,6 +60,7 @@ const scene = {
         this.load.image('ch_clown', 'assets/ch_clown.png');
         this.load.image('ch_scarecrow', 'assets/ch_scarecrow.png');
         this.load.image('ch_frasco', 'assets/ch_frasco.png');
+        this.load.image('ch_dog', 'assets/ch_dog.png');
         this.load.image('cat', 'assets/cat.png');
 
         // this.load.spritesheet('dude',

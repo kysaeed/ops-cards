@@ -117,6 +117,12 @@ const CardList = [
     },
     {
       power: 1,
+      name: '犬',
+      image: 'ch_dog',
+      type: 0,
+    },
+    {
+      power: 1,
       name: '尖兵',
       image: 'chara',
       type: 0,
