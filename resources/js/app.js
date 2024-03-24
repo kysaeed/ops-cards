@@ -58,9 +58,10 @@ const scene = {
         this.load.image('ch_mass', 'assets/ch_mass.png');
         this.load.image('ch_db', 'assets/ch_db.png');
         this.load.image('ch_clown', 'assets/ch_clown.png');
+        this.load.image('ch_dog', 'assets/ch_dog.png');
+        this.load.image('ch_machine', 'assets/ch_machine.png');
         this.load.image('ch_scarecrow', 'assets/ch_scarecrow.png');
         this.load.image('ch_frasco', 'assets/ch_frasco.png');
-        this.load.image('ch_dog', 'assets/ch_dog.png');
         this.load.image('cat', 'assets/cat.png');
 
         // this.load.spritesheet('dude',
