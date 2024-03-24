@@ -55,6 +55,8 @@ const scene = {
         this.load.image('ch_moon', 'assets/ch_moon.png');
         this.load.image('ch_mono', 'assets/ch_mono.png');
         this.load.image('ch_star', 'assets/ch_star.png');
+        this.load.image('ch_mass', 'assets/ch_mass.png');
+        this.load.image('ch_db', 'assets/ch_db.png');
         this.load.image('ch_clown', 'assets/ch_clown.png');
         this.load.image('ch_scarecrow', 'assets/ch_scarecrow.png');
         this.load.image('ch_frasco', 'assets/ch_frasco.png');

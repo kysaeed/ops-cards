@@ -105,8 +105,14 @@ const CardList = [
     },
     {
       power: 4,
-      name: '質量',
-      image: 'ch_mono',
+      name: '質量兵器',
+      image: 'ch_mass',
+      type: 0,
+    },
+    {
+      power: 1,
+      name: '凹凸',
+      image: 'ch_db',
       type: 0,
     },
     {
@@ -131,12 +137,6 @@ const CardList = [
     {
       power: 1,
       name: '井戸',
-      image: 'chara',
-      type: 0,
-    },
-    {
-      power: 1,
-      name: '凹凸',
       image: 'chara',
       type: 0,
     },
@@ -182,7 +182,12 @@ const CardList = [
       image: 'chara',
       type: 0,
     },
-
+    {
+      power: 1,
+      name: '聖人',
+      image: 'chara',
+      type: 0,
+    },
 
 
 
