@@ -3,6 +3,14 @@
  * https://www.well-boardgame.com/challengers-rule/
  */
 
+/*
+power = (addPower) => {
+  return {
+    power: addPower,
+    text: `攻撃時：パワー +${addPower}`,
+  }
+}
+*/
 
 const CardList = [
   {
@@ -11,11 +19,11 @@ const CardList = [
     image: 'ch_whell',
     type: 0,
     ability: {
-      attack:
-      {
+      attack: {
         power: 1,
       }
     },
+    // text: "攻撃時：パワー +1",
   },
   {
       power: 1,
@@ -92,7 +100,7 @@ const CardList = [
     {
       power: 4,
       name: '彗星',
-      image: 'ch_mono',
+      image: 'ch_star',
       type: 0,
     },
     {

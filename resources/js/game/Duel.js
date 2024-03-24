@@ -1,7 +1,9 @@
 
+import Const from '../Const.js'
 import ObjectManager from './ObjectManager.js'
 import Player from './Player.js'
 import Flag from './Flag.js'
+
 
 
 export default class Duel {

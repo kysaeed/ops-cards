@@ -9,8 +9,8 @@ class CardTip {
         this.duel = duel
         const scene = duel.getScene()
 
-        this.cardTip = scene.add.sprite(0, 0, 'card_tip')
-        this.cardTipText = scene.add.text(-30, -20, '', { fontSize: '32px', fill: '#000' });
+        this.cardTip = scene.add.sprite(-30, 0, 'card_tip')
+        this.cardTipText = scene.add.text(-40, -20, '', { fontSize: '32px', fill: '#000' });
 
         this.cardTipText.text = ''
 
@@ -80,7 +80,7 @@ export default class Card {
         this.cardTextTitle = scene.add.text(-30, -88, `${cardInfo.name}`, { fontSize: '14px', fill: '#000' });
 
         // card tip
-        this.cardTip = new CardTip(duel, cardInfo, player, 0, -130)
+        this.cardTip = new CardTip(duel, cardInfo, player, -30, -142)
 
         //this.cardTipTextPoint.visible = false
         //this.cardTip.visible = false
@@ -171,6 +171,7 @@ export default class Card {
 
     attack(stackCount, onEnd) {
         // console.log('attack..')
+        const direction = this.player.getDirection()
         const y = this.player.getBaseY();
         const x = WidthBase * this.player.direction
         this.duel.getScene().tweens.chain({
@@ -180,7 +181,7 @@ export default class Card {
                     delay: stackCount * 40,
                     // angle: '-=8',
                     // angle: 180 * (turnPlayer) + 9,
-                    x: 0 - stackCount * 8,
+                    x: 0 - (stackCount * 8 * -direction),
                     y: 0,
                     scale: 0.6,
                     duration: 100,
@@ -188,14 +189,14 @@ export default class Card {
                 },
                 {
                     // angle: 180 * (turnPlayer) + 9,
-                    x: x - stackCount * 8,
+                    x: x - (stackCount * 8 * -direction),
                     scale: 1.2 * 0.6,
                     y: this.sprite.y,
                     ease: 'power1',
                     duration: 300,
                 },
                 {
-                    x: x - stackCount * 8,
+                    x: x - (stackCount * 32 * -direction),
                     y: y - stackCount * 8,
                     // angle: '+=8',
                     scale: 0.6,
@@ -348,9 +349,8 @@ export default class Card {
         }
 
         const stackCount = this.player.getCardStack().getStackCount()
-        const x = (WidthBase * direction) - (stackCount * 8)
+        const x = (WidthBase * direction) - (stackCount * 32 * -direction)
         const y = (-HeightBase) + (HeightBase * 2 * (1 - this.player.getPlayerId()))
-
 
         scene.tweens.chain({
             targets: this.sprite,
