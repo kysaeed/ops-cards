@@ -173,8 +173,13 @@ export default class Card {
         // console.log('attack..')
         const direction = this.player.getDirection()
         const y = this.player.getBaseY();
-        const x = WidthBase * this.player.direction
-        this.duel.getScene().tweens.chain({
+        const x = WidthBase + (1 * this.player.direction)
+
+        const startY = this.sprite.y;
+
+        const tweens = this.duel.getScene().tweens
+
+        tweens.chain({
             targets: this.sprite,
             tweens: [
                 {
@@ -187,31 +192,38 @@ export default class Card {
                     duration: 100,
                     ease: 'power1',
                 },
-                {
-                    // angle: 180 * (turnPlayer) + 9,
-                    x: x - (stackCount * 8 * -direction),
-                    scale: 1.2 * 0.6,
-                    y: this.sprite.y,
-                    ease: 'power1',
-                    duration: 300,
-                },
-                {
-                    x: x - (stackCount * 32 * -direction),
-                    y: y - stackCount * 8,
-                    // angle: '+=8',
-                    scale: 0.6,
-                    duration: 200,
-                    ease: 'power1',
-                },
-                {
-                    delay: 800,
-                }
             ],
-            onComplete() {
+            onComplete: () => {
                 console.log('OK!')
                 if (onEnd) {
                     onEnd()
                 }
+
+                tweens.chain({
+                    targets: this.sprite,
+                    tweens: [
+                        {
+                            // angle: 180 * (turnPlayer) + 9,
+                            x: x - (stackCount * 32 * -direction),
+                            scale: 1.2 * 0.6,
+                            y: startY, //this.sprite.y,
+                            ease: 'power1',
+                            duration: 300,
+                        },
+                        {
+                            x: x - (stackCount * 32 * -direction),
+                            y: startY /*y - stackCount * 8*/,
+                            // angle: '+=8',
+                            scale: 0.6,
+                            duration: 200,
+                            ease: 'power1',
+                        },
+                        {
+                            delay: 800,
+                        }
+                    ],
+                    onComplete: () => {},
+                })
             },
         })
 
