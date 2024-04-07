@@ -12,6 +12,18 @@ power = (addPower) => {
 }
 */
 
+
+const CardTypeList = [
+  {
+    type: 0,
+    name: "",
+  },
+  {
+    type: 1,
+    name: "魔術",
+  },
+];
+
 const CardList = [
   {
     power: 2,
@@ -23,13 +35,13 @@ const CardList = [
         power: 1,
       }
     },
-    // text: "攻撃時：パワー +1",
+    text: "攻撃時：パワー +1",
   },
   {
       power: 1,
       name: '影',
       image: 'ch_kage',
-      type: 0,
+      type: 1,
     },
     {
       power: 2,
@@ -41,13 +53,13 @@ const CardList = [
       power: 3,
       name: '魔術師',
       image: 'ch_magi',
-      type: 0,
+      type: 1,
     },
     {
       power: 4,
       name: '月',
       image: 'ch_moon',
-      type: 0,
+      type: 1,
     },
     {
       power: 5,

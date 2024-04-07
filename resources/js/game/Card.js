@@ -76,8 +76,15 @@ export default class Card {
         this.cardBg = scene.add.sprite(0, 0, 'card')
         this.cardChara = scene.add.sprite(0, 0, cardInfo.image)
         this.cardPow = scene.add.sprite(-50, -73, 'card_pow')
+        this.cardType = scene.add.sprite(50, -67, 'card_type')
         this.cardTextPoint = scene.add.text(-62, -95, `${cardInfo.power}`, { fontSize: '30px', fill: '#000' });
-        this.cardTextTitle = scene.add.text(-30, -88, `${cardInfo.name}`, { fontSize: '14px', fill: '#000' });
+        this.cardTextType = scene.add.text(38, -72, '種別', { fontSize: '13px', fill: '#000' });
+        this.cardTextTitle = scene.add.text(-26, -98, `${cardInfo.name}`, { fontSize: '15px', fill: '#000' });
+        this.cardTextDesc = scene.add.text(-68, 74, 'あいうえおかきくけこ', { fontSize: '12px', fill: '#000' });
+
+        if (cardInfo.text) {
+            this.cardTextDesc.text = cardInfo.text
+        }
 
         // card tip
         this.cardTip = new CardTip(duel, cardInfo, player, -30, -142)
@@ -89,8 +96,11 @@ export default class Card {
             this.cardBg,
             this.cardChara,
             this.cardPow,
+            this.cardType,
             this.cardTextPoint,
+            this.cardTextType,
             this.cardTextTitle,
+            this.cardTextDesc,
             this.cardTip.getSprite(),
         ])
         this.sprite.angle = Bevel + (180 * cardDirection)
