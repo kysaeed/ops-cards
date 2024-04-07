@@ -221,10 +221,10 @@ export default class Deck {
         this.cards = []
         this.player = player
 
-        const x = -320
-        const y = 120 * player.getDirection()
+        const x = -160 * player.getDirection()
+        const y = (210 * player.getDirection()) + 30
 
-        const isPlyaer = player.getPlayerId() === 0
+        const isPlyaer = (player.getPlayerId() === 0)
 
         this.sprite = new DeckSprite(duel, x, y, 10)
     }

@@ -237,7 +237,6 @@ export default class Card {
         const y = this.sprite.y
 
         const direction = this.player.getDirection()
-console.log('direction *****', direction)
         this.duel.getScene().tweens.chain({
             targets: this.sprite,
             tweens: [
