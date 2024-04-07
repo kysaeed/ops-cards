@@ -8,10 +8,10 @@ const AttackPhase = {
     enter(duel, onEnd) {
         this.onEnd = onEnd
 
-        const turnPlayer = duel.getTurnPlayerId()
+        const turnPlayerId = duel.getTurnPlayerId()
         const enemyCard = duel.getOtherPlayer().cardStack.getTopCard()
 
-        const player = duel.getTurnPlayer()
+        //const player = duel.getTurnPlayer()
         const ohterPlayer = duel.getOtherPlayer()
         //player.getCardStack().addCard(newAttackCard)
 
@@ -27,12 +27,12 @@ const AttackPhase = {
                 c.attack(stackCount, () => {
                     if (stackCount < 1) {
                         duel.getScene().damageMark.setDamage(null) // dummy param
+
                         if (total >= enemyCard.cardInfo.power) {
                             ohterPlayer.getCardStack().criticalDamaged(() => {
-                                // console.log('かった！' + turnPlayer, duel.playerList[turnPlayer].cardStack)
 
                                 duel.getTurnPlayer().cardStack.cards.forEach((c) => {
-                                    c.angle = Bevel + (180 * turnPlayer)
+                                    c.angle = Bevel + (180 * turnPlayerId)
 
                                     // console.log(c.sprite)
                                     // duel.getScene().tweens.chain({
@@ -47,7 +47,7 @@ const AttackPhase = {
                                     // })
                                 })
 
-                                duel.getFlag().moveTo(520, 170 + (200 * (1 - turnPlayer)))
+                                duel.getFlag().moveTo(520, 170 + (200 * (1 - turnPlayerId)))
 
                                 // 攻撃側から見た敵プレイヤー
                                 const enemyPlayer = duel.getOtherPlayer()
@@ -59,7 +59,7 @@ const AttackPhase = {
                                     c.hideStatusTip()
                                 })
 
-                                enemyPlayer.getBench().addCards(1 - turnPlayer, deffenceCards, () => {
+                                enemyPlayer.getBench().addCards(1 - turnPlayerId, deffenceCards, () => {
 
                                     if (enemyPlayer.getDeck().isEmpty()) {
 
@@ -68,7 +68,7 @@ const AttackPhase = {
                                         textModal.displayWidth = 400
 
                                         let text = ''
-                                        if (turnPlayer == 0) {
+                                        if (turnPlayerId == 0) {
                                             text = '勝ち'
                                         } else {
                                             text = '負け'
@@ -88,7 +88,6 @@ const AttackPhase = {
                         }
 
                     }
-
 
 
                 })

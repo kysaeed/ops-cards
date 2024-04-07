@@ -172,8 +172,12 @@ export default class Card {
     attack(stackCount, onEnd) {
         // console.log('attack..')
         const direction = this.player.getDirection()
-        const y = this.player.getBaseY();
-        const x = WidthBase + (1 * this.player.direction)
+        // const y = this.player.getBaseY();
+        // const x = WidthBase + (1 * this.player.direction)
+
+        const x = (WidthBase * direction) - (stackCount * 32 * -direction)
+        const y = (-HeightBase) + (HeightBase * 2 * (1 - this.player.getPlayerId()))
+
 
         const startY = this.sprite.y;
 
@@ -203,16 +207,15 @@ export default class Card {
                     targets: this.sprite,
                     tweens: [
                         {
-                            // angle: 180 * (turnPlayer) + 9,
-                            x: x - (stackCount * 32 * -direction),
+                            x: x,
+                            y: y,
                             scale: 1.2 * 0.6,
-                            y: startY, //this.sprite.y,
                             ease: 'power1',
                             duration: 300,
                         },
                         {
-                            x: x - (stackCount * 32 * -direction),
-                            y: startY /*y - stackCount * 8*/,
+                            x: x,
+                            y: y,
                             // angle: '+=8',
                             scale: 0.6,
                             duration: 200,
@@ -234,17 +237,17 @@ export default class Card {
         const y = this.sprite.y
 
         const direction = this.player.getDirection()
-
+console.log('direction *****', direction)
         this.duel.getScene().tweens.chain({
             targets: this.sprite,
             tweens: [
-                {
-                    x: x,
-                    y: y,
-                    //angle: 270,
-                    // scale: /*1.3 * */ 0.6,
-                    duration: 100,
-                },
+                // {
+                //     x: x,
+                //     y: y,
+                //     //angle: 270,
+                //     // scale: /*1.3 * */ 0.6,
+                //     duration: 100,
+                // },
                 {
                     //angle: 180,
                     x: x,
@@ -272,20 +275,19 @@ export default class Card {
         const x = this.sprite.x
         const y = this.sprite.y
         const direction = this.player.direction
-
         const xAdd = (index * 80)
-        const yMlt = 1.0 * (index * 0.05)
+        const yMlt = 1.0 + (index * 0.05)
 
         this.duel.getScene().tweens.chain({
             targets: this.sprite,
             tweens: [
-                {
-                    x: x,
-                    y: y,
-                    //angle: 270,
-                    scale: 1.3 * 0.6,
-                    duration: 100,
-                },
+                // {
+                //     x: x,
+                //     y: y,
+                //     //angle: 270,
+                //     scale: 1.3 * 0.6,
+                //     duration: 100,
+                // },
                 {
                     //angle: 180,
                     x: x + xAdd,
@@ -294,7 +296,7 @@ export default class Card {
                     duration: 100,
                 },
                 {
-                    x: x + + xAdd,
+                    x: x + xAdd,
                     y: y + ((80 * direction) * yMlt),
                     //angle: 180,
                     scale: 0.6,

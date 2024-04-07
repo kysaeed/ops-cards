@@ -36,12 +36,10 @@ export default class CardStack {
     }
 
     criticalDamaged(onEnd) {
+        let onEndFirst = onEnd
         this.cards.forEach((c, i) => {
-            let onEndFirst = null
-            if (i < 1) {
-                onEndFirst = onEnd
-            }
-            c.criticalDamaged(i, onEnd)
+            c.criticalDamaged(i, onEndFirst)
+            onEndFirst = null
         })
     }
 }
