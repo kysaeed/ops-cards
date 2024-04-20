@@ -1,8 +1,3 @@
-// constants
-const Bevel = 8
-const HeightBase = 100
-const WidthBase = -30
-
 
 const AttackPhase = {
     enter(duel, onEnd) {
@@ -11,13 +6,12 @@ const AttackPhase = {
         const turnPlayerId = duel.getTurnPlayerId()
         const enemyCard = duel.getOtherPlayer().cardStack.getTopCard()
 
-        //const player = duel.getTurnPlayer()
         const ohterPlayer = duel.getOtherPlayer()
         //player.getCardStack().addCard(newAttackCard)
 
         const total = duel.getTurnPlayer().cardStack.getTotalPower()
 
-        const topCard = duel.getTurnPlayer().cardStack.getTopCard() ///// todo!!!
+        const topCard = duel.getTurnPlayer().cardStack.getTopCard()
         topCard.showStatusTip(() => { // todo: 引数に表示内容を設定?
 
             duel.getTurnPlayer().cardStack.cards.forEach((c, stackCount) => {
@@ -28,22 +22,6 @@ const AttackPhase = {
                         if (total >= enemyCard.cardInfo.power) {
                             ohterPlayer.getCardStack().criticalDamaged(() => {
 
-                                duel.getTurnPlayer().cardStack.cards.forEach((c) => {
-                                    c.angle = Bevel + (180 * turnPlayerId)
-
-                                    // console.log(c.sprite)
-                                    // duel.getScene().tweens.chain({
-                                    //   targets:  c.sprite,
-                                    //   tweens: {
-                                    // //     x: 400,
-                                    // //     y: 0,
-                                    // //     duration: 100,
-                                    // //     //scale: 1.0,
-                                    // //     // angle: 0,
-                                    //   }
-                                    // })
-                                })
-
                                 duel.getFlag().moveTo(520, 170 + (200 * (1 - turnPlayerId)))
 
                                 // 攻撃側から見た敵プレイヤー
@@ -52,9 +30,11 @@ const AttackPhase = {
                                 // ディフェンス側のカードを横へ
                                 const deffenceCards = enemyPlayer.cardStack.takeAll()
 
+                                /*
                                 deffenceCards.forEach((c) => {
                                     c.hideStatusTip()
                                 })
+                                */
 
                                 enemyPlayer.getBench().addCards(1 - turnPlayerId, deffenceCards, () => {
 
@@ -89,9 +69,7 @@ const AttackPhase = {
                 })
             })
 
-
         })
-
 
     },
 

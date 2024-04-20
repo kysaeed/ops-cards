@@ -9,6 +9,10 @@ export default class CardStack {
         this.cards.push(card)
     }
 
+    each(callback) {
+        this.cards.forEach(callback)
+    }
+
     getTotalPower(enemyCard) {
         //
         let power = 0
