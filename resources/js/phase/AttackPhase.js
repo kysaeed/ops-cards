@@ -17,13 +17,10 @@ const AttackPhase = {
 
         const total = duel.getTurnPlayer().cardStack.getTotalPower()
 
-        // duel.getTurnPlayer().cardStack.getTopCard() ///// todo!!!
+        const topCard = duel.getTurnPlayer().cardStack.getTopCard() ///// todo!!!
+        topCard.showStatusTip(() => { // todo: 引数に表示内容を設定?
 
-        duel.getTurnPlayer().cardStack.cards.forEach((c, i) => {
-
-            c.showStatusTip(() => { // TIPの表示アニメーション
-
-                const stackCount = i
+            duel.getTurnPlayer().cardStack.cards.forEach((c, stackCount) => {
                 c.attack(stackCount, () => {
                     if (stackCount < 1) {
                         duel.getScene().damageMark.setDamage(null) // dummy param
@@ -89,11 +86,10 @@ const AttackPhase = {
 
                     }
 
-
                 })
-
-
             })
+
+
         })
 
 

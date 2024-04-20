@@ -75,12 +75,14 @@ export default class Card {
         // card main
         this.cardBg = scene.add.sprite(0, 0, 'card')
         this.cardChara = scene.add.sprite(0, 0, cardInfo.image)
-        this.cardPow = scene.add.sprite(-50, -73, 'card_pow')
+        this.cardPow = scene.add.sprite(-52, -73, 'card_pow')
         this.cardType = scene.add.sprite(50, -67, 'card_type')
-        this.cardTextPoint = scene.add.text(-62, -95, `${cardInfo.power}`, { fontSize: '30px', fill: '#000' });
-        this.cardTextType = scene.add.text(38, -72, '種別', { fontSize: '13px', fill: '#000' });
-        this.cardTextTitle = scene.add.text(-26, -98, `${cardInfo.name}`, { fontSize: '15px', fill: '#000' });
-        this.cardTextDesc = scene.add.text(-68, 74, 'あいうえおかきくけこ', { fontSize: '12px', fill: '#000' });
+        this.cardTextPoint = scene.add.text(-62, -95, `${cardInfo.power}`, { fontSize: '30px', fill: '#000' }).setPadding(0, 2, 0, 2);;
+        this.cardTextType = scene.add.text(38, -74, '種別', { fontSize: '13px', fill: '#000' }).setPadding(0, 2, 0, 2);;
+        this.cardTextTitle = scene.add.text(-26, -98, `${cardInfo.name}`, { fontSize: '15px', fill: '#000' }).setPadding(0, 4, 0, 4);
+        this.cardTextDesc = scene.add
+            .text(-68, 74, 'あいうえおかきくけこ\nあいうえおかきくけこ', { fontSize: '12px', fill: '#000' })
+            .setPadding(0, 2, 0, 2);
 
         if (cardInfo.text) {
             this.cardTextDesc.text = cardInfo.text
