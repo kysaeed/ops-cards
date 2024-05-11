@@ -123,13 +123,8 @@ export default class Card {
     bringToTop() {
         const parent = this.duel.getCardBoard()
 
-        console.log('*********** bringToTop')
-        console.log(parent.bringToTop)
-
         parent.bringToTop(this.cardShadow)
         parent.bringToTop(this.sprite)
-
-
     }
 
     setClickableState(isClickable) {
