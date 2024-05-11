@@ -3,5 +3,5 @@ export default {
         Width: 970,
         Height: 600,
     },
-    Bevel: 8,
+    Bevel: 16,
 }

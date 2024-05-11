@@ -1,11 +1,12 @@
 
 import _ from 'lodash'
 
+import Const from '../Const.js'
 import Card from './Card.js'
 import CardList from './CardList'
 
 
-const Bevel = 8
+const Bevel = Const.Bevel
 const HeightBase = 100
 const WidthBase = -30
 

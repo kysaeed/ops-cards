@@ -1,6 +1,10 @@
-const Bevel = 8
+import Const from '../Const.js'
+
+const Bevel = Const.Bevel
 const HeightBase = 100
 const WidthBase = -30
+
+const DefaultCardSize = 0.5
 
 // const direction  = 1
 
@@ -116,6 +120,39 @@ export default class Card {
         this.cardInfo = cardInfo
     }
 
+    bringToTop() {
+        const parent = this.duel.getCardBoard()
+
+        console.log('*********** bringToTop')
+        console.log(parent.bringToTop)
+
+        parent.bringToTop(this.cardShadow)
+        parent.bringToTop(this.sprite)
+
+
+    }
+
+    setClickableState(isClickable) {
+        const sprite = this.cardBg
+        if (isClickable) {
+            sprite.setInteractive()
+            sprite.on('pointerdown', (pointer) => {
+
+                const phase = this.duel.getCurrentPhase()
+
+                if (phase.onEvent) {
+
+                    // todo イベントハンドラを設定できるようにする
+                    phase.onEvent('click-hand', this, {})
+
+                }
+            })
+        } else {
+            sprite.disableInteractive()
+        }
+
+    }
+
     showStatusTip(onEnd) {
         this.cardTip.showStatusTip(onEnd)
     }
@@ -170,7 +207,7 @@ export default class Card {
                     x: x,
                     y: y,
                     angle: angle + Bevel,
-                    scale: 0.6,
+                    scale: DefaultCardSize,
                     duration: 200,
                 },
             ],
@@ -204,7 +241,7 @@ export default class Card {
                     // angle: 180 * (turnPlayer) + 9,
                     x: 0 - (stackCount * 8 * -direction),
                     y: 0,
-                    scale: 0.6,
+                    scale: DefaultCardSize,
                     duration: 100,
                     ease: 'power1',
                 },
@@ -229,7 +266,7 @@ export default class Card {
                             x: x,
                             y: y,
                             // angle: '+=8',
-                            scale: 0.6,
+                            scale: DefaultCardSize,
                             duration: 200,
                             ease: 'power1',
                         },
@@ -336,13 +373,13 @@ export default class Card {
                     x: x - 10,
                     y: y - 25,
                     // angle: ,
-                    scale: 0.5,
+                    scale: DefaultCardSize,
                     duration: 400,
                     ease: 'power1',
                 },
                 {
                     // angle: ,
-                    scale: 0.5,
+                    scale: DefaultCardSize,
                     duration: 400,
                     ease: 'power1',
                 },
@@ -355,6 +392,10 @@ export default class Card {
                     duration: 100,
                     angle: 0,
                 },
+                {
+                    duration: 1000,
+                    angle: 0,
+                },
             ],
             onComplete() {
                 if (onEnd) {
@@ -362,6 +403,48 @@ export default class Card {
                 }
             }
         })
+    }
+
+    moveToHandPosition(onEnd) {
+        //
+        const scene = this.duel.getScene()
+
+        let direction = 1
+        if (this.player.getPlayerId()) {
+            direction = -1
+        }
+
+        const stackCount = 0 //this.player.getCardStack().getStackCount()
+        const x = -(WidthBase * 2 /* * direction */ )
+        const y = (HeightBase) * 2.5 /* + (HeightBase * 2 * (1 - this.player.getPlayerId())) */
+
+        scene.tweens.chain({
+            targets: this.sprite,
+            tweens: [
+                {
+                    delay: 1000,
+                    scale: 0.65,
+                    x: x,
+                    y: y,
+                    ease: 'power1',
+                    duration: 200,
+                    angle: 0, //Bevel + (180 * this.player.getPlayerId()),
+                },
+                {
+                    x: x,
+                    y: y,
+                    scale: 0.65,
+                    duration: 100,
+                },
+            ],
+            onComplete() {
+                if (onEnd) {
+                    onEnd()
+                }
+            }
+        })
+
+
     }
 
     moveToAttackPosition(onEnd) {
@@ -381,8 +464,8 @@ export default class Card {
             targets: this.sprite,
             tweens: [
                 {
-                    delay: 1000,
-                    scale: 0.6,
+                    delay: 100,
+                    scale: DefaultCardSize,
                     x: x,
                     y: y - (stackCount * 8),
                     ease: 'power1',
@@ -392,7 +475,7 @@ export default class Card {
                 {
                     x: x,
                     y: y - (stackCount * 8),
-                    scale: 0.6,
+                    scale: DefaultCardSize,
                     duration: 100,
                 },
             ],
@@ -417,7 +500,7 @@ export default class Card {
                     x: x,
                     y: y,
                     angle: angle,
-                    scale: 0.5 * 0.6,
+                    scale: DefaultCardSize * 0.6,
                     duration: 400,
                     ease: 'power1',
                 },

@@ -8,6 +8,7 @@ export default class Player {
         this.duel = duel
         this.id = id
         this.direction = direction
+        this.hand = null /////
         this.deck = new Deck(duel, this)
 
         this.bench = new Bench(duel, duel.getScene(), id)
@@ -30,6 +31,20 @@ export default class Player {
 
     getBaseY() {
         return 100 * this.direction
+    }
+
+    takeHandCard() {
+        const handCard = this.hand
+        this.hand = null
+        return handCard
+    }
+
+    getHandCard() {
+        return this.hand
+    }
+
+    setHandCard(card) {
+        this.hand = card
     }
 
     getDeck() {

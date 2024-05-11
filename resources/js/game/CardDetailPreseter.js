@@ -1,3 +1,4 @@
+import Const from '../Const.js'
 
 
 export default class CardDetailPresenter {

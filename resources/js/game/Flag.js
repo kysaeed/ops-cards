@@ -37,7 +37,7 @@ export default class Flag {
                 },
             ],
             onComplete() {
-                console.log('flag: OK!')
+                // console.log('flag: OK!')
                 if (onEnd) {
                     onEnd()
                 }

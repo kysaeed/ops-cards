@@ -6,6 +6,8 @@ export default class CardStack {
     }
 
     addCard(card) {
+        const depth = this.cards.length + 1
+        //card.bringToTop()
         this.cards.push(card)
     }
 

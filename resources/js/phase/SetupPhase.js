@@ -1,5 +1,7 @@
+
 // constants
-const Bevel = 8
+import Const from '../Const.js'
+const Bevel = Const.Bevel
 const HeightBase = 100
 const WidthBase = -30
 

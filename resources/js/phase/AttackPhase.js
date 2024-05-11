@@ -38,7 +38,7 @@ const AttackPhase = {
 
                                 enemyPlayer.getBench().addCards(1 - turnPlayerId, deffenceCards, () => {
 
-                                    if (enemyPlayer.getDeck().isEmpty()) {
+                                    if (enemyPlayer.getDeck().isEmpty() && (!enemyPlayer.getHandCard())) {
 
                                         console.log('END!')
                                         const textModal = duel.getScene().add.sprite(360, 200, 'modal')

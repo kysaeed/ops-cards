@@ -7,6 +7,8 @@ const TurnChangePhase = {
         })
 
         duel.turnPlayerId = (1 - duel.getTurnPlayerId())
+
+        // todo: 守備側カードをたたむ
         onEnd('DrawPhase');
     },
 

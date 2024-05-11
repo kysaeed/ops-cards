@@ -1,3 +1,4 @@
+import Const from '../Const.js'
 
 import SetupPhase from './SetupPhase.js'
 import DrawPhase from './DrawPhase.js'
@@ -6,7 +7,7 @@ import TurnChangePhase from './TurnChangePhase.js'
 
 
 // constants
-const Bevel = 8
+const Bevel = Const.Bevel
 const HeightBase = 100
 const WidthBase = -30
 
