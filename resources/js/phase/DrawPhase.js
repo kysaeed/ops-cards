@@ -11,7 +11,7 @@ const DrawPhase = {
         const player = duel.getTurnPlayer()
         if (player.getPlayerId() === 0) {
             this.doDrawHandCard(duel, () => {
-                player.getDeck().setClickableState(true)
+                player.setCardClickableState(true)
             })
         } else {
             this.doDraw(duel)
@@ -21,14 +21,17 @@ const DrawPhase = {
     onEvent(event, sender, params) {
 
         // console.log('******* ' + event + ' *****', sender, params)
+        const player = this.duel.getTurnPlayer()
 
         if (event === 'click') {
-            sender.setClickableState(false)
+            player.setCardClickableState(false)
+
             this.doDraw(this.duel)
         }
 
         if (event === 'click-hand') {
-            sender.setClickableState(false)
+            player.setCardClickableState(false)
+
             console.log('On hand card clicked ....')
 
             this.attackByHandCard(this.duel, () => {
@@ -41,7 +44,6 @@ const DrawPhase = {
     attackByHandCard(duel, onEnd) {
         // const turnPlayer = duel.getTurnPlayerId()
         const player = duel.getTurnPlayer()
-
         const currentCard = player.takeHandCard()
         if (!currentCard) {
             console.log('empty....')
@@ -61,7 +63,6 @@ const DrawPhase = {
     },
 
     doDrawHandCard(duel, onEnd) {
-
         const turnPlayer = duel.getTurnPlayerId()
         const player = duel.getTurnPlayer()
 
@@ -80,10 +81,8 @@ const DrawPhase = {
                 currentDrawCard.showDetial(() => {
 
                     currentDrawCard.moveToHandPosition(() => {
-                        // duel.getTurnPlayer().getCardStack().addCard(currentDrawCard)
-                        currentDrawCard.setClickableState(true)
-
-                        duel.getTurnPlayer().setHandCard(currentDrawCard)
+                        player.setHandCard(currentDrawCard)
+                        console.log(player)
                         if (onEnd) {
                             onEnd()
                         }

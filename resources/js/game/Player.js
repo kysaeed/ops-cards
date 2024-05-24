@@ -17,6 +17,13 @@ export default class Player {
 
     }
 
+    setCardClickableState(isClickable) {
+        this.getDeck().setClickableState(isClickable)
+        if (this.hand) {
+            this.hand.setClickableState(isClickable)
+        }
+    }
+
     getDirection() {
         return this.direction
     }

@@ -98,6 +98,30 @@ export default class Card {
         //this.cardTipTextPoint.visible = false
         //this.cardTip.visible = false
 
+        // clickable ----
+        this.cardClickable = scene.add.sprite(0, 0, 'deck_clickable')
+        this.clickableTewwns = scene.tweens.chain({
+            targets: this.cardClickable,
+            repeat: -1,
+            yoyo: true,
+            paused: true,
+            tweens: [
+                {
+                    scale: 1.3,
+                    duration: 1000,
+                    ease: 'power1',
+                },
+                {
+                    scale: 1.1,
+                    duration: 1000,
+                    ease: 'power1',
+                },
+            ],
+        })
+        this.clickableTewwns.play()
+
+        this.cardClickable.visible = false
+
         this.sprite = scene.add.container(x, y, [
             this.cardBg,
             this.cardChara,
@@ -108,7 +132,10 @@ export default class Card {
             this.cardTextTitle,
             this.cardTextDesc,
             this.cardTip.getSprite(),
+            ///
+            this.cardClickable,
         ])
+
         this.sprite.angle = Bevel + (180 * cardDirection)
 
         const parent = duel.getCardBoard()
@@ -118,6 +145,19 @@ export default class Card {
         duel.getObjectManager().append(this)
 
         this.cardInfo = cardInfo
+
+        const sprite = this.cardBg
+        sprite.on('pointerdown', (pointer) => {
+
+            const phase = this.duel.getCurrentPhase()
+
+            if (phase.onEvent) {
+
+                // todo イベントハンドラを設定できるようにする
+                phase.onEvent('click-hand', this, {})
+
+            }
+        })
     }
 
     bringToTop() {
@@ -130,19 +170,13 @@ export default class Card {
     setClickableState(isClickable) {
         const sprite = this.cardBg
         if (isClickable) {
+            this.cardClickable.visible = true
+            this.clickableTewwns.play()
             sprite.setInteractive()
-            sprite.on('pointerdown', (pointer) => {
 
-                const phase = this.duel.getCurrentPhase()
-
-                if (phase.onEvent) {
-
-                    // todo イベントハンドラを設定できるようにする
-                    phase.onEvent('click-hand', this, {})
-
-                }
-            })
         } else {
+            this.cardClickable.visible = false
+            this.clickableTewwns.pause()
             sprite.disableInteractive()
         }
 
