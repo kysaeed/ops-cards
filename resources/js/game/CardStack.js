@@ -48,4 +48,12 @@ export default class CardStack {
             onEndFirst = null
         })
     }
+
+    fold(onEnd) {
+        let onEndFirst = onEnd
+        this.cards.forEach((c, i) => {
+            c.fold(i, onEndFirst)
+            onEndFirst = null
+        })
+    }
 }

@@ -29,13 +29,6 @@ const AttackPhase = {
 
                                 // ディフェンス側のカードを横へ
                                 const deffenceCards = enemyPlayer.cardStack.takeAll()
-
-                                /*
-                                deffenceCards.forEach((c) => {
-                                    c.hideStatusTip()
-                                })
-                                */
-
                                 enemyPlayer.getBench().addCards(1 - turnPlayerId, deffenceCards, () => {
 
                                     if (enemyPlayer.getDeck().isEmpty() && (!enemyPlayer.getHandCard())) {
