@@ -391,7 +391,7 @@ export default class Card {
     fold(index, onEnd) {
         const stackCount = index
         const direction = this.player.direction
-        const x = (WidthBase * direction) + (stackCount * 4 * direction)
+        const x = (WidthBase * direction) - (stackCount * 4 /* * direction */)
         const y = HeightBase * direction - (stackCount * 4 /* * direction */)
         const xAdd = 0 //(index * 8)
 
