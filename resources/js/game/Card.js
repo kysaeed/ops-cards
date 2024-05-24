@@ -389,18 +389,11 @@ export default class Card {
     }
 
     fold(index, onEnd) {
-console.log('on fold ' + index)
         const stackCount = index
-
         const direction = this.player.direction
-
         const x = (WidthBase * direction) + (stackCount * 4 * direction)
         const y = HeightBase * direction - (stackCount * 4 /* * direction */)
-
-        // const x = this.sprite.x
-        // const y = this.sprite.y
         const xAdd = 0 //(index * 8)
-        const yMlt = 1 //1.0 + (index * 0.05)
 
         this.duel.getScene().tweens.chain({
             targets: this.sprite,
