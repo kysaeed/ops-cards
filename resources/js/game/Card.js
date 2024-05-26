@@ -14,7 +14,9 @@ class CardTip {
         const scene = duel.getScene()
 
         this.cardTip = scene.add.sprite(-30, 0, 'card_tip')
-        this.cardTipText = scene.add.text(-40, -20, '', { fontSize: '32px', fill: '#000' });
+        this.cardTipText = scene.add.text(-40, -20, '', { fontSize: '32px', fill: '#000' })
+
+
 
         this.cardTipText.text = ''
 
@@ -54,7 +56,6 @@ class CardTip {
                 }
             }
         })
-
     }
 
     hideStatusTip() {
@@ -84,9 +85,20 @@ export default class Card {
         this.cardTextPoint = scene.add.text(-62, -95, `${cardInfo.power}`, { fontSize: '30px', fill: '#000' }).setPadding(0, 2, 0, 2);;
         this.cardTextType = scene.add.text(38, -74, '種別', { fontSize: '13px', fill: '#000' }).setPadding(0, 2, 0, 2);;
         this.cardTextTitle = scene.add.text(-26, -98, `${cardInfo.name}`, { fontSize: '15px', fill: '#000' }).setPadding(0, 4, 0, 4);
+
+        const descPosition = {
+            x: -68,
+            y: 74,
+        }
+        this.abilityEffect = scene.add.sprite(0, descPosition.y + 20, 'desc_effect')
+        this.abilityEffect.visible = false
         this.cardTextDesc = scene.add
-            .text(-68, 74, 'あいうえおかきくけこ\nあいうえおかきくけこ', { fontSize: '12px', fill: '#000' })
+            .text(
+                descPosition.x, descPosition.y,
+                'あいうえおかきくけこ\nあいうえおかきくけこ',
+                { fontSize: '12px', fill: '#000' })
             .setPadding(0, 2, 0, 2);
+
 
         if (cardInfo.text) {
             this.cardTextDesc.text = cardInfo.text
@@ -132,6 +144,7 @@ export default class Card {
             this.cardTextTitle,
             this.cardTextDesc,
             this.cardTip.getSprite(),
+            this.abilityEffect,
             ///
             this.cardClickable,
         ])
@@ -160,6 +173,40 @@ export default class Card {
         })
     }
 
+    showAbilityEffect(onEnd) {
+        const scene = this.duel.getScene()
+        this.abilityEffect.alpha = 0.0
+        this.abilityEffect.scale = 1.5
+        this.abilityEffect.visible = true
+        this.abilityEffectTewwns = scene.tweens.chain({
+            targets: this.abilityEffect,
+            // repeat: -1,
+            //yoyo: true,
+            //paused: true,
+            tweens: [
+                {
+                    scale: 1.2,
+                    alpha: 0.8,
+                    duration: 150,
+                    ease: 'power1',
+                },
+                {
+                    delay: 100,
+                    scale: 4.0,
+                    duration: 300,
+                    alpha: 0.0,
+                    ease: 'power1',
+                },
+            ],
+            onComplete: () => {
+                this.abilityEffect.visible = false
+                if (onEnd) {
+                    onEnd()
+                }
+            },
+        })
+    }
+
     bringToTop() {
         const parent = this.duel.getCardBoard()
 
@@ -183,7 +230,9 @@ export default class Card {
     }
 
     showStatusTip(onEnd) {
-        this.cardTip.showStatusTip(onEnd)
+        this.showAbilityEffect(() => {
+            this.cardTip.showStatusTip(onEnd)
+        })
     }
 
     hideStatusTip() {
@@ -392,8 +441,8 @@ export default class Card {
         const stackCount = index
         const direction = this.player.direction
         const x = (WidthBase * direction) - (stackCount * 4 /* * direction */)
-        const y = HeightBase * direction - (stackCount * 4 /* * direction */)
-        const xAdd = 0 //(index * 8)
+        const y = HeightBase * direction - (stackCount * 6 /* * direction */)
+        // const xAdd = 0 //(index * 8)
 
         this.duel.getScene().tweens.chain({
             targets: this.sprite,
@@ -406,7 +455,7 @@ export default class Card {
                 //     duration: 100,
                 // },
                 {
-                    x: x + xAdd,
+                    x: x,
                     y: y,
                     //angle: 180,
                     //scale: 0.6,

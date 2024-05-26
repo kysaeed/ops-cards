@@ -41,6 +41,8 @@ const scene = {
         this.load.image('modal', 'assets/modal.png');
         this.load.image('damage', 'assets/damage.png');
 
+        this.load.image('desc_effect', 'assets/desc_effect.png')
+
 
         /**
          * todo :
@@ -90,9 +92,6 @@ const scene = {
 
         const scene = this;
         this.objectManager = this.duel.getObjectManager()
-
-        const self = this;
-
 
         this.damageMark = new DamageMark(scene, 400, 280)
 

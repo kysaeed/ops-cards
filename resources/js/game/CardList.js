@@ -26,6 +26,12 @@ const CardTypeList = [
 
 const CardList = [
   {
+    power: 1,
+    name: '犬',
+    image: 'ch_dog',
+    type: 0,
+  },
+  {
     power: 2,
     name: '車輪',
     image: 'ch_whell',
@@ -42,8 +48,8 @@ const CardList = [
       name: '影',
       image: 'ch_kage',
       type: 1,
-    },
-    {
+  },
+  {
       power: 2,
       name: '二匹の蛇',
       image: 'ch_snake',
@@ -131,12 +137,6 @@ const CardList = [
       power: 2,
       name: '機械仕掛け',
       image: 'ch_machine',
-      type: 0,
-    },
-    {
-      power: 1,
-      name: '犬',
-      image: 'ch_dog',
       type: 0,
     },
     {
