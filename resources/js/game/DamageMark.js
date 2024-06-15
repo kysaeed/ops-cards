@@ -17,6 +17,7 @@ export default class DamageMark {
 
     setDamage(damage) {
         this.sprite.scale = 0
+        this.sprite.alpha = 1.0
         this.sprite.visible = true
         // this.sprite.alpha = 0.5
 
@@ -40,6 +41,15 @@ export default class DamageMark {
                     //alpha: 0,
                     duration: 150,
                 },
+                // {
+                //     // x: x,
+                //     // y: y,
+                //     //angle: angle + Bevel,
+                //     ease: 'power1',
+                //     scale: 10.0,
+                //     alpha: 0,
+                //     duration: 200,
+                // },
             ],
             onComplete: () => {
                 console.log('dm: OK!')

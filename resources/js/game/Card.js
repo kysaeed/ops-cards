@@ -77,6 +77,11 @@ export default class Card {
 
         this.cardShadow = scene.add.sprite(0 + 2, 0 + 2, 'card_shadow')
 
+
+        this.bufParams = {
+
+        }
+
         // card main
         this.cardBg = scene.add.sprite(0, 0, 'card')
         this.cardChara = scene.add.sprite(0, 0, cardInfo.image)
@@ -174,9 +179,12 @@ export default class Card {
     }
 
     showAbilityEffect(onEnd) {
+
         const scene = this.duel.getScene()
+        // todo 背景色の暗転
+
         this.abilityEffect.alpha = 0.0
-        this.abilityEffect.scale = 1.5
+        this.abilityEffect.scale = 3.0
         this.abilityEffect.visible = true
         this.abilityEffectTewwns = scene.tweens.chain({
             targets: this.abilityEffect,
@@ -187,12 +195,12 @@ export default class Card {
                 {
                     scale: 1.2,
                     alpha: 0.8,
-                    duration: 150,
+                    duration: 250,
                     ease: 'power1',
                 },
                 {
                     delay: 100,
-                    scale: 4.0,
+                    scale: 5.0,
                     duration: 300,
                     alpha: 0.0,
                     ease: 'power1',
@@ -239,9 +247,39 @@ export default class Card {
         this.cardTip.hideStatusTip()
     }
 
+    setBufParams(params, onEnd) {
+        this.params = params
+        if (onEnd) {
+            onEnd()
+        }
+    }
+
+    onEnterToAttackPosition() {
+console.log('******** onEnterToAttackPosition()', this)
+        const ability = this.cardInfo.ability
+        if (ability) {
+            const isTurnPlayerCard = this.duel.isTurnPlayer(this.player)
+            if (isTurnPlayerCard) {
+                if (ability.attack) {
+                    if (ability.attack.power) {
+                        this.bufParams = {
+                            power: ability.attack.power
+                        }
+                        // add += ability.attack.power
+                    }
+                }
+            }
+        }
+    }
+
+    onEnterToXxxx() {
+
+    }
+
     getPower() {
         let add = 0
 
+        /*
         const ability = this.cardInfo.ability
         if (ability) {
             const isTurnPlayerCard = this.duel.isTurnPlayer(this.player)
@@ -251,6 +289,13 @@ export default class Card {
                         add += ability.attack.power
                     }
                 }
+            }
+        }
+        */
+
+        if (this.bufParams) {
+            if (this.bufParams.power) {
+                add += this.bufParams.power
             }
         }
 

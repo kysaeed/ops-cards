@@ -26,12 +26,6 @@ const CardTypeList = [
 
 const CardList = [
   {
-    power: 1,
-    name: '犬',
-    image: 'ch_dog',
-    type: 0,
-  },
-  {
     power: 2,
     name: '車輪',
     image: 'ch_whell',
@@ -42,6 +36,12 @@ const CardList = [
       }
     },
     text: "攻撃時：パワー +1",
+  },
+  {
+    power: 1,
+    name: '犬',
+    image: 'ch_dog',
+    type: 0,
   },
   {
       power: 1,

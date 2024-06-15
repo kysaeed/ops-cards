@@ -41,6 +41,19 @@ const DrawPhase = {
 
     },
 
+    attack(card, onEnd) {
+        //
+        const duel = this.duel
+        card.moveToAttackPosition(() => {
+            card.onEnterToAttackPosition()
+            duel.getTurnPlayer().getCardStack().addCard(card)
+
+            if (onEnd) {
+                onEnd();
+            }
+        })
+    },
+
     attackByHandCard(duel, onEnd) {
         // const turnPlayer = duel.getTurnPlayerId()
         const player = duel.getTurnPlayer()
@@ -53,23 +66,21 @@ const DrawPhase = {
         }
 
         currentCard.bringToTop()
-        currentCard.moveToAttackPosition(() => {
-            duel.getTurnPlayer().getCardStack().addCard(currentCard)
+
+        // 攻撃実行
+        this.attack(currentCard, () => {
             if (onEnd) {
                 onEnd()
             }
         })
-
     },
 
     doDrawHandCard(duel, onEnd) {
         const turnPlayer = duel.getTurnPlayerId()
         const player = duel.getTurnPlayer()
 
+        // 手札を持っている場合は引かない
         if (player.getHandCard()) {
-
-
-
             if (onEnd) {
                 onEnd()
             }
@@ -79,7 +90,7 @@ const DrawPhase = {
         player.deck.draw(duel, 0, turnPlayer, (currentDrawCard) => {
             if (currentDrawCard) {
                 currentDrawCard.showDetial(() => {
-
+                    // ドローしたカードを手札にする
                     currentDrawCard.moveToHandPosition(() => {
                         player.setHandCard(currentDrawCard)
                         console.log(player)
@@ -90,7 +101,6 @@ const DrawPhase = {
                 })
             }
         })
-
 
     },
 
@@ -106,9 +116,8 @@ const DrawPhase = {
         player.deck.draw(duel, 0, turnPlayer, (currentDrawCard) => {
             if (currentDrawCard) {
                 currentDrawCard.showDetial(() => {
-                    //const stackCount = duel.getPlayer(turnPlayer).getCardStack().getStackCount()
-                    currentDrawCard.moveToAttackPosition(() => {
-                        duel.getTurnPlayer().getCardStack().addCard(currentDrawCard)
+                    // 攻撃実行
+                    this.attack(currentDrawCard, () => {
                         this.isDrawProcessing = false
                         if (this.onEnd) {
                             this.onEnd('AttackPhase')

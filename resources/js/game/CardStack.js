@@ -19,6 +19,7 @@ export default class CardStack {
         //
         let power = 0
         this.cards.forEach((c) => {
+//c.foo() ////
             power += c.getPower(enemyCard)
         })
         return power

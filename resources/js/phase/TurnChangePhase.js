@@ -8,11 +8,12 @@ const TurnChangePhase = {
 
         duel.turnPlayerId = (1 - duel.getTurnPlayerId())
 
-        // todo: 守備側カードをたたむ
         const defensePlayer = duel.getOtherPlayer()
         const defenseCardStack = defensePlayer.getCardStack()
 
+        // 守備側カードをたたむ
         defenseCardStack.fold(() => {
+
             onEnd('DrawPhase');
         })
     },
