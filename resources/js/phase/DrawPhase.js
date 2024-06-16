@@ -9,6 +9,7 @@ const DrawPhase = {
 
 
         const player = duel.getTurnPlayer()
+
         if (player.getPlayerId() === 0) {
             this.doDrawHandCard(duel, () => {
                 player.setCardClickableState(true)
@@ -65,6 +66,7 @@ const DrawPhase = {
             }
         }
 
+        currentCard.setShadowParams(1.0, 1.0)
         currentCard.bringToTop()
 
         // 攻撃実行
@@ -92,8 +94,8 @@ const DrawPhase = {
                 currentDrawCard.showDetial(() => {
                     // ドローしたカードを手札にする
                     currentDrawCard.moveToHandPosition(() => {
+                        currentDrawCard.setShadowParams(1.4, 0.2) // todo moveToHandPositionへ
                         player.setHandCard(currentDrawCard)
-                        console.log(player)
                         if (onEnd) {
                             onEnd()
                         }

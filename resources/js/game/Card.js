@@ -160,6 +160,9 @@ export default class Card {
         parent.add(this.cardShadow)
         parent.add(this.sprite)
 
+        this.shadowScale = 1.0
+        this.shadowAlpha = 1.0
+
         duel.getObjectManager().append(this)
 
         this.cardInfo = cardInfo
@@ -673,12 +676,21 @@ console.log('*** onEnterToDeffence ******:')
 
     }
 
+    setShadowParams(scale, alpha) {
+        this.shadowScale = scale
+        this.shadowAlpha = alpha
+    }
+
+
     onUpdate() {
         this.cardShadow.x = this.sprite.x + 2
         this.cardShadow.y = this.sprite.y + 2
-        this.cardShadow.scale = this.sprite.scale
+
+        // todo
         this.cardShadow.angle = this.sprite.angle
-        this.cardShadow.alpha = this.sprite.alpha
+        this.cardShadow.scale = this.sprite.scale * this.shadowScale
+        this.cardShadow.alpha = this.sprite.alpha * this.shadowAlpha
+
     }
 
 }
