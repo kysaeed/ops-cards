@@ -272,8 +272,11 @@ console.log('******** onEnterToAttackPosition()', this)
         }
     }
 
-    onEnterToXxxx() {
+    onEnterToDeffence() {
+console.log('*** onEnterToDeffence ******:')
 
+
+        //
     }
 
     getPower() {

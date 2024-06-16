@@ -13,6 +13,11 @@ const TurnChangePhase = {
 
         // 守備側カードをたたむ
         defenseCardStack.fold(() => {
+            const plyaer = duel.getOtherPlayer()
+            const card = plyaer.getCardStack().getTopCard()
+            if (card) {
+                card.onEnterToDeffence()
+            }
 
             onEnd('DrawPhase');
         })
