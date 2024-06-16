@@ -42,12 +42,6 @@ const CardList = [
     name: '犬',
     image: 'ch_dog',
     type: 0,
-    ability: {
-      defense: {
-        power: 1,
-      }
-    },
-    text: "守備時：パワー +1",
   },
   {
       power: 1,
@@ -78,6 +72,12 @@ const CardList = [
       name: 'カカシ',
       image: 'ch_scarecrow',
       type: 0,
+      ability: {
+        defense: {
+          power: 1,
+        }
+      },
+      text: "守備時：パワー +1",
     },
     {
       power: 4,
