@@ -266,9 +266,10 @@ console.log('******** onEnterToAttackPosition()', this)
                 if (ability.attack) {
                     if (ability.attack.power) {
                         this.bufParams = {
-                            power: ability.attack.power
+                            attack: {
+                                power: ability.attack.power,
+                            }
                         }
-                        // add += ability.attack.power
                     }
                 }
             }
@@ -278,30 +279,36 @@ console.log('******** onEnterToAttackPosition()', this)
     onEnterToDeffence() {
 console.log('*** onEnterToDeffence ******:')
 
+        const ability = this.cardInfo.ability
 
-        //
+        if (ability) {
+            if (ability.defence) {
+                if (!this.bufParams) {
+                    this.bufParams = {}
+                }
+            }
+
+            if (!this.bufParams['defence']) {
+                this.bufParams['defence'] = {}
+            }
+
+            if (ability.defence) {
+                this.bufParams.defence.power = ability.defence.power
+            }
+        }
+
     }
 
     getPower() {
         let add = 0
 
-        /*
-        const ability = this.cardInfo.ability
-        if (ability) {
-            const isTurnPlayerCard = this.duel.isTurnPlayer(this.player)
-            if (isTurnPlayerCard) {
-                if (ability.attack) {
-                    if (ability.attack.power) {
-                        add += ability.attack.power
-                    }
-                }
-            }
-        }
-        */
-
         if (this.bufParams) {
-            if (this.bufParams.power) {
-                add += this.bufParams.power
+            if (this.bufParams.attack) {
+                add += this.bufParams.attack.power
+            }
+
+            if (this.bufParams.defence) {
+                add += this.bufParams.defence.power
             }
         }
 
