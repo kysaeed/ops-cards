@@ -282,18 +282,18 @@ console.log('*** onEnterToDeffence ******:')
         const ability = this.cardInfo.ability
 
         if (ability) {
-            if (ability.defence) {
+            if (ability.defense) {
                 if (!this.bufParams) {
                     this.bufParams = {}
                 }
             }
 
-            if (!this.bufParams['defence']) {
-                this.bufParams['defence'] = {}
+            if (!this.bufParams['defense']) {
+                this.bufParams['defense'] = {}
             }
 
-            if (ability.defence) {
-                this.bufParams.defence.power = ability.defence.power
+            if (ability.defense) {
+                this.bufParams.defense.power = ability.defense.power
             }
         }
 
@@ -307,8 +307,8 @@ console.log('*** onEnterToDeffence ******:')
                 add += this.bufParams.attack.power
             }
 
-            if (this.bufParams.defence) {
-                add += this.bufParams.defence.power
+            if (this.bufParams.defense) {
+                add += this.bufParams.defense.power
             }
         }
 
