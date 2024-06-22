@@ -257,11 +257,42 @@ export default class Card {
         }
     }
 
+    getBufPowerByCardAbility(side, /** @todo 相手カードの情報とか */) {
+
+        const ability = this.cardInfo.ability
+        if (!ability) {
+            return 0
+        }
+
+        let add = 0
+        if (side === 1) {
+            if (ability.attack) {
+                if (ability.attack.power) {
+                    add += ability.attack.power
+                }
+
+            }
+
+        }
+        if (side === 2) {
+            if (ability.defense) {
+                if (ability.defense.power) {
+                    add += ability.defense.power
+                }
+            }
+
+        }
+
+        return add
+
+    }
+
     onEnterToAttackPosition(onEnd) {
 
-console.log('******** onEnterToAttackPosition()', this)
+console.log('******** onEnterToAttackPosition()')
         this.showStatusTip(() => { // todo: 引数に表示内容を設定?
 
+            /*
             const ability = this.cardInfo.ability
             if (ability) {
                 if (ability.attack) {
@@ -274,6 +305,16 @@ console.log('******** onEnterToAttackPosition()', this)
                     }
                 }
             }
+            */
+
+
+
+            const add = this.getBufPowerByCardAbility(1)
+            this.bufParams = {
+                power: add,
+            }
+
+            this.cardTip.setText(`+${add}`)
 
             if (onEnd) {
                 onEnd()
@@ -284,9 +325,10 @@ console.log('******** onEnterToAttackPosition()', this)
     onEnterToDefense(onEnd) {
 
         this.showStatusTip(() => { // todo: 引数に表示内容を設定?
-            const ability = this.cardInfo.ability
-            console.log('*** onEnterToDefense ******:', ability)
+            console.log('*** onEnterToDefense ******:')
 
+            /*
+            const ability = this.cardInfo.ability
             if (ability) {
                 if (ability.defense) {
                     if (!this.bufParams) {
@@ -302,6 +344,16 @@ console.log('******** onEnterToAttackPosition()', this)
                     this.bufParams.defense.power = ability.defense.power
                 }
             }
+            */
+
+            const add = this.getBufPowerByCardAbility(2)
+            this.bufParams = {
+                power: add,
+            }
+
+
+            this.cardTip.setText(`+${add}`)
+
             if (onEnd) {
                 onEnd()
             }
@@ -312,18 +364,21 @@ console.log('******** onEnterToAttackPosition()', this)
         let add = 0
 
         if (this.bufParams) {
-            if (this.bufParams.attack) {
-                add += this.bufParams.attack.power
-            }
+            add += this.bufParams.power
+            // if (this.bufParams.attack) {
+            //     add += this.bufParams.attack.power
+            // }
 
-            if (this.bufParams.defense) {
-                add += this.bufParams.defense.power
-            }
+            // if (this.bufParams.defense) {
+            //     add += this.bufParams.defense.power
+            // }
         }
 
+/*
         if (add) {
             this.cardTip.setText(`+${add}`)
         }
+*/
 
         return (this.cardInfo.power + add)
     }

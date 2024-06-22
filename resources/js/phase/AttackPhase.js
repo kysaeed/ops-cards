@@ -12,12 +12,10 @@ const AttackPhase = {
         const total = duel.getTurnPlayer().cardStack.getTotalPower()
 
 
-        // todo defense側のablity判定
         const defenseCard = ohterPlayer.getCardStack().getTopCard()
-        defenseCard.onEnterToDefense(() => {
+        defenseCard.onEnterToDefense(() => { // defense側のablity判定
 
             duel.getTurnPlayer().cardStack.cards.forEach((c, stackCount) => {
-
 
                 c.attack(stackCount, () => {
                     if (stackCount < 1) {
@@ -33,6 +31,11 @@ const AttackPhase = {
 
                                 // ディフェンス側のカードを横へ
                                 const deffenceCards = enemyPlayer.cardStack.takeAll()
+
+                                deffenceCards.forEach((c) => {
+                                    c.hideStatusTip()
+                                })
+
                                 enemyPlayer.getBench().addCards(1 - turnPlayerId, deffenceCards, () => {
 
                                     if (enemyPlayer.getDeck().isEmpty() && (!enemyPlayer.getHandCard())) {
