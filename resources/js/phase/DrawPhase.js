@@ -10,6 +10,14 @@ const DrawPhase = {
 
         const player = duel.getTurnPlayer()
 
+        if (player.getDeck().isEmpty()) {
+            if (!player.getHandCard) {
+                ///
+                onEnd('') // todo 勝敗表示へ
+            }
+        }
+
+
         if (player.getPlayerId() === 0) {
             this.doDrawHandCard(duel, () => {
                 player.setCardClickableState(true)
@@ -50,7 +58,7 @@ const DrawPhase = {
             duel.getTurnPlayer().getCardStack().addCard(card)
 
             if (onEnd) {
-                onEnd();
+                onEnd()
             }
         })
     },
@@ -115,7 +123,7 @@ const DrawPhase = {
 
         const turnPlayer = duel.getTurnPlayerId()
         const player = duel.getTurnPlayer()
-        player.deck.draw(duel, 0, turnPlayer, (currentDrawCard) => {
+        player.getDeck().draw(duel, 0, turnPlayer, (currentDrawCard) => {
             if (currentDrawCard) {
                 currentDrawCard.showDetial(() => {
                     // 攻撃実行

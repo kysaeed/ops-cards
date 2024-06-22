@@ -172,12 +172,6 @@ const CardList = [
     },
     {
       power: 1,
-      name: '機械仕掛け',
-      image: 'chara',
-      type: 0,
-    },
-    {
-      power: 1,
       name: '風車',
       image: 'chara',
       type: 0,
@@ -218,7 +212,18 @@ const CardList = [
       image: 'chara',
       type: 0,
     },
-
+    {
+      power: 1,
+      name: '大砲',
+      image: 'chara',
+      type: 0,
+    },
+    {
+      power: 1,
+      name: '城',
+      image: 'chara',
+      type: 0,
+    },
 
 
 

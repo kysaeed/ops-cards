@@ -13,6 +13,10 @@ export default class Bench {
         // this.y = y
     }
 
+    getCount() {
+        return this.cards.length
+    }
+
     addCards(playerId, cardList, onEnd) {
 
         playerId = this.playerId

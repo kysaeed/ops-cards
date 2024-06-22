@@ -4,6 +4,7 @@ import SetupPhase from './SetupPhase.js'
 import DrawPhase from './DrawPhase.js'
 import AttackPhase from './AttackPhase.js'
 import TurnChangePhase from './TurnChangePhase.js'
+import EndPhase from './EndPhase.js'
 
 
 // constants
@@ -18,6 +19,7 @@ const phase = {
     DrawPhase,
     AttackPhase,
     TurnChangePhase,
+    EndPhase,
 }
 
 export default phase

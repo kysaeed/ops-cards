@@ -34,6 +34,7 @@ const AttackPhase = {
                                     if (enemyPlayer.getDeck().isEmpty() && (!enemyPlayer.getHandCard())) {
 
                                         console.log('END!')
+
                                         const textModal = duel.getScene().add.sprite(360, 200, 'modal')
                                         textModal.displayWidth = 400
 
@@ -45,6 +46,8 @@ const AttackPhase = {
                                         }
 
                                         const endText = duel.getScene().add.text(360, 216, text, { fontSize: '32px', fill: '#000' });
+                                        onEnd('EndPhase')
+                                        return
                                     }
 
                                     onEnd('TurnChangePhase')
