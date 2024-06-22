@@ -54,12 +54,12 @@ const DrawPhase = {
         //
         const duel = this.duel
         card.moveToAttackPosition(() => {
-            card.onEnterToAttackPosition()
-            duel.getTurnPlayer().getCardStack().addCard(card)
-
-            if (onEnd) {
-                onEnd()
-            }
+            card.onEnterToAttackPosition(() => {
+                duel.getTurnPlayer().getCardStack().addCard(card)
+                if (onEnd) {
+                    onEnd()
+                }
+            })
         })
     },
 

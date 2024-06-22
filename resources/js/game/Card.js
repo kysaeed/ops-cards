@@ -257,12 +257,13 @@ export default class Card {
         }
     }
 
-    onEnterToAttackPosition() {
+    onEnterToAttackPosition(onEnd) {
+
 console.log('******** onEnterToAttackPosition()', this)
-        const ability = this.cardInfo.ability
-        if (ability) {
-            const isTurnPlayerCard = this.duel.isTurnPlayer(this.player)
-            if (isTurnPlayerCard) {
+        this.showStatusTip(() => { // todo: 引数に表示内容を設定?
+
+            const ability = this.cardInfo.ability
+            if (ability) {
                 if (ability.attack) {
                     if (ability.attack.power) {
                         this.bufParams = {
@@ -273,30 +274,38 @@ console.log('******** onEnterToAttackPosition()', this)
                     }
                 }
             }
-        }
+
+            if (onEnd) {
+                onEnd()
+            }
+        })
     }
 
-    onEnterToDeffence() {
-console.log('*** onEnterToDeffence ******:')
+    onEnterToDefense(onEnd) {
 
-        const ability = this.cardInfo.ability
+        this.showStatusTip(() => { // todo: 引数に表示内容を設定?
+            const ability = this.cardInfo.ability
+            console.log('*** onEnterToDefense ******:', ability)
 
-        if (ability) {
-            if (ability.defense) {
-                if (!this.bufParams) {
-                    this.bufParams = {}
+            if (ability) {
+                if (ability.defense) {
+                    if (!this.bufParams) {
+                        this.bufParams = {}
+                    }
+                }
+
+                if (!this.bufParams['defense']) {
+                    this.bufParams['defense'] = {}
+                }
+
+                if (ability.defense) {
+                    this.bufParams.defense.power = ability.defense.power
                 }
             }
-
-            if (!this.bufParams['defense']) {
-                this.bufParams['defense'] = {}
+            if (onEnd) {
+                onEnd()
             }
-
-            if (ability.defense) {
-                this.bufParams.defense.power = ability.defense.power
-            }
-        }
-
+        })
     }
 
     getPower() {

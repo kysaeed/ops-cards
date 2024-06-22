@@ -15,11 +15,15 @@ const TurnChangePhase = {
         defenseCardStack.fold(() => {
             const plyaer = duel.getOtherPlayer()
             const card = plyaer.getCardStack().getTopCard()
+console.log('defense card **** ', card)
             if (card) {
-                card.onEnterToDeffence()
+                card.onEnterToDefense(() => {
+                    onEnd('DrawPhase');
+                })
+            } else {
+                onEnd('DrawPhase');
             }
 
-            onEnd('DrawPhase');
         })
     },
 
