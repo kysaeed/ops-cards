@@ -265,7 +265,7 @@ export default class Card {
         }
 
         let add = 0
-        if (side === 1) {
+        if (side === Const.Card.Side.Attack) {
             if (ability.attack) {
                 if (ability.attack.power) {
                     add += ability.attack.power
@@ -273,8 +273,9 @@ export default class Card {
 
             }
 
+
         }
-        if (side === 2) {
+        if (side === Const.Card.Side.Defense) {
             if (ability.defense) {
                 if (ability.defense.power) {
                     add += ability.defense.power
@@ -309,7 +310,7 @@ console.log('******** onEnterToAttackPosition()')
 
 
 
-            const add = this.getBufPowerByCardAbility(1)
+            const add = this.getBufPowerByCardAbility(Const.Card.Side.Attack)
             this.bufParams = {
                 power: add,
             }
@@ -346,11 +347,10 @@ console.log('******** onEnterToAttackPosition()')
             }
             */
 
-            const add = this.getBufPowerByCardAbility(2)
+            const add = this.getBufPowerByCardAbility(Const.Card.Side.Defense)
             this.bufParams = {
                 power: add,
             }
-
 
             this.cardTip.setText(`+${add}`)
 
