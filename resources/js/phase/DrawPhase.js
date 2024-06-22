@@ -74,7 +74,7 @@ const DrawPhase = {
             }
         }
 
-        currentCard.setShadowParams(1.0, 1.0)
+        currentCard.setShadowParams(1.0, 1.0, 2)
         currentCard.bringToTop()
 
         // 攻撃実行
@@ -102,7 +102,7 @@ const DrawPhase = {
                 currentDrawCard.showDetial(() => {
                     // ドローしたカードを手札にする
                     currentDrawCard.moveToHandPosition(() => {
-                        currentDrawCard.setShadowParams(1.4, 0.2) // todo moveToHandPositionへ
+                        currentDrawCard.setShadowParams(1.4, 0.2, 6) // todo moveToHandPositionへ
                         player.setHandCard(currentDrawCard)
                         if (onEnd) {
                             onEnd()

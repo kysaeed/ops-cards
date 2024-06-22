@@ -160,6 +160,7 @@ export default class Card {
         parent.add(this.cardShadow)
         parent.add(this.sprite)
 
+        this.shadowDistance = 2
         this.shadowScale = 1.0
         this.shadowAlpha = 1.0
 
@@ -747,15 +748,16 @@ console.log('******** onEnterToAttackPosition()')
 
     }
 
-    setShadowParams(scale, alpha) {
+    setShadowParams(scale, alpha, distance) {
         this.shadowScale = scale
         this.shadowAlpha = alpha
+        this.shadowDistance = distance
     }
 
 
     onUpdate() {
-        this.cardShadow.x = this.sprite.x + 2
-        this.cardShadow.y = this.sprite.y + 2
+        this.cardShadow.x = this.sprite.x + this.shadowDistance
+        this.cardShadow.y = this.sprite.y + this.shadowDistance
 
         // todo
         this.cardShadow.angle = this.sprite.angle
