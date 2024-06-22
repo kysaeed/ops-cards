@@ -16,14 +16,16 @@ const TurnChangePhase = {
             const plyaer = duel.getOtherPlayer()
             const card = plyaer.getCardStack().getTopCard()
 console.log('defense card **** ', card)
-            if (card) {
-                card.onEnterToDefense(() => {
-                    onEnd('DrawPhase');
-                })
-            } else {
-                onEnd('DrawPhase');
-            }
 
+            // if (card) {
+            //     card.onEnterToDefense(() => {
+            //         onEnd('DrawPhase');
+            //     })
+            // } else {
+            //    onEnd('DrawPhase');
+            // }
+
+            onEnd('DrawPhase');
         })
     },
 
