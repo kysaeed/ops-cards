@@ -27,6 +27,10 @@ window.axios = axios //@
 
 const scene = {
     preload() {
+        this.load.spritesheet('number', 'assets/number.png', {
+            frameWidth: 20,
+            frameHeight: 20,
+        });
 
         this.load.image('flag', 'assets/flag.png');
         this.load.image('card', 'assets/card.png'); // (160 * 220) * 0.5

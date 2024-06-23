@@ -1,3 +1,4 @@
+import Const from "../Const"
 
 const AttackPhase = {
     enter(duel, onEnd) {
@@ -41,6 +42,13 @@ const AttackPhase = {
                                 })
 
                                 enemyPlayer.getBench().addCards(deffenceCards, () => {
+                                    if (enemyPlayer.getBench().getCount() > Const.Bench.Count) {
+                                        console.log('***** to EndPhase !')
+
+                                        onEnd('EndPhase')
+                                        return
+                                    }
+
 
                                     if (enemyPlayer.getDeck().isEmpty() && (!enemyPlayer.getHandCard())) {
 

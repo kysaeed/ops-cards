@@ -1,4 +1,5 @@
 import Const from '../Const.js'
+import Number from './Number.js'
 
 const Bevel = Const.Bevel
 const HeightBase = 100
@@ -85,9 +86,13 @@ export default class Card {
         // card main
         this.cardBg = scene.add.sprite(0, 0, 'card')
         this.cardChara = scene.add.sprite(0, 0, cardInfo.image)
+
         this.cardPow = scene.add.sprite(-52, -73, 'card_pow')
+        this.power = new Number(scene, -55, -80)
+        this.power.setNumber(cardInfo.power)
+        // this.cardTextPoint = scene.add.text(-62, -95, `${cardInfo.power}`, { fontSize: '30px', fill: '#000' }).setPadding(0, 2, 0, 2);;
+
         this.cardType = scene.add.sprite(50, -67, 'card_type')
-        this.cardTextPoint = scene.add.text(-62, -95, `${cardInfo.power}`, { fontSize: '30px', fill: '#000' }).setPadding(0, 2, 0, 2);;
         this.cardTextType = scene.add.text(38, -74, '種別', { fontSize: '13px', fill: '#000' }).setPadding(0, 2, 0, 2);;
         this.cardTextTitle = scene.add.text(-26, -98, `${cardInfo.name}`, { fontSize: '15px', fill: '#000' }).setPadding(0, 4, 0, 4);
 
@@ -144,7 +149,8 @@ export default class Card {
             this.cardChara,
             this.cardPow,
             this.cardType,
-            this.cardTextPoint,
+            //this.cardTextPoint,
+            this.power.getSprite(),
             this.cardTextType,
             this.cardTextTitle,
             this.cardTextDesc,
@@ -152,6 +158,7 @@ export default class Card {
             this.abilityEffect,
             ///
             this.cardClickable,
+
         ])
 
         this.sprite.angle = Bevel + (180 * cardDirection)

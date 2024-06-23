@@ -67,6 +67,18 @@ const CardList = [
       image: 'ch_moon',
       type: 1,
     },
+    {
+      power: 5,
+      name: 'カカシ',
+      image: 'ch_scarecrow',
+      type: 0,
+      ability: {
+        defense: {
+          power: 1,
+        }
+      },
+      text: "守備時：パワー +1",
+    },
 
     {
       power: 4,
