@@ -9,5 +9,8 @@ export default {
             Attack: 1,
             Defense: 2,
         }
+    },
+    Bench: {
+        Count: 7,
     }
 }

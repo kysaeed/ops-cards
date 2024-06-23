@@ -754,7 +754,6 @@ console.log('******** onEnterToAttackPosition()')
         this.shadowDistance = distance
     }
 
-
     onUpdate() {
         this.cardShadow.x = this.sprite.x + this.shadowDistance
         this.cardShadow.y = this.sprite.y + this.shadowDistance

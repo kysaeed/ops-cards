@@ -36,6 +36,10 @@ export default class CardStack {
         return this.cards.length
     }
 
+    take(count) {
+        return this.cards.splice(-count, count)
+    }
+
     takeAll() {
         const cards = this.cards
         this.cards = []

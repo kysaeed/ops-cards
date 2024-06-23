@@ -30,13 +30,17 @@ const AttackPhase = {
                                 const enemyPlayer = duel.getOtherPlayer()
 
                                 // ディフェンス側のカードを横へ
-                                const deffenceCards = enemyPlayer.cardStack.takeAll()
+                                enemyPlayer.getCardStack().each(() => {
+                                    c.hideStatusTip()
+                                })
+
+                                const deffenceCards = enemyPlayer.getCardStack().takeAll()
 
                                 deffenceCards.forEach((c) => {
                                     c.hideStatusTip()
                                 })
 
-                                enemyPlayer.getBench().addCards(1 - turnPlayerId, deffenceCards, () => {
+                                enemyPlayer.getBench().addCards(deffenceCards, () => {
 
                                     if (enemyPlayer.getDeck().isEmpty() && (!enemyPlayer.getHandCard())) {
 

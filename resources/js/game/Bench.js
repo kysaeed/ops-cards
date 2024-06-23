@@ -1,4 +1,6 @@
 
+import Const from "../Const"
+
 const HeightBase = 100
 const WidthBase = -30
 
@@ -17,18 +19,19 @@ export default class Bench {
         return this.cards.length
     }
 
-    addCards(playerId, cardList, onEnd) {
+    addCards(cardList, onEnd) {
 
-        playerId = this.playerId
-
-        // const currentPlayer = this.duelInfo.playerList[playerId]
+        let addCardCount = 0
         cardList.forEach((c, i) => {
-            // const benchIndex = this.cards.length
-
-            this.addCardElement(playerId, c, onEnd)
-            onEnd = null
+            this.addCardElement(this.playerId, c, () => {
+                addCardCount++
+                if (addCardCount >= cardList.length) {
+                    if (onEnd) {
+                        onEnd()
+                    }
+                }
+            })
         })
-
     }
 
     addCardElement(playerId, card, onEnd) {
