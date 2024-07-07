@@ -15,6 +15,20 @@ export default class Bench {
         // this.y = y
     }
 
+    takeLatestCard() {
+        if (!this.cards.length) {
+            return
+        }
+
+        const elements = this.cards[0]
+        if (!elements.length) {
+            return
+        }
+
+        return elements.pop()
+
+    }
+
     getCount() {
         return this.cards.length
     }

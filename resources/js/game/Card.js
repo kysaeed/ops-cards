@@ -233,6 +233,13 @@ export default class Card {
         parent.bringToTop(this.sprite)
     }
 
+    sendToBack() {
+        const parent = this.duel.getCardBoard()
+
+        parent.sendToBack(this.cardShadow)
+        parent.sendToBack(this.sprite)
+    }
+
     setClickableState(isClickable) {
         const sprite = this.cardBg
         if (isClickable) {
@@ -299,7 +306,23 @@ export default class Card {
     onEnterToAttackPosition(onEnd) {
 
 console.log('******** onEnterToAttackPosition()')
+
         this.showStatusTip(() => { // todo: 引数に表示内容を設定?
+
+
+
+            const player = this.duel.getTurnPlayer()
+            const bench = player.getBench()
+
+            const recycleCard = bench.takeLatestCard()
+            if (recycleCard) {
+                const x = -160 * player.getDirection()
+                const y = (210 * player.getDirection()) + 30
+                recycleCard.moveToDeck(x, y, () => {
+                    //
+                })
+
+            }
 
             /*
             const ability = this.cardInfo.ability
@@ -755,6 +778,84 @@ console.log('******** onEnterToAttackPosition()')
 
     }
 
+    moveToDeck(x, y, onEnd) {
+        // const max = 6
+        // const angle = Math.floor((90 + 12) + (Math.random() * max) - (max / 2))
+
+        const currentX = this.sprite.x
+        const currentY = this.sprite.y
+
+        const midX = currentX + ((x - currentX) * 0.5)
+
+        const player = this.duel.getTurnPlayer()
+        const angle = player.getDirection() //
+
+
+        this.duel.getScene().tweens.chain({
+            targets: this.sprite,
+            tweens: [
+                {
+                    // angle: angle,
+                    scale: DefaultCardSize * 0.8,
+                    duration: 200,
+                    ease: 'power1',
+                },
+                {
+                    x: midX,
+                    y: y,
+                    angle: 60,
+                    scale: DefaultCardSize * 0.8,
+                    duration: 400,
+                    ease: 'power1',
+                },
+                /*
+                {
+                    x: x,
+                    y: y,
+                    // angle: angle,
+                    // scale: DefaultCardSize * 0.4,
+                    duration: 400,
+                    alpha: 0,
+                    ease: 'power1',
+                },
+                */
+            ],
+            onComplete: () => {
+                this.sendToBack()
+
+                // if (onEnd) {
+                //     onEnd();
+                // }
+                this.duel.getScene().tweens.chain({
+                    targets: this.sprite,
+                    tweens: [
+                        {
+                            x: x,
+                            y: y,
+                            duration: 400,
+                            alpha: 0.5,
+                            ease: 'power1',
+                        },
+                        {
+                            duration: 400,
+                            alpha: 0,
+                            ease: 'power1',
+                        },
+                    ],
+                    onComplete: () => {
+                        if (onEnd) {
+                            onEnd();
+                        }
+                    },
+                })
+            },
+        })
+
+
+
+
+
+    }
     setShadowParams(scale, alpha, distance) {
         this.shadowScale = scale
         this.shadowAlpha = alpha

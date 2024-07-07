@@ -6,11 +6,12 @@ export default class Number {
 
         this.sprites = []
         for (let i = 0; i < maxDigit; i++) {
-            this.sprites.push(scene.add.sprite(-17 * i, 0, 'number', 1))
+            const sprite = scene.add.sprite(-17 * i, 0, 'number', 1)
+            sprite.scale = 1.3
+            this.sprites.push(sprite)
         }
 
         this.container = scene.add.container(x, y, this.sprites)
-
     }
 
     getSprite() {
