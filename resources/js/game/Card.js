@@ -15,22 +15,23 @@ class CardTip {
         const scene = duel.getScene()
 
         this.cardTip = scene.add.sprite(-30, 0, 'card_tip')
-        this.cardTipText = scene.add.text(-40, -20, '', { fontSize: '32px', fill: '#000' })
 
-
-
-        this.cardTipText.text = ''
+        this.power = new Number(scene, -55, -80)
+        this.power.getSprite().x = -40 + 8
+        this.power.getSprite().y = -20 + 16
+        // this.power.setNumber(0)
 
         this.sprite = scene.add.container(x, y, [
             this.cardTip,
-            this.cardTipText,
+            this.power.getSprite(),
         ])
         this.sprite.visible = false
 
     }
 
     setText(text) {
-        this.cardTipText.text = text
+        this.power.setNumber(text)
+        //this.cardTipText.text = text
     }
 
     getSprite() {
@@ -359,7 +360,7 @@ console.log('******** onEnterToAttackPosition()')
                 power: add,
             }
 
-            this.cardTip.setText(`+${add}`)
+            this.cardTip.setText(add)
 
             if (onEnd) {
                 onEnd()
