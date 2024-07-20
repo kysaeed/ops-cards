@@ -16,9 +16,9 @@ class CardTip {
 
         this.cardTip = scene.add.sprite(-30, 0, 'card_tip')
 
-        this.power = new Number(scene, -55, -80)
-        this.power.getSprite().x = -40 + 8
-        this.power.getSprite().y = -20 + 16
+        this.power = new Number(scene, -55, -80, 1, true)
+        this.power.getSprite().x = -36 + 16
+        this.power.getSprite().y = -16 + 16
         // this.power.setNumber(0)
 
         this.sprite = scene.add.container(x, y, [
