@@ -21,9 +21,8 @@ const DrawPhase = {
         this.doDrawHandCard(duel, () => {
             if (player.getPlayerId() === 0) {
                 player.setCardClickableState(true)
-
             } else {
-                if (((Math.random() * 10) < 5) && player.getHandCard()) {
+                if ((((Math.random() * 10) < 5) && player.getHandCard()) || (player.getDeck().isEmpty())) {
                     // 手札を使用
                     if (player.getHandCard()) {
                         this.attackByHandCard(this.duel, () => {
