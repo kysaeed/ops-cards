@@ -18,13 +18,22 @@ const DrawPhase = {
         }
 
 
-        if (player.getPlayerId() === 0) {
-            this.doDrawHandCard(duel, () => {
+        this.doDrawHandCard(duel, () => {
+            if (player.getPlayerId() === 0) {
                 player.setCardClickableState(true)
-            })
-        } else {
-            this.doDraw(duel)
-        }
+
+            } else {
+                if ((Math.random() * 10) < 5) {
+                    // 手札を使用
+                    this.attackByHandCard(this.duel, () => {
+                        this.onEnd('AttackPhase')
+                    })
+                } else {
+                    // 山札を使用
+                    this.doDraw(this.duel)
+                }
+            }
+        })
     },
 
     onEvent(event, sender, params) {
@@ -102,7 +111,7 @@ const DrawPhase = {
                 currentDrawCard.showDetial(() => {
                     // ドローしたカードを手札にする
                     currentDrawCard.moveToHandPosition(() => {
-                        currentDrawCard.setShadowParams(1.4, 0.2, 6) // todo moveToHandPositionへ
+                        currentDrawCard.setShadowParams(1.4, 0.2, 6) // todo moveToHandPosition内へ
                         player.setHandCard(currentDrawCard)
                         if (onEnd) {
                             onEnd()

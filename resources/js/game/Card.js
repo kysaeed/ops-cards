@@ -694,14 +694,14 @@ console.log('******** onEnterToAttackPosition()')
 
         const stackCount = 0 //this.player.getCardStack().getStackCount()
         const x = -(WidthBase * 2 /* * direction */ )
-        const y = (HeightBase) * 2.5 /* + (HeightBase * 2 * (1 - this.player.getPlayerId())) */
+        const y = (HeightBase) * 2.4 * direction /* + (HeightBase * 2 * (1 - this.player.getPlayerId())) */
 
         scene.tweens.chain({
             targets: this.sprite,
             tweens: [
                 {
                     delay: 1000,
-                    scale: 0.65,
+                    scale: 0.60,
                     x: x,
                     y: y,
                     ease: 'power1',
@@ -711,7 +711,7 @@ console.log('******** onEnterToAttackPosition()')
                 {
                     x: x,
                     y: y,
-                    scale: 0.65,
+                    scale: 0.60,
                     duration: 100,
                 },
             ],
