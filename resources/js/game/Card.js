@@ -695,6 +695,7 @@ console.log('******** onEnterToAttackPosition()')
         const stackCount = 0 //this.player.getCardStack().getStackCount()
         const x = -(WidthBase * 2 /* * direction */ )
         const y = (HeightBase) * 2.4 * direction /* + (HeightBase * 2 * (1 - this.player.getPlayerId())) */
+        const angle = this.player.getPlayerId() * 180
 
         scene.tweens.chain({
             targets: this.sprite,
@@ -706,7 +707,7 @@ console.log('******** onEnterToAttackPosition()')
                     y: y,
                     ease: 'power1',
                     duration: 200,
-                    angle: 0, //Bevel + (180 * this.player.getPlayerId()),
+                    angle: angle, //Bevel + (180 * this.player.getPlayerId()),
                 },
                 {
                     x: x,

@@ -11,9 +11,9 @@ const DrawPhase = {
         const player = duel.getTurnPlayer()
 
         if (player.getDeck().isEmpty()) {
-            if (!player.getHandCard) {
-                ///
-                onEnd('') // todo 勝敗表示へ
+            if (!player.getHandCard()) {
+                /// todo!!!
+                onEnd('EndPhase') // todo 勝敗表示へ
             }
         }
 
@@ -23,11 +23,13 @@ const DrawPhase = {
                 player.setCardClickableState(true)
 
             } else {
-                if ((Math.random() * 10) < 5) {
+                if (((Math.random() * 10) < 5) && player.getHandCard()) {
                     // 手札を使用
-                    this.attackByHandCard(this.duel, () => {
-                        this.onEnd('AttackPhase')
-                    })
+                    if (player.getHandCard()) {
+                        this.attackByHandCard(this.duel, () => {
+                            this.onEnd('AttackPhase')
+                        })
+                    }
                 } else {
                     // 山札を使用
                     this.doDraw(this.duel)
