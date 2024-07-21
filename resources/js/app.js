@@ -40,6 +40,7 @@ const scene = {
         this.load.image('card_shadow', 'assets/card_shadow.png');
         this.load.image('deck_shadow', 'assets/deck_shadow.png');
         this.load.image('card_tip', 'assets/card_tip.png');
+        this.load.image('card_tip_shadow', 'assets/card_tip_shadow.png');
         this.load.image('deck_clickable', 'assets/deck_clickable.png');
         this.load.image('board', 'assets/board.png');
         this.load.image('modal', 'assets/modal.png');

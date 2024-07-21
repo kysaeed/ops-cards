@@ -89,7 +89,7 @@ export default class Card {
         this.cardChara = scene.add.sprite(0, 0, cardInfo.image)
 
         this.cardPow = scene.add.sprite(-52, -73, 'card_pow')
-        this.power = new Number(scene, -55, -80)
+        this.power = new Number(scene, -53, -80)
         this.power.setNumber(cardInfo.power)
         // this.cardTextPoint = scene.add.text(-62, -95, `${cardInfo.power}`, { fontSize: '30px', fill: '#000' }).setPadding(0, 2, 0, 2);;
 
