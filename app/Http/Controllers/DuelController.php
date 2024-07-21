@@ -42,6 +42,18 @@ class DuelController extends Controller
         ]);
     }
 
+    public function draw(Request $request)
+    {
+        $idUser = $request->input('idUser');
+        $index = $request->input('index');
+
+
+        return response()->json([
+            'cardNumber' => 1,
+        ]);
+
+    }
+
     /**
      * Store a newly created resource in storage.
      */

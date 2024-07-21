@@ -22,7 +22,7 @@ const SetupPhase = {
                 player.getDeck().setCardList(deckData)
             })
 
-            const diffenceCardInfo = player.getDeck().draw(duel, 400, turnPlayerId, () => {
+            player.getDeck().draw(duel, 400, turnPlayerId, (diffenceCardInfo) => {
 
                 let enemyY = -HeightBase
                 if (turnPlayerId) {

@@ -24,4 +24,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::prefix('data')->group(function() {
     Route::get('deck', [DuelController::class, 'index']);
+
+    Route::post('deck/draw', [DuelController::class, 'draw']);
 });

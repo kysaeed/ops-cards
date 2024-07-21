@@ -256,20 +256,35 @@ export default class Deck {
         const y = -(HeightBase) + (HeightBase * 2 * (turnPlayerId))
 
 
-        const cardId = this.cards.shift()
-        const cardInfo = CardList[cardId - 1]
 
-        const card = new Card(duel, cardInfo, this.player, stackCount * 8, y + stackCount * 8)
 
-        this.sprite.setDrawCardPosition(card, () => {
-            this.sprite.setCount(this.cards.length)
-            if (onEnd) {
-                onEnd(card)
-            }
+
+        window.axios.post('api/data/deck/draw', {
+            idUser: turnPlayerId,
+            index: this.cards.length,
+        }).then((res) => {
+            console.log(res)
+
+            let cardId = this.cards.shift()
+
+
+
+            const cardInfo = CardList[cardId - 1]
+
+            const card = new Card(duel, cardInfo, this.player, stackCount * 8, y + stackCount * 8)
+
+            this.sprite.setDrawCardPosition(card, () => {
+                this.sprite.setCount(this.cards.length)
+                if (onEnd) {
+                    onEnd(card)
+                }
+            })
+
+
         })
 
 
-        return card
+        // return card
     }
 
     isEmpty() {
