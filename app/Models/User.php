@@ -12,6 +12,11 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    public function decks()
+    {
+        return $this->hasMany(Deck::class);
+    }
+
     /**
      * The attributes that are mass assignable.
      *

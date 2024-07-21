@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use App\Models\User;
 
 class DuelController extends Controller
 {
@@ -12,20 +13,22 @@ class DuelController extends Controller
      */
     public function index()
     {
-
-        $defaultDeck = [
-            1, 1, 1, 2, 3, 4,
-        ];
+        $users = User::query()
+            ->whereIn('id', [1, 2])
+            ->get();
 
         $decks = [];
-        for ($i = 0; $i < 2; $i++) {
-            $decks[$i] = $defaultDeck;
-            for ($j = 0; $j < 5; $j++) {
-                //
-                $decks[$i][] = 5 + rand(0, 12);
+        foreach ($users as $user) {
+            $deck = $user->decks()->first();
+            $deckCards = $deck->deckCards()->orderBy('order')->get();
+
+            $deckArray = [];
+            foreach ($deckCards as $deckCard) {
+                $deckArray[] = $deckCard->card_number;
             }
-            $decks[$i] = Arr::shuffle($decks[$i]);
+            $decks[] = $deckArray;
         }
+
 
         return response()->json([
             'players' => [
