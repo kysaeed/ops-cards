@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use App\Models\User;
+use App\Models\Duel;
 
 class DuelController extends Controller
 {
@@ -15,28 +16,34 @@ class DuelController extends Controller
     {
         $users = User::query()
             ->whereIn('id', [1, 2])
+            ->oldest('id')
             ->get();
 
-        $decks = [];
-        foreach ($users as $user) {
-            $deck = $user->decks()->first();
+        $duel = Duel::query()
+            ->first();
+
+        $deckModels = [];
+        $deckModels[] = $duel->deck;
+        $deckModels[] = $duel->enemyDeck;
+
+        $deckArrays = [];
+        foreach ($deckModels as $deck) {
             $deckCards = $deck->deckCards()->orderBy('order')->get();
 
             $deckArray = [];
             foreach ($deckCards as $deckCard) {
                 $deckArray[] = $deckCard->card_number;
             }
-            $decks[] = $deckArray;
+            $deckArrays[] = $deckArray;
         }
-
 
         return response()->json([
             'players' => [
                 [
-                    'deck' => $decks[0],
+                    'deck' => $deckArrays[0],
                 ],
                 [
-                    'deck' => $decks[1],
+                    'deck' => $deckArrays[1],
                 ]
             ],
         ]);
@@ -46,6 +53,7 @@ class DuelController extends Controller
     {
         $idUser = $request->input('idUser');
         $index = $request->input('index');
+
 
 
         return response()->json([

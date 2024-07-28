@@ -6,6 +6,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\Duel;
 use App\Models\Deck;
 use App\Models\DeckCard;
 
@@ -23,6 +24,7 @@ class DatabaseSeeder extends Seeder
         ];
 
         $users = [];
+        $deckModels = [];
         for ($i = 1; $i <= 2; $i++) {
             $user = User::create([
                 'name' => "user{$i}",
@@ -35,6 +37,7 @@ class DatabaseSeeder extends Seeder
             ]);
 
             $user->decks()->save($deck);
+            $deckModels[] = $deck;
 
             $order = 1;
             foreach ($defaultDeck as $cardNumber) {
@@ -66,6 +69,12 @@ class DatabaseSeeder extends Seeder
 
         }
 
+        ///////
+        Duel::create([
+            'turn' => 1,
+            'deck_id' => $deckModels[0]->id,
+            'enemy_deck_id' => $deckModels[1]->id,
+        ]);
 
         // \App\Models\User::factory(10)->create();
 
