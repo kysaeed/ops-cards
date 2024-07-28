@@ -232,7 +232,8 @@ export default class Deck {
     }
 
     setClickableState(isClickable) {
-        if (!this.cards.length) {
+
+        if (this.isEmpty()) {
             this.sprite.setClickableState(false)
             return
         }
