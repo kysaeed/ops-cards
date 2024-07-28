@@ -54,10 +54,20 @@ class DuelController extends Controller
         $idUser = $request->input('idUser');
         $index = $request->input('index');
 
+        $duel = Duel::query()
+            ->first();
 
+        if ($idUser != 1) {
+            $deck = $duel->deck;
+        } else {
+            $deck = $duel->enemyDeck;
+        }
 
+        $deckCards = $deck->deckCards;
+
+        $deckCard = $deckCards[$index];
         return response()->json([
-            'cardNumber' => 1,
+            'cardNumber' => $deckCard->card_number,
         ]);
 
     }

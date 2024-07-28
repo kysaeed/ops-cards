@@ -221,6 +221,8 @@ export default class Deck {
     constructor(duel, player) {
         this.cards = []
         this.player = player
+        this.initialCardCount = 0
+        this.deckIndex = 0
 
         const x = -180 * player.getDirection() + 30
         const y = (220 * player.getDirection()) + 30
@@ -241,8 +243,10 @@ export default class Deck {
 
     setCardList(cardList) {
         this.cards = _.cloneDeep(cardList)
+        this.initialCardCount = this.cards.length
         this.sprite.setCount(cardList.length)
     }
+
     shuffle() {
         this.cards = _.shuffle(this.cards)
     }
@@ -257,17 +261,16 @@ export default class Deck {
 
 
 
-
-
         window.axios.post('api/data/deck/draw', {
             idUser: turnPlayerId,
-            index: this.cards.length,
+            index: this.deckIndex,
         }).then((res) => {
-            console.log(res)
+            console.log(res.data)
 
-            let cardId = this.cards.shift()
+            //let cardId = this.cards.shift()
+            let cardId = res.data.cardNumber
 
-
+            this.deckIndex++
 
             const cardInfo = CardList[cardId - 1]
 
