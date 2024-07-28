@@ -19,7 +19,8 @@ const SetupPhase = {
             duel.playerList.forEach((player) => {
                 const playerId = player.getPlayerId()
                 const deckData = data.players[playerId].deck
-                player.getDeck().setCardList(deckData)
+
+                player.getDeck().setCardList(data.players[playerId].cardCount)
             })
 
             player.getDeck().draw(duel, 400, turnPlayerId, (diffenceCardInfo) => {

@@ -219,7 +219,6 @@ class DeckSprite {
 
 export default class Deck {
     constructor(duel, player) {
-        this.cards = []
         this.player = player
         this.initialCardCount = 0
         this.deckIndex = 0
@@ -241,14 +240,9 @@ export default class Deck {
         this.sprite.setClickableState(isClickable)
     }
 
-    setCardList(cardList) {
-        this.cards = _.cloneDeep(cardList)
-        this.initialCardCount = this.cards.length
-        this.sprite.setCount(cardList.length)
-    }
-
-    shuffle() {
-        this.cards = _.shuffle(this.cards)
+    setCardList(cardCount) {
+        this.initialCardCount = cardCount // this.cards.length
+        this.sprite.setCount(cardCount)
     }
 
     draw(duel, stackCount, turnPlayerId, onEnd) {
@@ -277,7 +271,11 @@ export default class Deck {
             const card = new Card(duel, cardInfo, this.player, stackCount * 8, y + stackCount * 8)
 
             this.sprite.setDrawCardPosition(card, () => {
-                this.sprite.setCount(this.cards.length)
+                let deckRemainCount = this.initialCardCount - this.deckIndex
+                if (deckRemainCount < 0) {
+                    deckRemainCount = 0
+                }
+                this.sprite.setCount(deckRemainCount)
                 if (onEnd) {
                     onEnd(card)
                 }
@@ -286,12 +284,11 @@ export default class Deck {
 
         })
 
-
         // return card
     }
 
     isEmpty() {
-        if (!this.cards.length) {
+        if (this.initialCardCount <= this.deckIndex) {
             return true
         }
         return false

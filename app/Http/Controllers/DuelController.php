@@ -37,13 +37,21 @@ class DuelController extends Controller
             $deckArrays[] = $deckArray;
         }
 
+        $cardCountList = [];
+        foreach ($deckModels as $deck) {
+            $cardCountList[] = $deck->deckCArds()->count();
+        }
+
+
         return response()->json([
             'players' => [
                 [
-                    'deck' => $deckArrays[0],
+                    'deck' => null,
+                    'cardCount' => $cardCountList[0],
                 ],
                 [
-                    'deck' => $deckArrays[1],
+                    'deck' => null,
+                    'cardCount' => $cardCountList[1],
                 ]
             ],
         ]);
