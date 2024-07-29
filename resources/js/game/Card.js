@@ -315,28 +315,24 @@ console.log('******** onEnterToAttackPosition()')
             const player = this.duel.getTurnPlayer()
             const bench = player.getBench()
 
-            const recycleCard = bench.takeLatestCard()
-            if (recycleCard) {
+            // const recycleCard = bench.takeLatestCard()
+            // if (recycleCard) {
 
-                /*
-                /// move to abyss
-                const x = 330 * player.getDirection()
-                const y = (180 * player.getDirection()) + 30
-                recycleCard.moveToAbyss(x, y, () => {
-                    //
-                })
-                */
+            //     /// move to abyss
+            //     const x = 330 * player.getDirection()
+            //     const y = (180 * player.getDirection()) + 30
+            //     recycleCard.moveToAbyss(x, y, () => {
+            //         //
+            //     })
 
-                /*
-                // move to deck
-                const x = -160 * player.getDirection()
-                const y = (210 * player.getDirection()) + 30
-                recycleCard.moveToDeck(x, y, () => {
-                    //
-                })
-                */
+            //     // move to deck
+            //     const x = -160 * player.getDirection()
+            //     const y = (210 * player.getDirection()) + 30
+            //     recycleCard.moveToDeck(x, y, () => {
+            //         //
+            //     })
 
-            }
+            // }
 
             /*
             const ability = this.cardInfo.ability
