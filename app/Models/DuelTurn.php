@@ -9,5 +9,5 @@ class DuelTurn extends Model
 {
     use HasFactory;
 
-    protected $guards = ['id'];
+    protected $guarded = ['id'];
 }

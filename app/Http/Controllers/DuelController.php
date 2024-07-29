@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Duel;
+use App\Models\DuelTurn;
 
 class DuelController extends Controller
 {
@@ -28,7 +30,9 @@ class DuelController extends Controller
 
         $deckArrays = [];
         foreach ($deckModels as $deck) {
-            $deckCards = $deck->deckCards()->orderBy('order')->get();
+            $deckCards = $deck->deckCards()
+                ->orderBy('order')
+                ->get();
 
             $deckArray = [];
             foreach ($deckCards as $deckCard) {
@@ -41,7 +45,6 @@ class DuelController extends Controller
         foreach ($deckModels as $deck) {
             $cardCountList[] = $deck->deckCArds()->count();
         }
-
 
         return response()->json([
             'players' => [
@@ -62,21 +65,42 @@ class DuelController extends Controller
         $idUser = $request->input('idUser');
         $index = $request->input('index');
 
-        $duel = Duel::query()
-            ->first();
+        return DB::transaction(function () use ($idUser, $index) {
+            $duel = Duel::query()
+                ->first();
 
-        if ($idUser != 1) {
-            $deck = $duel->deck;
-        } else {
-            $deck = $duel->enemyDeck;
-        }
 
-        $deckCards = $deck->deckCards;
+            $order = $duel->duelTurns()
+                ->max('order') ?? 0;
 
-        $deckCard = $deckCards[$index];
-        return response()->json([
-            'cardNumber' => $deckCard->card_number,
-        ]);
+            $order++;
+
+            $turn = new DuelTurn([
+                'user_id' => $idUser, // @todo validation
+                'is_hand' => false,
+                'order' => $order,
+            ]);
+
+            $duel->duelTurns()->save($turn);
+
+
+            if ($idUser != 1) {
+                $deck = $duel->deck;
+            } else {
+                $deck = $duel->enemyDeck;
+            }
+
+            $deckCards = $deck->deckCards;
+
+            $deckCard = $deckCards[$index];
+
+            return response()->json([
+                'cardNumber' => $deckCard->card_number,
+                'order' => null,
+            ]);
+
+        });
+
 
     }
 

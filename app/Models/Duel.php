@@ -5,12 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Deck;
+use App\Models\DuelTurn;
 
 class Duel extends Model
 {
     use HasFactory;
 
-    protected $guards = ['id'];
+    protected $guarded = ['id'];
 
     public function deck()
     {
@@ -20,5 +21,10 @@ class Duel extends Model
     public function enemyDeck()
     {
         return $this->belongsTo(Deck::class, 'enemy_deck_id');
+    }
+
+    public function duelTurns()
+    {
+        return $this->hasMany(DuelTurn::class);
     }
 }

@@ -241,7 +241,7 @@ export default class Deck {
         this.sprite.setClickableState(isClickable)
     }
 
-    setCardList(cardCount) {
+    setInitilCardCount(cardCount) {
         this.initialCardCount = cardCount // this.cards.length
         this.sprite.setCount(cardCount)
     }

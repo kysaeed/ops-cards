@@ -15,9 +15,10 @@ return new class extends Migration
     {
         Schema::create('duel_turns', function (Blueprint $table) {
             $table->id();
-            $table->foreignId(Duel::class);
-            $table->foreignId(User::class);
+            $table->foreignIdFor(Duel::class);
+            $table->foreignIdFor(User::class);
             $table->boolean('is_hand');
+
             $table->integer('order')->index();
             $table->timestamps();
         });
