@@ -10,4 +10,8 @@ class DuelTurn extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
+
+    protected $casts = [
+        'turn_state' => 'json',
+    ];
 }

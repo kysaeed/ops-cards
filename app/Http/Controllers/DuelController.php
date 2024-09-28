@@ -16,10 +16,12 @@ class DuelController extends Controller
      */
     public function index()
     {
+        /*
         $users = User::query()
             ->whereIn('id', [1, 2])
             ->oldest('id')
             ->get();
+        */
 
         $duel = Duel::query()
             ->first();
@@ -46,15 +48,52 @@ class DuelController extends Controller
             $cardCountList[] = $deck->deckCArds()->count();
         }
 
+        /**
+         *　@todo 新しいオブジェクトを作る
+         *    （テストのために全削除しているのでなおす）
+         */
+        $duel->duelTurns()->delete();
+
+        $order = $duel->duelTurns()
+            ->max('order') ?? 0;
+
+        $order++;
+
+        $deckCardNumbers = $deck->deckCards()
+            ->pluck('card_number');
+
+
+        $turnState = [
+            'player' => [
+                'deckCardNumbers' => $deckCardNumbers->shuffle()->toArray(),
+            ],
+            'enemy' => [
+                'deckCardNumbers' => $deckCardNumbers->shuffle()->toArray(), //
+            ],
+        ];
+
+        $turn = new DuelTurn([
+            'user_id' => 1, // @todo validation
+            'is_player_turn' => true,
+            'is_hand' => false,
+            'order' => $order,
+            //'deck_card_id' => $deckCard->id,
+            //'hand_card_id' => null,
+            'turn_state' => $turnState,
+        ]);
+        $duel->duelTurns()->save($turn);
+
+        /////
+
         return response()->json([
             'players' => [
                 [
                     'deck' => null,
-                    'cardCount' => $cardCountList[0],
+                    'cardCount' => count($turnState['player']['deckCardNumbers']),
                 ],
                 [
                     'deck' => null,
-                    'cardCount' => $cardCountList[1],
+                    'cardCount' => count($turnState['enemy']['deckCardNumbers']),
                 ]
             ],
         ]);
@@ -65,37 +104,57 @@ class DuelController extends Controller
         $idUser = $request->input('idUser');
         $index = $request->input('index');
 
-        return DB::transaction(function () use ($idUser, $index) {
+
+        /**
+         * @todo PlayerのturnかをBEで判定する
+         */
+        $isPlayerTurn = $request->input('isPlayer');
+
+        return DB::transaction(function () use ($idUser, $isPlayerTurn, $index) {
             $duel = Duel::query()
                 ->first();
 
+            $jsonIndex = 'player';
+            if ($idUser != 1) {
+            } else {
+                $jsonIndex = 'enemy';
+            }
 
-            $order = $duel->duelTurns()
-                ->max('order') ?? 0;
+            // $deckCards = $deck->deckCards;
+            // $deckCard = $deckCards[$index];
 
-            $order++;
+            $prevTrun = $duel->duelTurns()
+                ->latest('order')
+                ->first();
+
+            $order = $prevTrun->order + 1;
+
+
+            $turnState = $prevTrun->turn_state;
+            $cardNumber = array_shift($turnState[$jsonIndex]['deckCardNumbers']);
+            $cardCount = count($turnState[$jsonIndex]['deckCardNumbers']);
+
+            // $deckCardNumbers = $deck->deckCards()
+            //     ->pluck('card_number');
 
             $turn = new DuelTurn([
                 'user_id' => $idUser, // @todo validation
+                'is_player_turn' => true, // @todo カレントのturnを設定
                 'is_hand' => false,
                 'order' => $order,
+                //'deck_card_id' => $deckCard->id,
+                //'hand_card_id' => null,
+                'turn_state' => $turnState,
             ]);
+
+            $turn->is_player_turn = $isPlayerTurn;
 
             $duel->duelTurns()->save($turn);
 
 
-            if ($idUser != 1) {
-                $deck = $duel->deck;
-            } else {
-                $deck = $duel->enemyDeck;
-            }
-
-            $deckCards = $deck->deckCards;
-
-            $deckCard = $deckCards[$index];
-
             return response()->json([
-                'cardNumber' => $deckCard->card_number,
+                'cardNumber' => $cardNumber,
+                'cardCount' => $cardCount,
                 'order' => null,
             ]);
 

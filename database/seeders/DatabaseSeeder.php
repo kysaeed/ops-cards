@@ -65,6 +65,20 @@ class DatabaseSeeder extends Seeder
                 $order++;
             }
 
+            /*
+            $cards = $deck->deckCards()
+                ->orderBy('order')
+                ->get();
+            $cards->shuffle();
+            $order = 1;
+
+            foreach($cards as $c) {
+                $c->order = $order;
+                $c->save();
+                $order++;
+            }
+            */
+
             $users[] = $user;
 
         }

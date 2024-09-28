@@ -25,24 +25,7 @@ const CardTypeList = [
 ];
 
 const CardList = [
-  {
-    power: 2,
-    name: '車輪',
-    image: 'ch_whell',
-    type: 0,
-    ability: {
-      attack: {
-        power: 1,
-      }
-    },
-    text: "攻撃時：パワー +1",
-  },
-  {
-    power: 1,
-    name: '犬',
-    image: 'ch_dog',
-    type: 0,
-  },
+
   {
       power: 1,
       name: '影',
@@ -79,7 +62,24 @@ const CardList = [
       },
       text: "守備時：パワー +1",
     },
-
+    {
+      power: 2,
+      name: '車輪',
+      image: 'ch_whell',
+      type: 0,
+      ability: {
+        attack: {
+          power: 1,
+        }
+      },
+      text: "攻撃時：パワー +1",
+    },
+    {
+      power: 1,
+      name: '犬',
+      image: 'ch_dog',
+      type: 0,
+    },
     {
       power: 4,
       name: 'ねこ',

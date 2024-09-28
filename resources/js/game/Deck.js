@@ -255,10 +255,11 @@ export default class Deck {
         const y = -(HeightBase) + (HeightBase * 2 * (turnPlayerId))
 
 
-
+        let isPlayer = (duel.getTurnPlayer().getPlayerId() === 0) // @todo BEで判定する
         window.axios.post('api/data/deck/draw', {
             idUser: turnPlayerId,
             index: this.deckIndex,
+            isPlayer: isPlayer, // @todo テスト用なので後で削除
         }).then((res) => {
             console.log(res.data)
 
