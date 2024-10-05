@@ -102,33 +102,32 @@ class DuelController extends Controller
     public function draw(Request $request)
     {
         $idUser = $request->input('idUser');
-        $index = $request->input('index');
-
+        //$index = $request->input('index');
+        $isHandCrad = $request->input('isHandCard');
 
         /**
          * @todo PlayerのturnかをBEで判定する
          */
         $isPlayerTurn = $request->input('isPlayer');
 
-        return DB::transaction(function () use ($idUser, $isPlayerTurn, $index) {
+        return DB::transaction(function () use ($idUser, $isPlayerTurn) {
+
             $duel = Duel::query()
                 ->first();
 
+            $drawType = 0;
             $jsonIndex = 'player';
             if ($idUser != 1) {
             } else {
                 $jsonIndex = 'enemy';
+                $drawType = mt_rand(0, 1);
             }
-
-            // $deckCards = $deck->deckCards;
-            // $deckCard = $deckCards[$index];
 
             $prevTrun = $duel->duelTurns()
                 ->latest('order')
                 ->first();
 
             $order = $prevTrun->order + 1;
-
 
             $turnState = $prevTrun->turn_state;
             $cardNumber = array_shift($turnState[$jsonIndex]['deckCardNumbers']);

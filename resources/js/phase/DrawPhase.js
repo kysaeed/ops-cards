@@ -1,6 +1,41 @@
 
 
 const DrawPhase = {
+
+    fetchDraw(duel, onEnd) {
+        const player = duel.getTurnPlayer()
+        let isPlayer = (duel.getTurnPlayer().getPlayerId() === 0) // @todo BEで判定する
+
+        const turnPlayerId = player.getPlayerId()
+
+        window.axios.post('api/data/deck/draw', {
+            idUser: turnPlayerId,
+            isHandCard: false,
+            isPlayer: isPlayer, // @todo テスト用なので後で削除
+        }).then((res) => {
+            console.log(res.data)
+
+            // let cardId = res.data.cardNumber
+            // this.deckIndex++
+            //const cardInfo = CardList[cardId - 1]
+
+            onEnd(res)
+
+            //const card = new Card(duel, cardInfo, player, stackCount * 8, y + stackCount * 8)
+            // this.sprite.setDrawCardPosition(card, () => {
+            //     let deckRemainCount = this.initialCardCount - this.deckIndex
+            //     if (deckRemainCount < 0) {
+            //         deckRemainCount = 0
+            //     }
+            //     this.sprite.setCount(deckRemainCount)
+            //     if (onEnd) {
+            //         onEnd(card)
+            //     }
+            // })
+
+
+        })
+    },
     enter(duel, onEnd) {
         this.isDrawProcessing = false
 
@@ -17,11 +52,11 @@ const DrawPhase = {
             }
         }
 
-
         this.doDrawHandCard(duel, () => {
             if (player.getPlayerId() === 0) {
                 player.setCardClickableState(true)
             } else {
+
                 if ((((Math.random() * 10) < 5) && player.getHandCard()) || (player.getDeck().isEmpty())) {
                     // 手札を使用
                     if (player.getHandCard()) {
@@ -107,19 +142,21 @@ const DrawPhase = {
             return
         }
 
-        player.deck.draw(duel, 0, turnPlayer, (currentDrawCard) => {
-            if (currentDrawCard) {
-                currentDrawCard.showDetial(() => {
-                    // ドローしたカードを手札にする
-                    currentDrawCard.moveToHandPosition(() => {
-                        currentDrawCard.setShadowParams(1.4, 0.2, 6) // todo moveToHandPosition内へ
-                        player.setHandCard(currentDrawCard)
-                        if (onEnd) {
-                            onEnd()
-                        }
+        this.fetchDraw(duel, (res) => {
+            player.getDeck().draw2(duel, res, 0, turnPlayer, (currentDrawCard) => {
+                if (currentDrawCard) {
+                    currentDrawCard.showDetial(() => {
+                        // ドローしたカードを手札にする
+                        currentDrawCard.moveToHandPosition(() => {
+                            currentDrawCard.setShadowParams(1.4, 0.2, 6) // todo moveToHandPosition内へ
+                            player.setHandCard(currentDrawCard)
+                            if (onEnd) {
+                                onEnd()
+                            }
+                        })
                     })
-                })
-            }
+                }
+            })
         })
 
     },
@@ -133,19 +170,25 @@ const DrawPhase = {
 
         const turnPlayer = duel.getTurnPlayerId()
         const player = duel.getTurnPlayer()
-        player.getDeck().draw(duel, 0, turnPlayer, (currentDrawCard) => {
-            if (currentDrawCard) {
-                currentDrawCard.showDetial(() => {
-                    // 攻撃実行
-                    this.attack(currentDrawCard, () => {
-                        this.isDrawProcessing = false
-                        if (this.onEnd) {
-                            this.onEnd('AttackPhase')
-                        }
+
+
+        this.fetchDraw(duel, (res) => {
+            player.getDeck().draw2(duel, res, 0, turnPlayer, (currentDrawCard) => {
+                if (currentDrawCard) {
+                    currentDrawCard.showDetial(() => {
+                        // 攻撃実行
+                        this.attack(currentDrawCard, () => {
+                            this.isDrawProcessing = false
+                            if (this.onEnd) {
+                                this.onEnd('AttackPhase')
+                            }
+                        })
                     })
+                }
                 })
-            }
+
         })
+
     },
 
 }
