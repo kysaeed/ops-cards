@@ -59,16 +59,25 @@ class DuelController extends Controller
 
         $order++;
 
-        $deckCardNumbers = $deck->deckCards()
-            ->pluck('card_number');
+        $deckCardNumbers = [];
+        $handCardNumbers = [];
+        foreach ($deckModels as $deck) {
+            $n = $deck->deckCards()
+                ->pluck('card_number')
+                ->shuffle();
 
+            $deckCardNumbers[] = $n;
+            $handCardNumbers[] = $n->shift();
+        }
 
         $turnState = [
             'player' => [
-                'deckCardNumbers' => $deckCardNumbers->shuffle()->toArray(),
+                'handCardNumber' => $handCardNumbers[0],
+                'deckCardNumbers' => $deckCardNumbers[0]->toArray(),
             ],
             'enemy' => [
-                'deckCardNumbers' => $deckCardNumbers->shuffle()->toArray(), //
+                'handCardNumber' => $handCardNumbers[1],
+                'deckCardNumbers' => $deckCardNumbers[1]->toArray(), //
             ],
         ];
 
@@ -78,7 +87,7 @@ class DuelController extends Controller
             'is_hand' => false,
             'order' => $order,
             //'deck_card_id' => $deckCard->id,
-            //'hand_card_id' => null,
+            'hand_card_id' => null, ////$handCardNumbers[0],
             'turn_state' => $turnState,
         ]);
         $duel->duelTurns()->save($turn);
@@ -89,10 +98,12 @@ class DuelController extends Controller
             'players' => [
                 [
                     'deck' => null,
+                    'handCardNumber' => 1,
                     'cardCount' => count($turnState['player']['deckCardNumbers']),
                 ],
                 [
                     'deck' => null,
+                    'handCardNumber' => 1,
                     'cardCount' => count($turnState['enemy']['deckCardNumbers']),
                 ]
             ],
@@ -110,17 +121,15 @@ class DuelController extends Controller
          */
         $isPlayerTurn = $request->input('isPlayer');
 
-        return DB::transaction(function () use ($idUser, $isPlayerTurn) {
+        return DB::transaction(function () use ($idUser, $isPlayerTurn, $isHandCrad) {
 
             $duel = Duel::query()
                 ->first();
 
-            $drawType = 0;
             $jsonIndex = 'player';
-            if ($idUser != 1) {
-            } else {
+            if ($idUser != 0) {
                 $jsonIndex = 'enemy';
-                $drawType = mt_rand(0, 1);
+                $isHandCrad = (bool)mt_rand(0, 1);
             }
 
             $prevTrun = $duel->duelTurns()
@@ -128,23 +137,38 @@ class DuelController extends Controller
                 ->first();
 
             $order = $prevTrun->order + 1;
+            $turn = new DuelTurn([
+                'user_id' => $idUser, // @todo validation
+                'is_player_turn' => true, // @todo カレントのturnを設定
+                'is_hand' => $isHandCrad,
+                'order' => $order,
+                'turn_state' => $prevTrun->turn_state,
+                'hand_card_id' => $prevTrun->hand_card_id,
+                //'deck_card_id' => $deckCard->id,
+            ]);
 
-            $turnState = $prevTrun->turn_state;
-            $cardNumber = array_shift($turnState[$jsonIndex]['deckCardNumbers']);
-            $cardCount = count($turnState[$jsonIndex]['deckCardNumbers']);
+
+            $turnState = $turn->turn_state;
+            if ($isHandCrad) {
+
+                $cardNumber = $turn->hand_card_id; // $turnState[$jsonIndex]['handCardNumber'];
+                $turn->hand_card_id = array_shift($turnState[$jsonIndex]['deckCardNumbers']);
+                $turnState[$jsonIndex]['handCardNumber'] = $turn->hand_card_id;
+
+                $cardCount = count($turnState[$jsonIndex]['deckCardNumbers']);
+
+
+            } else {
+                $cardNumber = array_shift($turnState[$jsonIndex]['deckCardNumbers']);
+                $cardCount = count($turnState[$jsonIndex]['deckCardNumbers']);
+            }
+
 
             // $deckCardNumbers = $deck->deckCards()
             //     ->pluck('card_number');
 
-            $turn = new DuelTurn([
-                'user_id' => $idUser, // @todo validation
-                'is_player_turn' => true, // @todo カレントのturnを設定
-                'is_hand' => false,
-                'order' => $order,
-                //'deck_card_id' => $deckCard->id,
-                //'hand_card_id' => null,
-                'turn_state' => $turnState,
-            ]);
+            $turn->turn_state = $turnState;
+
 
             $turn->is_player_turn = $isPlayerTurn;
 
@@ -152,13 +176,13 @@ class DuelController extends Controller
 
 
             return response()->json([
+                'isHandCard' => $isHandCrad,
                 'cardNumber' => $cardNumber,
                 'cardCount' => $cardCount,
                 'order' => null,
             ]);
 
         });
-
 
     }
 

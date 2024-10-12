@@ -2,45 +2,13 @@
 
 const DrawPhase = {
 
-    fetchDraw(duel, onEnd) {
-        const player = duel.getTurnPlayer()
-        let isPlayer = (duel.getTurnPlayer().getPlayerId() === 0) // @todo BEで判定する
-
-        const turnPlayerId = player.getPlayerId()
-
-        window.axios.post('api/data/deck/draw', {
-            idUser: turnPlayerId,
-            isHandCard: false,
-            isPlayer: isPlayer, // @todo テスト用なので後で削除
-        }).then((res) => {
-            console.log(res.data)
-
-            // let cardId = res.data.cardNumber
-            // this.deckIndex++
-            //const cardInfo = CardList[cardId - 1]
-
-            onEnd(res)
-
-            //const card = new Card(duel, cardInfo, player, stackCount * 8, y + stackCount * 8)
-            // this.sprite.setDrawCardPosition(card, () => {
-            //     let deckRemainCount = this.initialCardCount - this.deckIndex
-            //     if (deckRemainCount < 0) {
-            //         deckRemainCount = 0
-            //     }
-            //     this.sprite.setCount(deckRemainCount)
-            //     if (onEnd) {
-            //         onEnd(card)
-            //     }
-            // })
-
-
-        })
-    },
     enter(duel, onEnd) {
         this.isDrawProcessing = false
 
         this.duel = duel
         this.onEnd = onEnd
+
+this.data = null
 
 
         const player = duel.getTurnPlayer()
@@ -52,24 +20,59 @@ const DrawPhase = {
             }
         }
 
-        this.doDrawHandCard(duel, () => {
-            if (player.getPlayerId() === 0) {
-                player.setCardClickableState(true)
-            } else {
+        /**
+         * プレイヤー側のUIでのドローと敵側の処理を分岐
+         */
+        if (player.getPlayerId() === 0) {
 
-                if ((((Math.random() * 10) < 5) && player.getHandCard()) || (player.getDeck().isEmpty())) {
-                    // 手札を使用
-                    if (player.getHandCard()) {
-                        this.attackByHandCard(this.duel, () => {
-                            this.onEnd('AttackPhase')
-                        })
+            this.fetchDraw(duel, false, (data) => {
+
+                this.doDrawHandCard(duel, data, () => {
+
+                    this.data = data
+
+                    player.setCardClickableState(true)
+
+                })
+            })
+
+        } else {
+
+            this.fetchDraw(duel, null, (data) => {
+
+                this.doDrawHandCard(duel, data, () => {
+
+                    if (data.isHandCard) {
+
+                        // 手札を使用
+                        if (player.getHandCard()) {
+                            this.attackByHandCard(this.duel, data, () => {
+                                this.onEnd('AttackPhase')
+                            })
+                        }
+
+                    } else {
+                        // 山札を使用
+                        this.doDraw(this.duel, data)
+
                     }
-                } else {
-                    // 山札を使用
-                    this.doDraw(this.duel)
-                }
-            }
-        })
+
+                    /*
+                    if ((((Math.random() * 10) < 5) && player.getHandCard()) || (player.getDeck().isEmpty())) {
+                        // 手札を使用
+                        if (player.getHandCard()) {
+                            this.attackByHandCard(this.duel, () => {
+                                this.onEnd('AttackPhase')
+                            })
+                        }
+                    } else {
+                        // 山札を使用
+                        this.doDraw(this.duel)
+                    }
+                    */
+                })
+            })
+        }
     },
 
     onEvent(event, sender, params) {
@@ -80,7 +83,7 @@ const DrawPhase = {
         if (event === 'click') {
             player.setCardClickableState(false)
 
-            this.doDraw(this.duel)
+            this.doDraw(this.duel, this.data)
         }
 
         if (event === 'click-hand') {
@@ -88,7 +91,7 @@ const DrawPhase = {
 
             console.log('On hand card clicked ....')
 
-            this.attackByHandCard(this.duel, () => {
+            this.attackByHandCard(this.duel, this.data, () => {
                 this.onEnd('AttackPhase')
             })
         }
@@ -108,7 +111,7 @@ const DrawPhase = {
         })
     },
 
-    attackByHandCard(duel, onEnd) {
+    attackByHandCard(duel, data, onEnd) {
         // const turnPlayer = duel.getTurnPlayerId()
         const player = duel.getTurnPlayer()
         const currentCard = player.takeHandCard()
@@ -130,7 +133,7 @@ const DrawPhase = {
         })
     },
 
-    doDrawHandCard(duel, onEnd) {
+    doDrawHandCard(duel, data, onEnd) {
         const turnPlayer = duel.getTurnPlayerId()
         const player = duel.getTurnPlayer()
 
@@ -142,8 +145,8 @@ const DrawPhase = {
             return
         }
 
-        this.fetchDraw(duel, (res) => {
-            player.getDeck().draw2(duel, res, 0, turnPlayer, (currentDrawCard) => {
+        // this.fetchDraw(duel, false, (data) => {
+            player.getDeck().draw2(duel, data, 0, (currentDrawCard) => {
                 if (currentDrawCard) {
                     currentDrawCard.showDetial(() => {
                         // ドローしたカードを手札にする
@@ -157,23 +160,21 @@ const DrawPhase = {
                     })
                 }
             })
-        })
+        // })
 
     },
 
-    doDraw(duel) {
+    doDraw(duel, data) {
         if (this.isDrawProcessing) {
             return
         }
 
         this.isDrawProcessing = true
 
-        const turnPlayer = duel.getTurnPlayerId()
         const player = duel.getTurnPlayer()
 
-
-        this.fetchDraw(duel, (res) => {
-            player.getDeck().draw2(duel, res, 0, turnPlayer, (currentDrawCard) => {
+        //this.fetchDraw(duel, false, (data) => {
+            player.getDeck().draw2(duel, data, 0, (currentDrawCard) => {
                 if (currentDrawCard) {
                     currentDrawCard.showDetial(() => {
                         // 攻撃実行
@@ -185,10 +186,43 @@ const DrawPhase = {
                         })
                     })
                 }
-                })
+            })
+        //})
+    },
+
+    fetchDraw(duel, isHandCard, onEnd) {
+        const player = duel.getTurnPlayer()
+        let isPlayer = (duel.getTurnPlayer().getPlayerId() === 0) // @todo BEで判定する
+
+        const turnPlayerId = player.getPlayerId()
+
+        window.axios.post('api/data/deck/draw', {
+            idUser: turnPlayerId,
+            isHandCard: isHandCard,
+            isPlayer: isPlayer, // @todo テスト用なので後で削除
+        }).then((res) => {
+            console.log(res.data)
+
+            // let cardId = res.data.cardNumber
+            // this.deckIndex++
+            //const cardInfo = CardList[cardId - 1]
+
+            onEnd(res.data)
+
+            //const card = new Card(duel, cardInfo, player, stackCount * 8, y + stackCount * 8)
+            // this.sprite.setDrawCardPosition(card, () => {
+            //     let deckRemainCount = this.initialCardCount - this.deckIndex
+            //     if (deckRemainCount < 0) {
+            //         deckRemainCount = 0
+            //     }
+            //     this.sprite.setCount(deckRemainCount)
+            //     if (onEnd) {
+            //         onEnd(card)
+            //     }
+            // })
+
 
         })
-
     },
 
 }

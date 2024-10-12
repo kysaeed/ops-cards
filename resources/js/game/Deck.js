@@ -246,8 +246,8 @@ export default class Deck {
         this.sprite.setCount(cardCount)
     }
 
-    draw2(duel, res, stackCount, turnPlayerId, onEnd) {
-
+    draw2(duel, data, stackCount, onEnd) {
+        const turnPlayerId = this.player.getPlayerId()
 
         if (this.isEmpty()) {
             return null
@@ -263,10 +263,10 @@ export default class Deck {
         //     index: this.deckIndex,
         //     isPlayer: isPlayer, // @todo テスト用なので後で削除
         // }).then((res) => {
-            console.log(res.data)
+            console.log(data)
 
             //let cardId = this.cards.shift()
-            let cardId = res.data.cardNumber
+            let cardId = data.cardNumber
 
             this.deckIndex++
 
@@ -305,6 +305,7 @@ export default class Deck {
         window.axios.post('api/data/deck/draw', {
             idUser: turnPlayerId,
             index: this.deckIndex,
+            isHandCard: false,
             isPlayer: isPlayer, // @todo テスト用なので後で削除
         }).then((res) => {
             console.log(res.data)
