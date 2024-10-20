@@ -696,21 +696,23 @@ console.log('******** onEnterToAttackPosition()')
         scene.tweens.chain({
             targets: this.sprite,
             tweens: [
-                {
-                    delay: 1000,
-                    scale: 0.60,
-                    x: x,
-                    y: y,
-                    ease: 'power1',
-                    duration: 200,
-                    angle: angle, //Bevel + (180 * this.player.getPlayerId()),
-                },
+                // {
+                //     delay: 1000,
+                //     scale: 0.60,
+                //     x: x,
+                //     y: y,
+                //     ease: 'power1',
+                //     duration: 200,
+                //     angle: angle, //Bevel + (180 * this.player.getPlayerId()),
+                // },
                 {
                     x: x,
                     y: y,
                     scale: 0.60,
                     duration: 100,
-                },
+                    angle: angle, //Bevel + (180 * this.player.getPlayerId()),
+                    ease: 'power1',
+            },
             ],
             onComplete() {
                 if (onEnd) {

@@ -8,9 +8,6 @@ const DrawPhase = {
         this.duel = duel
         this.onEnd = onEnd
 
-this.data = null
-
-
         const player = duel.getTurnPlayer()
 
         if (player.getDeck().isEmpty()) {
@@ -25,16 +22,17 @@ this.data = null
          */
         if (player.getPlayerId() === 0) {
 
+            /*
             this.fetchDraw(duel, false, (data) => {
 
                 this.doDrawHandCard(duel, data, () => {
-
-                    this.data = data
 
                     player.setCardClickableState(true)
 
                 })
             })
+            */
+            player.setCardClickableState(true)
 
         } else {
 
@@ -82,23 +80,26 @@ this.data = null
 
         if (event === 'click') {
             player.setCardClickableState(false)
-
-            this.doDraw(this.duel, this.data)
+            this.fetchDraw(this.duel, false, (data) => {
+console.log('onEvent hand-card click!!!', data)
+                this.doDraw(this.duel, data)
+            })
         }
 
         if (event === 'click-hand') {
             player.setCardClickableState(false)
+            this.fetchDraw(this.duel, true, (data) => {
 
-            console.log('On hand card clicked ....')
-
-            this.attackByHandCard(this.duel, this.data, () => {
-                this.onEnd('AttackPhase')
+                console.log('On hand card clicked ....')
+                this.attackByHandCard(this.duel, data, () => {
+                    this.onEnd('AttackPhase')
+                })
             })
         }
 
     },
 
-    attack(card, onEnd) {
+    attack(card, nextCard, onEnd) {
         //
         const duel = this.duel
         card.moveToAttackPosition(() => {
@@ -126,9 +127,18 @@ this.data = null
         currentCard.bringToTop()
 
         // 攻撃実行
-        this.attack(currentCard, () => {
-            if (onEnd) {
-                onEnd()
+        const nextCard = null
+        this.attack(currentCard, nextCard, () => {
+            if (data.nextHnadCardNumber) {
+                this.doDrawHandCard(this.duel, { cardNumber: data.nextHnadCardNumber }, () => {
+                    if (onEnd) {
+                        onEnd()
+                    }
+                })
+            } else {
+                if (onEnd) {
+                    onEnd()
+                }
             }
         })
     },
@@ -148,7 +158,7 @@ this.data = null
         // this.fetchDraw(duel, false, (data) => {
             player.getDeck().draw2(duel, data, 0, (currentDrawCard) => {
                 if (currentDrawCard) {
-                    currentDrawCard.showDetial(() => {
+                    //currentDrawCard.showDetial(() => {
                         // ドローしたカードを手札にする
                         currentDrawCard.moveToHandPosition(() => {
                             currentDrawCard.setShadowParams(1.4, 0.2, 6) // todo moveToHandPosition内へ
@@ -157,7 +167,7 @@ this.data = null
                                 onEnd()
                             }
                         })
-                    })
+                    //})
                 }
             })
         // })
@@ -178,7 +188,7 @@ this.data = null
                 if (currentDrawCard) {
                     currentDrawCard.showDetial(() => {
                         // 攻撃実行
-                        this.attack(currentDrawCard, () => {
+                        this.attack(currentDrawCard, null, () => {
                             this.isDrawProcessing = false
                             if (this.onEnd) {
                                 this.onEnd('AttackPhase')

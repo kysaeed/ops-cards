@@ -51,21 +51,6 @@ const SetupPhase = {
                 })
             })
 
-            /*
-            player.getDeck().draw2(duel, { cardNumber: res.data.players[1].handCardNumber, }, 0, (currentDrawCard) => {
-                if (currentDrawCard) {
-                    currentDrawCard.showDetial(() => {
-                        // ドローしたカードを手札にする
-                        currentDrawCard.moveToHandPosition(() => {
-                            currentDrawCard.setShadowParams(1.4, 0.2, 6) // todo moveToHandPosition内へ
-                            player.setHandCard(currentDrawCard)
-
-                        })
-                    })
-                }
-            });
-            */
-
         })
     },
 

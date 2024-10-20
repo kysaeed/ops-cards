@@ -148,11 +148,13 @@ class DuelController extends Controller
             ]);
 
 
+            $nextHandCardNumber = null;
             $turnState = $turn->turn_state;
             if ($isHandCrad) {
 
                 $cardNumber = $turn->hand_card_id; // $turnState[$jsonIndex]['handCardNumber'];
                 $turn->hand_card_id = array_shift($turnState[$jsonIndex]['deckCardNumbers']);
+                $nextHandCardNumber = $turn->hand_card_id;
                 $turnState[$jsonIndex]['handCardNumber'] = $turn->hand_card_id;
 
                 $cardCount = count($turnState[$jsonIndex]['deckCardNumbers']);
@@ -174,10 +176,10 @@ class DuelController extends Controller
 
             $duel->duelTurns()->save($turn);
 
-
             return response()->json([
                 'isHandCard' => $isHandCrad,
                 'cardNumber' => $cardNumber,
+                'nextHnadCardNumber' => $nextHandCardNumber,
                 'cardCount' => $cardCount,
                 'order' => null,
             ]);
