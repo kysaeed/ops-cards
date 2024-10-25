@@ -81,10 +81,12 @@ class DuelController extends Controller
             'player' => [
                 'handCardNumber' => $handCardNumbers[0],
                 'deckCardNumbers' => $deckCardNumbers[0]->toArray(),
+                'cardStackNumbers' => [],
             ],
             'enemy' => [
                 'handCardNumber' => $handCardNumbers[1],
                 'deckCardNumbers' => $deckCardNumbers[1]->toArray(), //
+                'cardStackNumbers' => [],
             ],
         ];
 

@@ -12,7 +12,7 @@ const SetupPhase = {
         this.duel = duel
 
         window.axios.get('api/data/deck').then((res) => {
-            console.log('Initial draw : res api/data/deck', res.data)
+            //console.log('Initial draw : res api/data/deck', res.data)
 
             const data = res.data
 
@@ -40,7 +40,6 @@ const SetupPhase = {
                         }
                         diffenceCardInfo.sprite.angle = Bevel + (180 * (1 - turnPlayerId)) // todo enterToにマージ
 
-
                         ///////
                         player.cardStack.addCard(diffenceCardInfo)
                         diffenceCardInfo.enterTo(-WidthBase, enemyY, 1 - turnPlayerId)
@@ -48,7 +47,6 @@ const SetupPhase = {
                         if (onEnd) {
                             onEnd('DrawPhase');
                         }
-
                     })
                 })
             })
@@ -57,7 +55,6 @@ const SetupPhase = {
 
 
     drawInitialHandCard(player, handCardNumber, onEnd) {
-
 
         player.getDeck().enterDraw(this.duel, handCardNumber, 0, (currentDrawCard) => {
             if (currentDrawCard) {
