@@ -61,13 +61,20 @@ class DuelController extends Controller
 
         $deckCardNumbers = [];
         $handCardNumbers = [];
-        foreach ($deckModels as $deck) {
+        $initialStackCardNumbers = [];
+        foreach ($deckModels as $i => $deck) {
             $n = $deck->deckCards()
                 ->pluck('card_number')
                 ->shuffle();
 
             $deckCardNumbers[] = $n;
             $handCardNumbers[] = $n->shift();
+
+            if ($i == 0) {
+                $initialStackCardNumbers[] = null;
+            } else {
+                $initialStackCardNumbers[] = $n->shift();
+            }
         }
 
         $turnState = [
@@ -99,11 +106,13 @@ class DuelController extends Controller
                 [
                     'deck' => null,
                     'handCardNumber' => 1,
+                    'initialStackCard' => $initialStackCardNumbers[0],
                     'cardCount' => count($turnState['player']['deckCardNumbers']),
                 ],
                 [
                     'deck' => null,
                     'handCardNumber' => 1,
+                    'initialStackCard' => $initialStackCardNumbers[1],
                     'cardCount' => count($turnState['enemy']['deckCardNumbers']),
                 ]
             ],

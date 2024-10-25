@@ -246,7 +246,7 @@ export default class Deck {
         this.sprite.setCount(cardCount)
     }
 
-    draw2(duel, data, stackCount, onEnd) {
+    enterDraw(duel, idDrawCard, stackCount, onEnd) {
         const turnPlayerId = this.player.getPlayerId()
 
         if (this.isEmpty()) {
@@ -263,10 +263,10 @@ export default class Deck {
         //     index: this.deckIndex,
         //     isPlayer: isPlayer, // @todo テスト用なので後で削除
         // }).then((res) => {
-            console.log(data)
+            console.log(idDrawCard)
 
             //let cardId = this.cards.shift()
-            let cardId = data.cardNumber
+            let cardId = idDrawCard
 
             this.deckIndex++
 
@@ -287,51 +287,6 @@ export default class Deck {
 
 
         // })
-
-        // return card
-    }
-
-    draw(duel, stackCount, turnPlayerId, onEnd) {
-        if (this.isEmpty()) {
-            return null
-        }
-
-        const x = 400
-        const y = -(HeightBase) + (HeightBase * 2 * (turnPlayerId))
-
-
-        let isPlayer = (duel.getTurnPlayer().getPlayerId() === 0) // @todo BEで判定する
-
-        window.axios.post('api/data/deck/draw', {
-            idUser: turnPlayerId,
-            index: this.deckIndex,
-            isHandCard: false,
-            isPlayer: isPlayer, // @todo テスト用なので後で削除
-        }).then((res) => {
-            console.log(res.data)
-
-            //let cardId = this.cards.shift()
-            let cardId = res.data.cardNumber
-
-            this.deckIndex++
-
-            const cardInfo = CardList[cardId - 1]
-
-            const card = new Card(duel, cardInfo, this.player, stackCount * 8, y + stackCount * 8)
-
-            this.sprite.setDrawCardPosition(card, () => {
-                let deckRemainCount = this.initialCardCount - this.deckIndex
-                if (deckRemainCount < 0) {
-                    deckRemainCount = 0
-                }
-                this.sprite.setCount(deckRemainCount)
-                if (onEnd) {
-                    onEnd(card)
-                }
-            })
-
-
-        })
 
         // return card
     }

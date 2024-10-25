@@ -131,14 +131,11 @@ console.log('onEvent hand-card click!!!', data)
         this.attack(currentCard, nextCard, () => {
             if (data.nextHnadCardNumber) {
                 this.doDrawHandCard(this.duel, { cardNumber: data.nextHnadCardNumber }, () => {
-                    if (onEnd) {
-                        onEnd()
-                    }
+                    //
                 })
-            } else {
-                if (onEnd) {
-                    onEnd()
-                }
+            }
+            if (onEnd) {
+                onEnd()
             }
         })
     },
@@ -155,23 +152,19 @@ console.log('onEvent hand-card click!!!', data)
             return
         }
 
-        // this.fetchDraw(duel, false, (data) => {
-            player.getDeck().draw2(duel, data, 0, (currentDrawCard) => {
-                if (currentDrawCard) {
-                    //currentDrawCard.showDetial(() => {
-                        // ドローしたカードを手札にする
-                        currentDrawCard.moveToHandPosition(() => {
-                            currentDrawCard.setShadowParams(1.4, 0.2, 6) // todo moveToHandPosition内へ
-                            player.setHandCard(currentDrawCard)
-                            if (onEnd) {
-                                onEnd()
-                            }
-                        })
-                    //})
-                }
-            })
-        // })
 
+        player.getDeck().enterDraw(duel, data.cardNumber, 0, (currentDrawCard) => {
+            if (currentDrawCard) {
+                // ドローしたカードを手札にする
+                currentDrawCard.moveToHandPosition(() => {
+                    currentDrawCard.setShadowParams(1.4, 0.2, 6) // todo moveToHandPosition内へ
+                    player.setHandCard(currentDrawCard)
+                    if (onEnd) {
+                        onEnd()
+                    }
+                })
+            }
+        })
     },
 
     doDraw(duel, data) {
@@ -184,7 +177,7 @@ console.log('onEvent hand-card click!!!', data)
         const player = duel.getTurnPlayer()
 
         //this.fetchDraw(duel, false, (data) => {
-            player.getDeck().draw2(duel, data, 0, (currentDrawCard) => {
+            player.getDeck().enterDraw(duel, data.cardNumber, 0, (currentDrawCard) => {
                 if (currentDrawCard) {
                     currentDrawCard.showDetial(() => {
                         // 攻撃実行

@@ -31,7 +31,8 @@ const SetupPhase = {
                 this.drawInitialHandCard(duel.getPlayer(0), res.data.players[0].handCardNumber, () => {
 
                     ////// デッキから初期防御側カードを出す
-                    player.getDeck().draw(duel, 400, turnPlayerId, (diffenceCardInfo) => {
+                    const initialCard = res.data.players[1].initialStackCard
+                    player.getDeck().enterDraw(duel, initialCard, /*stackCount*/0, (diffenceCardInfo) => {
 
                         let enemyY = -HeightBase
                         if (turnPlayerId) {
@@ -47,17 +48,18 @@ const SetupPhase = {
                         if (onEnd) {
                             onEnd('DrawPhase');
                         }
+
                     })
                 })
             })
-
         })
     },
 
 
     drawInitialHandCard(player, handCardNumber, onEnd) {
 
-        player.getDeck().draw2(this.duel, { cardNumber: handCardNumber, }, 0, (currentDrawCard) => {
+
+        player.getDeck().enterDraw(this.duel, handCardNumber, 0, (currentDrawCard) => {
             if (currentDrawCard) {
                 currentDrawCard.showDetial(() => {
                     // ドローしたカードを手札にする
