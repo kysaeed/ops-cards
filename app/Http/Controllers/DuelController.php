@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Duel;
 use App\Models\DuelTurn;
+use App\Packages\DuelManager;
 
 class DuelController extends Controller
 {
@@ -16,6 +17,10 @@ class DuelController extends Controller
      */
     public function index()
     {
+
+        $dm = new DuelManager();
+dd($dm);
+
         /*
         $users = User::query()
             ->whereIn('id', [1, 2])
