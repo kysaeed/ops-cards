@@ -18,6 +18,11 @@ class DuelController extends Controller
     public function index()
     {
 
+        $string = file_get_contents(resource_path('settings/cards.json'));
+        $data = json_decode($string);
+
+
+
         $duel = Duel::query()
             ->first();
 
