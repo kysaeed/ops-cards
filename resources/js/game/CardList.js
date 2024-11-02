@@ -158,6 +158,12 @@ const CardList = [
       image: 'chara',
       type: 0,
     },
+    {
+      power: 1,
+      name: '伝令',
+      image: 'chara',
+      type: 0,
+    },
 
     {
       power: 1,

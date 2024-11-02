@@ -18,16 +18,6 @@ class DuelController extends Controller
     public function index()
     {
 
-        $dm = new DuelManager();
-dd($dm);
-
-        /*
-        $users = User::query()
-            ->whereIn('id', [1, 2])
-            ->oldest('id')
-            ->get();
-        */
-
         $duel = Duel::query()
             ->first();
 
@@ -66,34 +56,31 @@ dd($dm);
 
         $deckCardNumbers = [];
         $handCardNumbers = [];
-        $initialStackCardNumbers = [];
         foreach ($deckModels as $i => $deck) {
             $n = $deck->deckCards()
                 ->pluck('card_number')
                 ->shuffle();
 
             $deckCardNumbers[] = $n;
-            $handCardNumbers[] = $n->shift();
-
-            if ($i == 0) {
-                $initialStackCardNumbers[] = null;
-            } else {
-                $initialStackCardNumbers[] = $n->shift();
-            }
+            $handCardNumbers[] = null;
         }
 
         $turnState = [
             'player' => [
-                'handCardNumber' => $handCardNumbers[0],
+                'handCardNumber' => null, //$handCardNumbers[0],
                 'deckCardNumbers' => $deckCardNumbers[0]->toArray(),
                 'cardStackNumbers' => [],
             ],
             'enemy' => [
-                'handCardNumber' => $handCardNumbers[1],
+                'handCardNumber' => null, //$handCardNumbers[1],
                 'deckCardNumbers' => $deckCardNumbers[1]->toArray(), //
                 'cardStackNumbers' => [],
             ],
         ];
+
+        $duelManager = new DuelManager($turnState);
+
+        $initialState = $duelManager->initial();
 
         $turn = new DuelTurn([
             'user_id' => 1, // @todo validation
@@ -102,28 +89,12 @@ dd($dm);
             'order' => $order,
             //'deck_card_id' => $deckCard->id,
             'hand_card_id' => null, ////$handCardNumbers[0],
-            'turn_state' => $turnState,
+            'turn_state' => $duelManager->getState(), //$turnState,
         ]);
         $duel->duelTurns()->save($turn);
 
         /////
-
-        return response()->json([
-            'players' => [
-                [
-                    'deck' => null,
-                    'handCardNumber' => 1,
-                    'initialStackCard' => $initialStackCardNumbers[0],
-                    'cardCount' => count($turnState['player']['deckCardNumbers']),
-                ],
-                [
-                    'deck' => null,
-                    'handCardNumber' => 1,
-                    'initialStackCard' => $initialStackCardNumbers[1],
-                    'cardCount' => count($turnState['enemy']['deckCardNumbers']),
-                ]
-            ],
-        ]);
+        return response()->json($initialState);
     }
 
     public function draw(Request $request)
@@ -142,15 +113,21 @@ dd($dm);
             $duel = Duel::query()
                 ->first();
 
-            $jsonIndex = 'player';
-            if ($idUser != 0) {
-                $jsonIndex = 'enemy';
-                $isHandCrad = (bool)mt_rand(0, 1);
-            }
-
             $prevTrun = $duel->duelTurns()
                 ->latest('order')
                 ->first();
+
+            if ($idUser != 0) {
+                $enemyState = $prevTrun->turn_state['enemy'];
+
+                $isHandCrad = false;
+                if (empty($enemyState['deckCardNumbers'])) {
+                    $isHandCrad = true;
+                } else {
+                    $isHandCrad = (bool)mt_rand(0, 1);
+                }
+            }
+
 
             $order = $prevTrun->order + 1;
             $turn = new DuelTurn([
@@ -166,39 +143,23 @@ dd($dm);
 
             $nextHandCardNumber = null;
             $turnState = $turn->turn_state;
-            if ($isHandCrad) {
 
-                $cardNumber = $turn->hand_card_id; // $turnState[$jsonIndex]['handCardNumber'];
-                $turn->hand_card_id = array_shift($turnState[$jsonIndex]['deckCardNumbers']);
-                $nextHandCardNumber = $turn->hand_card_id;
-                $turnState[$jsonIndex]['handCardNumber'] = $turn->hand_card_id;
+            $duelManager = new DuelManager($turnState);
 
-                $cardCount = count($turnState[$jsonIndex]['deckCardNumbers']);
+            $step = $duelManager->step($isPlayerTurn, $isHandCrad);
 
-
-            } else {
-                $cardNumber = array_shift($turnState[$jsonIndex]['deckCardNumbers']);
-                $cardCount = count($turnState[$jsonIndex]['deckCardNumbers']);
-            }
-
+            $turnState = $duelManager->getState();
 
             // $deckCardNumbers = $deck->deckCards()
             //     ->pluck('card_number');
 
             $turn->turn_state = $turnState;
 
-
             $turn->is_player_turn = $isPlayerTurn;
 
             $duel->duelTurns()->save($turn);
 
-            return response()->json([
-                'isHandCard' => $isHandCrad,
-                'cardNumber' => $cardNumber,
-                'nextHnadCardNumber' => $nextHandCardNumber,
-                'cardCount' => $cardCount,
-                'order' => null,
-            ]);
+            return response()->json($step);
 
         });
 
