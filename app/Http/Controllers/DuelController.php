@@ -12,16 +12,24 @@ use App\Packages\DuelManager;
 
 class DuelController extends Controller
 {
+    protected array $cardSettings;
+
+    public function __construct()
+    {
+        $this->cardSettings = [];
+        $string = file_get_contents(resource_path('settings/cards.json'));
+        if (!empty($string)) {
+            $this->cardSettings = json_decode($string, true);
+        }
+
+    }
+
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-
-        $string = file_get_contents(resource_path('settings/cards.json'));
-        $data = json_decode($string);
-
-
 
         $duel = Duel::query()
             ->first();
@@ -45,7 +53,7 @@ class DuelController extends Controller
 
         $cardCountList = [];
         foreach ($deckModels as $deck) {
-            $cardCountList[] = $deck->deckCArds()->count();
+            $cardCountList[] = $deck->deckCards()->count();
         }
 
         /**
@@ -83,7 +91,7 @@ class DuelController extends Controller
             ],
         ];
 
-        $duelManager = new DuelManager($turnState);
+        $duelManager = new DuelManager($turnState, $this->cardSettings);
 
         $initialState = $duelManager->initial();
 
@@ -149,7 +157,7 @@ class DuelController extends Controller
             $nextHandCardNumber = null;
             $turnState = $turn->turn_state;
 
-            $duelManager = new DuelManager($turnState);
+            $duelManager = new DuelManager($turnState, $this->cardSettings);
 
             $step = $duelManager->step($isPlayerTurn, $isHandCrad);
 
