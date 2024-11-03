@@ -24,7 +24,6 @@ class DuelController extends Controller
 
     }
 
-
     /**
      * Display a listing of the resource.
      */
@@ -131,7 +130,8 @@ class DuelController extends Controller
                 ->first();
 
             if ($idUser != 0) {
-                $enemyState = $prevTrun->turn_state['enemy'];
+                $enemyJsonIndex = 1;
+                $enemyState = $prevTrun->turn_state[$enemyJsonIndex];
 
                 $isHandCrad = false;
                 if (empty($enemyState['deckCardNumbers'])) {

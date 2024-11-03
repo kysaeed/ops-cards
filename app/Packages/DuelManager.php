@@ -44,7 +44,7 @@ class DuelManager
         );
 
         return [
-            'turnPalyerIndex' => 0,
+            //'turnPalyerIndex' => 0,
             'players' => [
                 [
                     //
@@ -70,7 +70,7 @@ class DuelManager
 
         $jsonIndex = self::Player;
         $enemyJsonIndex = self::Enemy;
-        if ($isPlyaerTurn) {
+        if (!$isPlyaerTurn) {
             $jsonIndex = self::Enemy;
             $enemyJsonIndex = self::Player;
         }
@@ -94,10 +94,12 @@ class DuelManager
         $cardCount = count($nextState[$jsonIndex]['deckCardNumbers']);
 
         /////////
-        $defenceCardNumber = $nextState[$enemyJsonIndex]['cardStackNumbers'][0] ?? null;
+logger("enemy-index: {$enemyJsonIndex}");
+        $defenceCardNumber = $nextState[$enemyJsonIndex]['cardStackNumbers'][0];
 
         $this->onAttack(
             $cardNumber,
+            0,
             $defenceCardNumber,
         );
 
