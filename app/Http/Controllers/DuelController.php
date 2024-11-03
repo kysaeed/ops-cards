@@ -79,12 +79,12 @@ class DuelController extends Controller
         }
 
         $turnState = [
-            'player' => [
+            0 => [
                 'handCardNumber' => null, //$handCardNumbers[0],
                 'deckCardNumbers' => $deckCardNumbers[0]->toArray(),
                 'cardStackNumbers' => [],
             ],
-            'enemy' => [
+            1 => [
                 'handCardNumber' => null, //$handCardNumbers[1],
                 'deckCardNumbers' => $deckCardNumbers[1]->toArray(), //
                 'cardStackNumbers' => [],

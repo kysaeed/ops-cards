@@ -3,6 +3,9 @@ namespace App\Packages;
 
 class DuelManager
 {
+    public const Player = 0;
+    public const Enemy = 1;
+
     protected array $state;
     protected array $cardSettings;
 
@@ -28,14 +31,14 @@ class DuelManager
 
         }
 
-        $def = 'enemy';
+        $def = self::Enemy;
         $initialCardStack = array_shift($nextState[$def]['deckCardNumbers']);
         $nextState[$def]['cardStackNumbers'][] = $initialCardStack;
 
         $this->state = $nextState;
 
         $this->onAttack(
-            $nextState['player']['handCardNumber'],
+            $nextState[self::Player]['handCardNumber'],
             0,
             $initialCardStack,
         );
@@ -46,16 +49,16 @@ class DuelManager
                 [
                     //
                     'deck' => null,
-                    'handCardNumber' => $nextState['player']['handCardNumber'],
+                    'handCardNumber' => $nextState[self::Player]['handCardNumber'],
                     'initialStackCard' => null,
-                    'cardCount' => count($nextState['player']['deckCardNumbers']),
+                    'cardCount' => count($nextState[self::Player]['deckCardNumbers']),
                 ],
                 [
                     //
                     'deck' => null,
-                    'handCardNumber' => $nextState['enemy']['handCardNumber'],
+                    'handCardNumber' => $nextState[self::Enemy]['handCardNumber'],
                     'initialStackCard' => $initialCardStack,
-                    'cardCount' => count($nextState['enemy']['deckCardNumbers']),
+                    'cardCount' => count($nextState[self::Enemy]['deckCardNumbers']),
                 ],
             ],
         ];
@@ -65,11 +68,11 @@ class DuelManager
     {
         $nextState = $this->state;
 
-        $jsonIndex = 'player';
-        $enemyJsonIndex = 'enemy';
+        $jsonIndex = self::Player;
+        $enemyJsonIndex = self::Enemy;
         if ($isPlyaerTurn) {
-            $jsonIndex = 'enemy';
-            $enemyJsonIndex = 'player';
+            $jsonIndex = self::Enemy;
+            $enemyJsonIndex = self::Player;
         }
 
         $nextHandCardNumber = null;
