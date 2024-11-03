@@ -78,16 +78,19 @@ class DuelController extends Controller
         }
 
         $turnState = [
-            0 => [
-                'handCardNumber' => null, //$handCardNumbers[0],
-                'deckCardNumbers' => $deckCardNumbers[0]->toArray(),
-                'cardStackNumbers' => [],
+            'players' => [
+                0 => [
+                    'handCardNumber' => null,
+                    'deckCardNumbers' => $deckCardNumbers[0]->toArray(),
+                    'cardStackNumbers' => [],
+                ],
+                1 => [
+                    'handCardNumber' => null,
+                    'deckCardNumbers' => $deckCardNumbers[1]->toArray(), //
+                    'cardStackNumbers' => [],
+                ],
             ],
-            1 => [
-                'handCardNumber' => null, //$handCardNumbers[1],
-                'deckCardNumbers' => $deckCardNumbers[1]->toArray(), //
-                'cardStackNumbers' => [],
-            ],
+
         ];
 
         $duelManager = new DuelManager($turnState, $this->cardSettings);
@@ -101,7 +104,7 @@ class DuelController extends Controller
             'order' => $order,
             //'deck_card_id' => $deckCard->id,
             'hand_card_id' => null, ////$handCardNumbers[0],
-            'turn_state' => $duelManager->getState(), //$turnState,
+            'turn_state' => $duelManager->getState(),
         ]);
         $duel->duelTurns()->save($turn);
 
@@ -131,7 +134,7 @@ class DuelController extends Controller
 
             if ($idUser != 0) {
                 $enemyJsonIndex = 1;
-                $enemyState = $prevTrun->turn_state[$enemyJsonIndex];
+                $enemyState = $prevTrun->turn_state['players'][$enemyJsonIndex];
 
                 $isHandCrad = false;
                 if (empty($enemyState['deckCardNumbers'])) {
