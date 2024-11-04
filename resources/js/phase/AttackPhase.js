@@ -22,7 +22,7 @@ const AttackPhase = {
                     if (stackCount < 1) {
                         duel.getScene().damageMark.setDamage(null) // dummy param
 
-                        if (total >= enemyCard.cardInfo.power) {
+                        if (fetchData.isTurnChange) {
                             ohterPlayer.getCardStack().criticalDamaged(() => {
 
                                 duel.getFlag().moveTo(520, 170 + (200 * (1 - turnPlayerId)))

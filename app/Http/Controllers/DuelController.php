@@ -131,13 +131,13 @@ class DuelController extends Controller
             $duel = Duel::query()
                 ->first();
 
-            $prevTrun = $duel->duelTurns()
+            $prevTurn = $duel->duelTurns()
                 ->latest('order')
                 ->first();
 
             if ($idUser != 0) {
                 $enemyJsonIndex = 1;
-                $enemyState = $prevTrun->turn_state['players'][$enemyJsonIndex];
+                $enemyState = $prevTurn->turn_state['players'][$enemyJsonIndex];
 
                 $isHandCrad = false;
                 if (empty($enemyState['deckCardNumbers'])) {
@@ -148,14 +148,14 @@ class DuelController extends Controller
             }
 
 
-            $order = $prevTrun->order + 1;
+            $order = $prevTurn->order + 1;
             $turn = new DuelTurn([
                 'user_id' => $idUser, // @todo validation
                 'is_player_turn' => true, // @todo カレントのturnを設定
                 'is_hand' => $isHandCrad,
                 'order' => $order,
-                'turn_state' => $prevTrun->turn_state,
-                'hand_card_id' => $prevTrun->hand_card_id,
+                'turn_state' => $prevTurn->turn_state,
+                'hand_card_id' => $prevTurn->hand_card_id,
                 //'deck_card_id' => $deckCard->id,
             ]);
 
@@ -165,7 +165,7 @@ class DuelController extends Controller
 
             $duelManager = new DuelManager($turnState, $this->cardSettings);
 
-            $step = $duelManager->subTrun($isPlayerTurn, $isHandCrad);
+            $step = $duelManager->subTurn($isPlayerTurn, $isHandCrad);
 
             $turnState = $duelManager->getState();
 

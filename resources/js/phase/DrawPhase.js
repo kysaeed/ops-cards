@@ -176,21 +176,19 @@ console.log('onEvent hand-card click!!!', data)
 
         const player = duel.getTurnPlayer()
 
-        //this.fetchDraw(duel, false, (data) => {
-            player.getDeck().enterDraw(duel, data.cardNumber, 0, (currentDrawCard) => {
-                if (currentDrawCard) {
-                    currentDrawCard.showDetial(() => {
-                        // 攻撃実行
-                        this.attack(currentDrawCard, null, () => {
-                            this.isDrawProcessing = false
-                            if (this.onEnd) {
-                                this.onEnd('AttackPhase', data)
-                            }
-                        })
+        player.getDeck().enterDraw(duel, data.cardNumber, 0, (currentDrawCard) => {
+            if (currentDrawCard) {
+                currentDrawCard.showDetial(() => {
+                    // 攻撃実行
+                    this.attack(currentDrawCard, null, () => {
+                        this.isDrawProcessing = false
+                        if (this.onEnd) {
+                            this.onEnd('AttackPhase', data)
+                        }
                     })
-                }
-            })
-        //})
+                })
+            }
+        })
     },
 
     fetchDraw(duel, isHandCard, onEnd) {

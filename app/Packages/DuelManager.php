@@ -71,7 +71,7 @@ class DuelManager
         ];
     }
 
-    public function subTrun(bool $isPlyaerTurn, bool $isHandCard)
+    public function subTurn(bool $isPlyaerTurn, bool $isHandCard)
     {
         $nextState = $this->state;
 
@@ -110,7 +110,7 @@ class DuelManager
         );
 
         if ($attackResult) {
-            if (!$attackResult['isTrunChange']) {
+            if (!$attackResult['isTurnChange']) {
                 $nextState['players'][$jsonIndex]['cardStackPower'] = $attackResult['attackPower'];
             } else {
                 // 交代時に積み直す
@@ -125,6 +125,7 @@ logger('turn : ' . $nextState['turnPalyerIndex']);
 
         return [
             'isHandCard' => $isHandCard,
+            'isTurnChange' => $attackResult['isTurnChange'],
             'cardNumber' => $cardNumber,
             'nextHnadCardNumber' => $nextHandCardNumber,
             'cardCount' => $cardCount,
@@ -147,13 +148,13 @@ logger('turn : ' . $nextState['turnPalyerIndex']);
         /// dd($attckPower);
         $defencePower = $defenceCardStatus['power'];
 
-        $isTrunChange = false;
+        $isTurnChange = false;
         if ($totalAttackPower >= $defencePower) {
-            $isTrunChange = true;
+            $isTurnChange = true;
         }
 
         return [
-            'isTrunChange' => $isTrunChange,
+            'isTurnChange' => $isTurnChange,
             'attackPower' => $totalAttackPower,
             'defencePower' => $defencePower,
         ];
