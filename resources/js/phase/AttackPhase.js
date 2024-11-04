@@ -45,7 +45,7 @@ const AttackPhase = {
                                     if (enemyPlayer.getBench().getCount() > Const.Bench.Count) {
                                         console.log('***** to EndPhase !')
 
-                                        onEnd('EndPhase')
+                                        onEnd('EndPhase', fetchData)
                                         return
                                     }
 
@@ -65,17 +65,17 @@ const AttackPhase = {
                                         }
 
                                         const endText = duel.getScene().add.text(360, 216, text, { fontSize: '32px', fill: '#000' });
-                                        onEnd('EndPhase')
+                                        onEnd('EndPhase', fetchData)
                                         return
                                     }
 
-                                    onEnd('TurnChangePhase')
+                                    onEnd('TurnChangePhase', fetchData)
                                 })
 
                             })
                         } else {
                             enemyCard.damaged(() => {
-                                onEnd('DrawPhase')
+                                onEnd('DrawPhase', fetchData)
                             })
                         }
 
