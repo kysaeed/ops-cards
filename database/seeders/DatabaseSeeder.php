@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
 
         $users = [];
         $deckModels = [];
+        $testDeckCard = 5;
         for ($i = 1; $i <= 2; $i++) {
             $user = User::create([
                 'name' => "user{$i}",
@@ -53,7 +54,9 @@ class DatabaseSeeder extends Seeder
             }
 
             for ($j = 0; $j < 5; $j++) {
-                $cardNumber = 5 + rand(0, 12);
+                //$cardNumber = 5 + rand(0, 12);
+                $cardNumber = $testDeckCard;
+                $testDeckCard++;
 
                 $deckCard = new DeckCard([
                     'card_number' => $cardNumber,

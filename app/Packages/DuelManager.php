@@ -26,25 +26,32 @@ class DuelManager
 
         $nextState = $this->state;
         foreach ($nextState['players'] as &$player) {
-            // dump($player);
             $player['handCardNumber'] = array_shift($player['deckCardNumbers']);
 
         }
 
+        $turnPlayerIndex = $nextState['turnPalyerIndex'];
         $def = self::Enemy;
+        if (!$turnPlayerIndex) {
+            $def = self::Enemy;
+        } else {
+            $def = self::Player;
+        }
+
         $initialCardStack = array_shift($nextState['players'][$def]['deckCardNumbers']);
         $nextState['players'][$def]['cardStackNumbers'][] = $initialCardStack;
 
         $this->state = $nextState;
 
+        /*
         $this->onAttack(
             $nextState['players'][self::Player]['handCardNumber'],
             0,
             $initialCardStack,
         );
+        */
 
         return [
-            //'turnPalyerIndex' => 0,
             'players' => [
                 [
                     //
@@ -64,7 +71,7 @@ class DuelManager
         ];
     }
 
-    public function step(bool $isPlyaerTurn, bool $isHandCard)
+    public function subTrun(bool $isPlyaerTurn, bool $isHandCard)
     {
         $nextState = $this->state;
 
@@ -85,7 +92,6 @@ class DuelManager
             $cardNumber = array_shift($nextState['players'][$jsonIndex]['deckCardNumbers']);
         }
 
-        // todo 交代時に積み直す
         if ($cardNumber) {
             array_unshift($nextState['players'][$jsonIndex]['cardStackNumbers'], $cardNumber);
 
@@ -94,15 +100,26 @@ class DuelManager
         $cardCount = count($nextState['players'][$jsonIndex]['deckCardNumbers']);
 
         /////////
-logger("enemy-index: {$enemyJsonIndex}");
+        $prevAttackPower = $nextState['players'][$jsonIndex]['cardStackPower'];
         $defenceCardNumber = $nextState['players'][$enemyJsonIndex]['cardStackNumbers'][0];
 
-        $this->onAttack(
+        $attackResult = $this->onAttack(
             $cardNumber,
-            0,
+            $prevAttackPower,
             $defenceCardNumber,
         );
 
+        if ($attackResult) {
+            if (!$attackResult['isTrunChange']) {
+                $nextState['players'][$jsonIndex]['cardStackPower'] = $attackResult['attackPower'];
+            } else {
+                // 交代時に積み直す
+                $nextState['players'][$jsonIndex]['cardStackPower'] = 0;
+                $nextState['turnPalyerIndex'] = 1 - $nextState['turnPalyerIndex'];
+            }
+        }
+
+logger('turn : ' . $nextState['turnPalyerIndex']);
 
         $this->state = $nextState;
 
@@ -125,21 +142,20 @@ logger("enemy-index: {$enemyJsonIndex}");
 
         // @todo ターンの入れ替えをチェック
         $attackPower = $attackCardStatus['power'];
+        $totalAttackPower = $attackPower + $prevAttackPower;
 
         /// dd($attckPower);
         $defencePower = $defenceCardStatus['power'];
 
         $isTrunChange = false;
-        if ($attackPower >= $defencePower) {
-
+        if ($totalAttackPower >= $defencePower) {
             $isTrunChange = true;
-
         }
 
         return [
             'isTrunChange' => $isTrunChange,
-            'attackPower' => 0,
-            'defencePower' => 0,
+            'attackPower' => $totalAttackPower,
+            'defencePower' => $defencePower,
         ];
     }
 

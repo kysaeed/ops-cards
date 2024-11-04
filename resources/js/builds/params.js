@@ -2,7 +2,7 @@ import { writeFileSync } from 'fs'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 
-import CardList from '../builds/params.json'
+import CardList from '../game/CardList.js'
 
 // console.log(CardList)
 

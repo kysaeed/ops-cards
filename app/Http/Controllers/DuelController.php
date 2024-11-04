@@ -78,16 +78,19 @@ class DuelController extends Controller
         }
 
         $turnState = [
+            'turnPalyerIndex' => 0,
             'players' => [
                 0 => [
                     'handCardNumber' => null,
                     'deckCardNumbers' => $deckCardNumbers[0]->toArray(),
                     'cardStackNumbers' => [],
+                    'cardStackPower' => 0,
                 ],
                 1 => [
                     'handCardNumber' => null,
                     'deckCardNumbers' => $deckCardNumbers[1]->toArray(), //
                     'cardStackNumbers' => [],
+                    'cardStackPower' => 0,
                 ],
             ],
 
@@ -162,7 +165,7 @@ class DuelController extends Controller
 
             $duelManager = new DuelManager($turnState, $this->cardSettings);
 
-            $step = $duelManager->step($isPlayerTurn, $isHandCrad);
+            $step = $duelManager->subTrun($isPlayerTurn, $isHandCrad);
 
             $turnState = $duelManager->getState();
 
