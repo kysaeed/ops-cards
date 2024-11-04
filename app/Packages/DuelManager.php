@@ -101,12 +101,12 @@ class DuelManager
 
         /////////
         $prevAttackPower = $nextState['players'][$jsonIndex]['cardStackPower'];
-        $defenceCardNumber = $nextState['players'][$enemyJsonIndex]['cardStackNumbers'][0];
+        $defenseCardNumber = $nextState['players'][$enemyJsonIndex]['cardStackNumbers'][0];
 
         $attackResult = $this->onAttack(
             $cardNumber,
             $prevAttackPower,
-            $defenceCardNumber,
+            $defenseCardNumber,
         );
 
         if ($attackResult) {
@@ -134,30 +134,41 @@ logger('turn : ' . $nextState['turnPalyerIndex']);
         ];
     }
 
-    protected function onAttack(int $attackCardNumber, int $prevAttackPower, ?int $defenceCardNumber)
+    protected function onAttack(int $attackCardNumber, int $prevAttackPower, ?int $defenseCardNumber)
     {
 
-        // @todo それぞれのパラメータを取得
-        $attackCardStatus = $this->cardSettings[$attackCardNumber];
-        $defenceCardStatus = $this->cardSettings[$defenceCardNumber];
+        /**
+         * @todo それぞれのパラメータを取得
+         *  カードIDは1起点なので合わせやすいように修正する
+         * */
+        $attackCardStatus = $this->cardSettings[$attackCardNumber - 1];
+        $defenseCardStatus = $this->cardSettings[$defenseCardNumber - 1];
+
+logger('attakc cared status **');
+logger($attackCardStatus);
+        $addAttackPower = 0;
+        $attackAbility = $attackCardStatus['ability']['attack'] ?? null;
+        if ($attackAbility) {
+            $addAttackPower = $attackAbility['power'] ?? 0;
+        }
 
 
         // @todo ターンの入れ替えをチェック
         $attackPower = $attackCardStatus['power'];
         $totalAttackPower = $attackPower + $prevAttackPower;
 
-        $defencePower = $defenceCardStatus['power'];
+        $defensePower = $defenseCardStatus['power'];
 
         $isTurnChange = false;
-        if ($totalAttackPower >= $defencePower) {
+        if ($totalAttackPower >= $defensePower) {
             $isTurnChange = true;
         }
 
         return [
             'isTurnChange' => $isTurnChange,
             'attackPower' => $totalAttackPower,
-            'addAttackPower' => 0,
-            'defencePower' => $defencePower,
+            'addAttackPower' => $addAttackPower,
+            'defensePower' => $defensePower,
         ];
     }
 
