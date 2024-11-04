@@ -99,11 +99,12 @@ console.log('onEvent hand-card click!!!', data)
 
     },
 
-    attack(card, nextCard, onEnd) {
+    attack(card, data, onEnd) {
         //
         const duel = this.duel
         card.moveToAttackPosition(() => {
-            card.onEnterToAttackPosition(() => {
+            const add = data.addAttackPower
+            card.onEnterToAttackPosition(add, () => {
                 duel.getTurnPlayer().getCardStack().addCard(card)
                 if (onEnd) {
                     onEnd()
@@ -128,7 +129,7 @@ console.log('onEvent hand-card click!!!', data)
 
         // 攻撃実行
         const nextCard = null
-        this.attack(currentCard, nextCard, () => {
+        this.attack(currentCard, data, () => {
             if (data.nextHnadCardNumber) {
                 this.doDrawHandCard(this.duel, { cardNumber: data.nextHnadCardNumber }, () => {
                     //
@@ -180,7 +181,7 @@ console.log('onEvent hand-card click!!!', data)
             if (currentDrawCard) {
                 currentDrawCard.showDetial(() => {
                     // 攻撃実行
-                    this.attack(currentDrawCard, null, () => {
+                    this.attack(currentDrawCard, data, () => {
                         this.isDrawProcessing = false
                         if (this.onEnd) {
                             this.onEnd('AttackPhase', data)

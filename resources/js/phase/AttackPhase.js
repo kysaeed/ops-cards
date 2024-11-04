@@ -92,10 +92,10 @@ const AttackPhase = {
 
     onEvent(event, sender, params) {
         // console.log('******* ' + event + ' *****', sender, params)
-        sender.setClickableState(false)
-        if (this.onEnd) {
-            this.onEnd('DrawPhase')
-        }
+        // sender.setClickableState(false)
+        // if (this.onEnd) {
+        //     this.onEnd('DrawPhase')
+        // }
     }
 }
 

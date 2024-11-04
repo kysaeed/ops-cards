@@ -304,12 +304,11 @@ export default class Card {
 
     }
 
-    onEnterToAttackPosition(onEnd) {
+    onEnterToAttackPosition(add, onEnd) {
 
 console.log('******** onEnterToAttackPosition()')
 
         this.showStatusTip(() => { // todo: 引数に表示内容を設定?
-
 
 
             const player = this.duel.getTurnPlayer()
@@ -351,7 +350,7 @@ console.log('******** onEnterToAttackPosition()')
 
 
 
-            const add = this.getBufPowerByCardAbility(Const.Card.Side.Attack)
+            //const add = this.getBufPowerByCardAbility(Const.Card.Side.Attack)
             this.bufParams = {
                 power: add,
             }

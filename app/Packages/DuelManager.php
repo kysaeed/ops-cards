@@ -127,6 +127,7 @@ logger('turn : ' . $nextState['turnPalyerIndex']);
             'isHandCard' => $isHandCard,
             'isTurnChange' => $attackResult['isTurnChange'],
             'cardNumber' => $cardNumber,
+            'addAttackPower' => $attackResult['addAttackPower'],
             'nextHnadCardNumber' => $nextHandCardNumber,
             'cardCount' => $cardCount,
             'order' => null,
@@ -145,7 +146,6 @@ logger('turn : ' . $nextState['turnPalyerIndex']);
         $attackPower = $attackCardStatus['power'];
         $totalAttackPower = $attackPower + $prevAttackPower;
 
-        /// dd($attckPower);
         $defencePower = $defenceCardStatus['power'];
 
         $isTurnChange = false;
@@ -156,6 +156,7 @@ logger('turn : ' . $nextState['turnPalyerIndex']);
         return [
             'isTurnChange' => $isTurnChange,
             'attackPower' => $totalAttackPower,
+            'addAttackPower' => 0,
             'defencePower' => $defencePower,
         ];
     }
