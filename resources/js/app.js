@@ -100,15 +100,16 @@ const scene = {
 
         this.damageMark = new DamageMark(scene, 400, 280)
 
-        const toNextPhase = (next) => {
+        const toNextPhase = (next, fetchData) => {
+console.log('to Next State : ', fetchData)
             currentPhase = phase[next]
             this.duel.setCurrentPhase(currentPhase)
-            currentPhase.enter(this.duel, (next) => {
-                toNextPhase(next)
+            currentPhase.enter(this.duel, fetchData, (next, fetchData) => {
+                toNextPhase(next, fetchData)
             })
         }
 
-        currentPhase.enter(this.duel, toNextPhase)
+        currentPhase.enter(this.duel, {}, toNextPhase)
 
     },
     update() {

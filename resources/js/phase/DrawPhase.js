@@ -2,7 +2,7 @@
 
 const DrawPhase = {
 
-    enter(duel, onEnd) {
+    enter(duel, fetchData, onEnd) {
         this.isDrawProcessing = false
 
         this.duel = duel
@@ -13,7 +13,7 @@ const DrawPhase = {
         if (player.getDeck().isEmpty()) {
             if (!player.getHandCard()) {
                 /// todo!!!
-                onEnd('EndPhase') // todo 勝敗表示へ
+                onEnd('EndPhase', fetchData) // todo 勝敗表示へ
             }
         }
 
@@ -45,7 +45,7 @@ const DrawPhase = {
                         // 手札を使用
                         if (player.getHandCard()) {
                             this.attackByHandCard(this.duel, data, () => {
-                                this.onEnd('AttackPhase')
+                                this.onEnd('AttackPhase', data)
                             })
                         }
 
@@ -60,7 +60,7 @@ const DrawPhase = {
                         // 手札を使用
                         if (player.getHandCard()) {
                             this.attackByHandCard(this.duel, () => {
-                                this.onEnd('AttackPhase')
+                                this.onEnd('AttackPhase', data)
                             })
                         }
                     } else {
@@ -92,7 +92,7 @@ console.log('onEvent hand-card click!!!', data)
 
                 console.log('On hand card clicked ....')
                 this.attackByHandCard(this.duel, data, () => {
-                    this.onEnd('AttackPhase')
+                    this.onEnd('AttackPhase', data)
                 })
             })
         }
@@ -152,7 +152,7 @@ console.log('onEvent hand-card click!!!', data)
             return
         }
 
-
+        // data.xxx
         player.getDeck().enterDraw(duel, data.cardNumber, 0, (currentDrawCard) => {
             if (currentDrawCard) {
                 // ドローしたカードを手札にする
@@ -184,7 +184,7 @@ console.log('onEvent hand-card click!!!', data)
                         this.attack(currentDrawCard, null, () => {
                             this.isDrawProcessing = false
                             if (this.onEnd) {
-                                this.onEnd('AttackPhase')
+                                this.onEnd('AttackPhase', data)
                             }
                         })
                     })

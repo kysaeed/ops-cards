@@ -1,6 +1,6 @@
 
 const EndPhase = {
-    enter(duel, onEnd) {
+    enter(duel, fetchData, onEnd) {
         console.log('EndPhase !!!!!')
     },
 

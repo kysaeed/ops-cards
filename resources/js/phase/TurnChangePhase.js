@@ -1,7 +1,7 @@
 
 
 const TurnChangePhase = {
-    enter(duel, onEnd) {
+    enter(duel, fetchData, onEnd) {
         duel.getTurnPlayer().getCardStack().each((c, i) => {
             c.hideStatusTip()
         })
@@ -16,7 +16,7 @@ const TurnChangePhase = {
             // const plyaer = duel.getOtherPlayer()
             // const card = plyaer.getCardStack().getTopCard()
 
-            onEnd('DrawPhase');
+            onEnd('DrawPhase', fetchData);
         })
     },
 

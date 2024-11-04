@@ -1,7 +1,7 @@
 import Const from "../Const"
 
 const AttackPhase = {
-    enter(duel, onEnd) {
+    enter(duel, fetchData, onEnd) {
         this.onEnd = onEnd
 
         const turnPlayerId = duel.getTurnPlayerId()

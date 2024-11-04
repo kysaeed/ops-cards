@@ -8,7 +8,7 @@ const WidthBase = -30
 
 //
 const SetupPhase = {
-    enter(duel, onEnd) {
+    enter(duel, fetchData, onEnd) {
         this.duel = duel
 
         window.axios.get('api/data/deck').then((res) => {
@@ -45,7 +45,7 @@ const SetupPhase = {
                         diffenceCardInfo.enterTo(-WidthBase, enemyY, 1 - turnPlayerId)
 
                         if (onEnd) {
-                            onEnd('DrawPhase');
+                            onEnd('DrawPhase',null);
                         }
                     })
                 })

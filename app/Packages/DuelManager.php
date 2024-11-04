@@ -115,7 +115,7 @@ class DuelManager
             } else {
                 // 交代時に積み直す
                 $nextState['players'][$jsonIndex]['cardStackPower'] = 0;
-                $nextState['turnPalyerIndex'] = 1 - $nextState['turnPalyerIndex'];
+                $nextState['turnPalyerIndex'] = (1 - $nextState['turnPalyerIndex']);
             }
         }
 
