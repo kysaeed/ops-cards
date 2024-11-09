@@ -179,7 +179,7 @@ console.log('onEvent hand-card click!!!', data)
 
         const player = duel.getTurnPlayer()
 
-        player.getDeck().enterDraw(duel, data.cardNumber, 0, (currentDrawCard) => {
+        player.getDeck().enterDraw(duel, data.cardNumber, 0, null, (currentDrawCard) => {
             if (currentDrawCard) {
                 currentDrawCard.showDetial(() => {
                     // 攻撃実行
