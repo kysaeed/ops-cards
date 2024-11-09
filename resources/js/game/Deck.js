@@ -150,6 +150,8 @@ class DeckSprite {
         const x = card.sprite.x
         const y = card.sprite.y
 
+        card.sprite.alpha = 0
+
         this.duel.getScene().tweens.chain({
             targets: card.sprite,
             tweens: [
@@ -183,6 +185,7 @@ class DeckSprite {
             },
         })
 
+        this.drawCard.alpha = 0
         this.duel.getScene().tweens.chain({
             targets: this.drawCard,
             tweens: [
@@ -246,7 +249,7 @@ export default class Deck {
         this.sprite.setCount(cardCount)
     }
 
-    enterDraw(duel, idDrawCard, stackCount, onEnd) {
+    enterDraw(duel, idDrawCard, stackCount, onEnter, onEnd) {
         const turnPlayerId = this.player.getPlayerId()
 
         if (this.isEmpty()) {
@@ -256,26 +259,29 @@ export default class Deck {
         const x = 400
         const y = -(HeightBase) + (HeightBase * 2 * (turnPlayerId))
 
-            // console.log(idDrawCard)
-            //let cardId = this.cards.shift()
-            let cardId = idDrawCard
+        // console.log(idDrawCard)
+        //let cardId = this.cards.shift()
+        let cardId = idDrawCard
 
-            this.deckIndex++
+        this.deckIndex++
 
-            const cardInfo = CardList[cardId - 1]
+        const cardInfo = CardList[cardId - 1]
 
-            const card = new Card(duel, cardInfo, this.player, stackCount * 8, y + stackCount * 8)
+        const card = new Card(duel, cardInfo, this.player, stackCount * 8, y + stackCount * 8)
+        if (onEnter) {
+            onEnter(card)
+        }
 
-            this.sprite.setDrawCardPosition(card, () => {
-                let deckRemainCount = this.initialCardCount - this.deckIndex
-                if (deckRemainCount < 0) {
-                    deckRemainCount = 0
-                }
-                this.sprite.setCount(deckRemainCount)
-                if (onEnd) {
-                    onEnd(card)
-                }
-            })
+        this.sprite.setDrawCardPosition(card, () => {
+            let deckRemainCount = this.initialCardCount - this.deckIndex
+            if (deckRemainCount < 0) {
+                deckRemainCount = 0
+            }
+            this.sprite.setCount(deckRemainCount)
+            if (onEnd) {
+                onEnd(card)
+            }
+        })
 
 
         // })

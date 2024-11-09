@@ -185,7 +185,6 @@ class DuelController extends Controller
             $duel->duelTurns()->save($turn);
 
             return response()->json($step);
-
         });
 
     }

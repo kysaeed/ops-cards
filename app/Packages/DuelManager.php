@@ -128,6 +128,7 @@ logger('turn : ' . $nextState['turnPalyerIndex']);
             'isTurnChange' => $attackResult['isTurnChange'],
             'cardNumber' => $cardNumber,
             'addAttackPower' => $attackResult['addAttackPower'],
+            'ability' => $attackResult['ability'],
             'nextHnadCardNumber' => $nextHandCardNumber,
             'cardCount' => $cardCount,
             'order' => null,
@@ -144,23 +145,41 @@ logger('turn : ' . $nextState['turnPalyerIndex']);
         $attackCardStatus = $this->cardSettings[$attackCardNumber - 1];
         $defenseCardStatus = $this->cardSettings[$defenseCardNumber - 1];
 
+        $ability = [
+            'attack' => [],
+            'defense' => [],
+        ];
+
 logger('attakc cared status **');
 logger($attackCardStatus);
         $addAttackPower = 0;
         $attackAbility = $attackCardStatus['ability']['attack'] ?? null;
         if ($attackAbility) {
             $addAttackPower = $attackAbility['power'] ?? 0;
+            if ($addAttackPower) {
+                $ability['attack']['power'] = $addAttackPower;
+            }
         }
 
 
-        // @todo ターンの入れ替えをチェック
         $attackPower = $attackCardStatus['power'];
         $totalAttackPower = $attackPower + $prevAttackPower;
 
-        $defensePower = $defenseCardStatus['power'];
 
+        $defensePower = $defenseCardStatus['power'];
+        $addDefensePower = 0;
+        $defenseAbility = $defenseCardStatus['ability']['defense'] ?? null;
+        if ($defenseAbility) {
+            $addDefensePower = $defenseAbility['power'];
+            $ability['defense']['power'] = $addDefensePower;
+        }
+
+        $totalDefensePower = $defensePower + $addDefensePower;
+
+
+        // ターンの入れ替えをチェック
         $isTurnChange = false;
-        if ($totalAttackPower >= $defensePower) {
+        if ($totalAttackPower >= $totalDefensePower) {
             $isTurnChange = true;
         }
 
@@ -168,8 +187,10 @@ logger($attackCardStatus);
             'isTurnChange' => $isTurnChange,
             'attackPower' => $totalAttackPower,
             'addAttackPower' => $addAttackPower,
-            'addDefensePower' => 0,
-            'defensePower' => $defensePower,
+            'addDefensePower' => $addDefensePower,
+            'defensePower' => $totalDefensePower,
+            'addDefensePower' => $addDefensePower,
+            'ability' => $ability,
         ];
     }
 

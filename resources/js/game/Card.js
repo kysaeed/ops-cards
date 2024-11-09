@@ -257,9 +257,7 @@ export default class Card {
     }
 
     showStatusTip(onEnd) {
-        this.showAbilityEffect(() => {
-            this.cardTip.showStatusTip(onEnd)
-        })
+        this.cardTip.showStatusTip(onEnd)
     }
 
     hideStatusTip() {
@@ -304,63 +302,39 @@ export default class Card {
 
     }
 
-    onEnterToAttackPosition(add, onEnd) {
+    onEnterToAttackPosition(data, onEnd) {
 
-console.log('******** onEnterToAttackPosition()')
+console.log('******** onEnterToAttackPosition()', data)
 
-        this.showStatusTip(() => { // todo: 引数に表示内容を設定?
+        // const
+        const attackAbility = data.ability
+        const add = attackAbility.power
 
+        if (add) {
+            this.showAbilityEffect(() => {
+                this.showStatusTip(() => { // todo: 引数に表示内容を設定?
 
-            const player = this.duel.getTurnPlayer()
-            const bench = player.getBench()
+                    const player = this.duel.getTurnPlayer()
+                    const bench = player.getBench()
 
-            // const recycleCard = bench.takeLatestCard()
-            // if (recycleCard) {
-
-            //     /// move to abyss
-            //     const x = 330 * player.getDirection()
-            //     const y = (180 * player.getDirection()) + 30
-            //     recycleCard.moveToAbyss(x, y, () => {
-            //         //
-            //     })
-
-            //     // move to deck
-            //     const x = -160 * player.getDirection()
-            //     const y = (210 * player.getDirection()) + 30
-            //     recycleCard.moveToDeck(x, y, () => {
-            //         //
-            //     })
-
-            // }
-
-            /*
-            const ability = this.cardInfo.ability
-            if (ability) {
-                if (ability.attack) {
-                    if (ability.attack.power) {
-                        this.bufParams = {
-                            attack: {
-                                power: ability.attack.power,
-                            }
-                        }
+                    //const add = this.getBufPowerByCardAbility(Const.Card.Side.Attack)
+                    this.bufParams = {
+                        power: add,
                     }
-                }
-            }
-            */
 
+                    this.cardTip.setText(add)
 
+                    if (onEnd) {
+                        onEnd()
+                    }
 
-            //const add = this.getBufPowerByCardAbility(Const.Card.Side.Attack)
-            this.bufParams = {
-                power: add,
-            }
+                    return
+                })
+            })
+        } else {
+            onEnd()
+        }
 
-            this.cardTip.setText(add)
-
-            if (onEnd) {
-                onEnd()
-            }
-        })
     }
 
     onEnterToDefense(onEnd) {

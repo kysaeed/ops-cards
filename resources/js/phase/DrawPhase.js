@@ -104,7 +104,7 @@ console.log('onEvent hand-card click!!!', data)
         const duel = this.duel
         card.moveToAttackPosition(() => {
             const add = data.addAttackPower
-            card.onEnterToAttackPosition(add, () => {
+            card.onEnterToAttackPosition(data, () => {
                 duel.getTurnPlayer().getCardStack().addCard(card)
                 if (onEnd) {
                     onEnd()
@@ -129,14 +129,16 @@ console.log('onEvent hand-card click!!!', data)
 
         // 攻撃実行
         const nextCard = null
+        //let
         this.attack(currentCard, data, () => {
             if (data.nextHnadCardNumber) {
                 this.doDrawHandCard(this.duel, { cardNumber: data.nextHnadCardNumber }, () => {
-                    //
+                    if (onEnd) {
+                        onEnd()
+                    }
                 })
-            }
-            if (onEnd) {
-                onEnd()
+            } else {
+
             }
         })
     },
@@ -153,18 +155,18 @@ console.log('onEvent hand-card click!!!', data)
             return
         }
 
-        // data.xxx
         player.getDeck().enterDraw(duel, data.cardNumber, 0, (currentDrawCard) => {
             if (currentDrawCard) {
                 // ドローしたカードを手札にする
-                currentDrawCard.moveToHandPosition(() => {
-                    currentDrawCard.setShadowParams(1.4, 0.2, 6) // todo moveToHandPosition内へ
-                    player.setHandCard(currentDrawCard)
-                    if (onEnd) {
-                        onEnd()
-                    }
-                })
+                player.setHandCard(currentDrawCard)
+                if (onEnd) {
+                    onEnd()
+                }
             }
+        }, (currentDrawCard) => {
+            currentDrawCard.moveToHandPosition(() => {
+                currentDrawCard.setShadowParams(1.4, 0.2, 6) // todo moveToHandPosition内へ
+            })
         })
     },
 
