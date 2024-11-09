@@ -168,6 +168,7 @@ logger($attackCardStatus);
             'isTurnChange' => $isTurnChange,
             'attackPower' => $totalAttackPower,
             'addAttackPower' => $addAttackPower,
+            'addDefensePower' => 0,
             'defensePower' => $defensePower,
         ];
     }

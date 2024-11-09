@@ -117,16 +117,18 @@ class DuelController extends Controller
 
     public function draw(Request $request)
     {
-        $idUser = $request->input('idUser');
+        // @todo チェックに使用？
+        //$idUser = $request->input('idUser');
         //$index = $request->input('index');
+
         $isHandCrad = $request->input('isHandCard');
 
         /**
          * @todo PlayerのturnかをBEで判定する
          */
-        $isPlayerTurn = $request->input('isPlayer');
+        // $isPlayerTurn = $request->input('isPlayer');
 
-        return DB::transaction(function () use ($idUser, $isPlayerTurn, $isHandCrad) {
+        return DB::transaction(function () use ($isHandCrad) {
 
             $duel = Duel::query()
                 ->first();
@@ -135,7 +137,12 @@ class DuelController extends Controller
                 ->latest('order')
                 ->first();
 
-            if ($idUser != 0) {
+            $turnState = $prevTurn->turn_state;
+            $turnPlayerIndex = $turnState['turnPalyerIndex'] ?? 0;
+
+            $isPlayerTurn = true;
+            if ($turnPlayerIndex != 0) {
+                $isPlayerTurn = false;
                 $enemyJsonIndex = 1;
                 $enemyState = $prevTurn->turn_state['players'][$enemyJsonIndex];
 
@@ -150,8 +157,8 @@ class DuelController extends Controller
 
             $order = $prevTurn->order + 1;
             $turn = new DuelTurn([
-                'user_id' => $idUser, // @todo validation
-                'is_player_turn' => true, // @todo カレントのturnを設定
+                'user_id' => $turnPlayerIndex, // @todo 正しい値をいれる
+                'is_player_turn' => ($turnPlayerIndex === 0),
                 'is_hand' => $isHandCrad,
                 'order' => $order,
                 'turn_state' => $prevTurn->turn_state,
@@ -161,7 +168,6 @@ class DuelController extends Controller
 
 
             $nextHandCardNumber = null;
-            $turnState = $turn->turn_state;
 
             $duelManager = new DuelManager($turnState, $this->cardSettings);
 
