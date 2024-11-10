@@ -33,6 +33,19 @@ class DuelController extends Controller
         $duel = Duel::query()
             ->first();
 
+        if ($duel->duelTurns()->exists()) {
+            $resume = $duel->duelTurns()
+                ->latest('order')
+                ->first();
+
+            $duelManager = new DuelManager($resume->turn_state, $this->cardSettings);
+
+            $initialState = $duelManager->initial();
+
+            // dd($resume?->toArray());
+            return response()->json($initialState);
+        }
+
         $deckModels = [];
         $deckModels[] = $duel->deck;
         $deckModels[] = $duel->enemyDeck;
@@ -84,12 +97,14 @@ class DuelController extends Controller
                     'handCardNumber' => null,
                     'deckCardNumbers' => $deckCardNumbers[0]->toArray(),
                     'cardStackNumbers' => [],
+                    'benchCardNumbers' => [],
                     'cardStackPower' => 0,
                 ],
                 1 => [
                     'handCardNumber' => null,
                     'deckCardNumbers' => $deckCardNumbers[1]->toArray(), //
                     'cardStackNumbers' => [],
+                    'benchCardNumbers' => [],
                     'cardStackPower' => 0,
                 ],
             ],

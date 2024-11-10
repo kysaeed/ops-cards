@@ -1,5 +1,8 @@
 
 import Const from "../Const"
+import CardList from './CardList.js'
+import Card from './Card.js'
+
 
 const HeightBase = 100
 const WidthBase = -30
@@ -13,6 +16,43 @@ export default class Bench {
         this.cards = []
         // this.x = x
         // this.y = y
+    }
+
+    initialize(cardList) {
+        if (!cardList) {
+            return
+        }
+
+        const getBenchX = (benchIndex, playerId) => {
+            if (playerId == 0) {
+                return 200 + (benchIndex * 20)
+            }
+            return -200 - (benchIndex * 20)
+        }
+
+        const getBenchY = (benchIndex, playerId) => {
+            if (playerId == 0) {
+                return 200 - (benchIndex * 70)
+            }
+            return (-200 + (benchIndex * 70));
+        }
+
+
+        const player = this.duelInfo.getPlayer(this.playerId)
+
+        this.cards = []
+        cardList.forEach((benchElement, i) => {
+            benchElement.forEach((cardId) => {
+                const element = []
+                const cardInfo = CardList[cardId - 1]
+                if (cardInfo) {
+                    const card = new Card(this.duelInfo, cardInfo, player, getBenchX(i, this.playerId), getBenchY(i, this.playerId))
+                    element.push(card)
+                    card.moveToBench(getBenchX(i, this.playerId), getBenchY(i, this.playerId))
+                }
+                this.cards.push(element)
+            })
+        })
     }
 
     takeLatestCard() {

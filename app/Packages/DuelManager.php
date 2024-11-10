@@ -57,15 +57,18 @@ class DuelManager
                     //
                     'deck' => null,
                     'handCardNumber' => $nextState['players'][self::Player]['handCardNumber'],
-                    'initialStackCard' => null,
+                    'initialStackCards' => [],
                     'cardCount' => count($nextState['players'][self::Player]['deckCardNumbers']),
+                    'initialBench' => $nextState['players'][self::Player]['benchCardNumbers'],
                 ],
                 [
                     //
                     'deck' => null,
                     'handCardNumber' => $nextState['players'][self::Enemy]['handCardNumber'],
-                    'initialStackCard' => $initialCardStack,
+                    'initialStackCards' => [$initialCardStack],
                     'cardCount' => count($nextState['players'][self::Enemy]['deckCardNumbers']),
+                    'initialBench' => [],
+                    'initialBench' => $nextState['players'][self::Enemy]['benchCardNumbers'],
                 ],
             ],
         ];
@@ -116,10 +119,18 @@ class DuelManager
                 // 交代時に積み直す
                 $nextState['players'][$jsonIndex]['cardStackPower'] = 0;
                 $nextState['turnPalyerIndex'] = (1 - $nextState['turnPalyerIndex']);
+                $defenseBench = $nextState['players'][$enemyJsonIndex]['benchCardNumbers'];
+logger('******');
+logger($defenseBench);
+                $a = ($nextState['players'][$enemyJsonIndex]['cardStackNumbers']);
+                $nextState['players'][$enemyJsonIndex]['benchCardNumbers'] = $this->addCardsToBench(
+                    $a,
+                    $defenseBench,
+                );
+logger($nextState['players'][$enemyJsonIndex]['benchCardNumbers']);
+                $nextState['players'][$enemyJsonIndex]['cardStackNumbers'] = [];
             }
         }
-
-logger('turn : ' . $nextState['turnPalyerIndex']);
 
         $this->state = $nextState;
 
@@ -194,4 +205,23 @@ logger($attackCardStatus);
         ];
     }
 
+    protected function addCardsToBench(array $addCardList, array $bench): array
+    {
+        foreach ($addCardList as $addCard) {
+            $isAppended = false;
+            foreach ($bench as &$benchElement) {
+                if (empty($benchElement)) {
+                    $benchElement[] = $addCard;
+                    $isAppended = true;
+                } elseif ($benchElement[0] === $addCard) {
+                    $benchElement[] = $addCard;
+                    $isAppended = true;
+                }
+            }
+            if (!$isAppended) {
+                $bench[] = [$addCard];
+            }
+        }
+        return $bench;
+    }
 }

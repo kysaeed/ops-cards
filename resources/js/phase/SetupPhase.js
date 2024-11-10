@@ -26,12 +26,16 @@ const SetupPhase = {
                 player.getDeck().setInitilCardCount(data.players[playerId].cardCount)
             })
 
+            //const initialBench = data.players[1].initialBench
+            duel.getPlayer(0).getBench().initialize(data.players[0].initialBench)
+            duel.getPlayer(1).getBench().initialize(data.players[1].initialBench)
 
-            this.drawInitialHandCard(duel.getPlayer(1), res.data.players[1].handCardNumber, () => {
-                this.drawInitialHandCard(duel.getPlayer(0), res.data.players[0].handCardNumber, () => {
+
+            this.drawInitialHandCard(duel.getPlayer(1), data.players[1].handCardNumber, () => {
+                this.drawInitialHandCard(duel.getPlayer(0), data.players[0].handCardNumber, () => {
 
                     ////// デッキから初期防御側カードを出す
-                    const initialCard = res.data.players[1].initialStackCard
+                    const initialCard = data.players[1].initialStackCards[0]
                     player.getDeck().enterDraw(duel, initialCard, /*stackCount*/0, null, (diffenceCardInfo) => {
 
                         let enemyY = -HeightBase
