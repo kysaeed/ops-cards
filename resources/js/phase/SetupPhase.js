@@ -16,12 +16,19 @@ const SetupPhase = {
 
             const data = res.data
 
+            if (data.isPlayerTurn) {
+                this.duel.turnPlayerId = 0
+            } else {
+                this.duel.turnPlayerId = 1
+            }
+
             const turnPlayerId = duel.getTurnPlayerId()
-            const player = duel.getPlayer(1 - turnPlayerId)
+            const defensePlayer = duel.getPlayer(1 - turnPlayerId)
+
 
             duel.playerList.forEach((player) => {
                 const playerId = player.getPlayerId()
-                const deckData = data.players[playerId].deck
+                // const deckData = data.players[playerId].deck
 
                 player.getDeck().setInitilCardCount(data.players[playerId].cardCount)
             })
@@ -34,24 +41,43 @@ const SetupPhase = {
             this.drawInitialHandCard(duel.getPlayer(1), data.players[1].handCardNumber, () => {
                 this.drawInitialHandCard(duel.getPlayer(0), data.players[0].handCardNumber, () => {
 
-                    ////// デッキから初期防御側カードを出す
-                    const initialCard = data.players[1].initialStackCards[0]
-                    player.getDeck().enterDraw(duel, initialCard, /*stackCount*/0, null, (diffenceCardInfo) => {
+                    if (!data.isResume) {
 
-                        let enemyY = -HeightBase
-                        if (turnPlayerId) {
-                            enemyY = HeightBase
-                        }
-                        diffenceCardInfo.sprite.angle = Bevel + (180 * (1 - turnPlayerId)) // todo enterToにマージ
+                        ////// デッキから初期防御側カードを出す
+                        const initialCard = data.players[defensePlayer.getPlayerId()].initialStackCards[0]
+                        defensePlayer.getDeck().enterDraw(duel, initialCard, 0, null, (diffenceCardInfo) => {
 
-                        ///////
-                        player.cardStack.addCard(diffenceCardInfo)
-                        diffenceCardInfo.enterTo(-WidthBase, enemyY, 1 - turnPlayerId)
+                            let enemyY = -HeightBase
+                            if (turnPlayerId) {
+                                enemyY = HeightBase
+                            }
+                            diffenceCardInfo.sprite.angle = Bevel + (180 * (1 - turnPlayerId)) // todo enterToにマージ
+
+                            ///////
+                            defensePlayer.cardStack.addCard(diffenceCardInfo)
+                            diffenceCardInfo.enterTo(-WidthBase, enemyY, 1 - turnPlayerId)
+
+                            if (onEnd) {
+                                onEnd('DrawPhase',null);
+                            }
+                        })
+
+                    } else {
+                        console.log(
+                            'stack ! ********',
+
+                            data.players[0].initialStackCards,
+                            data.players[1].initialStackCards,
+                        )
+
+
+                        duel.getPlayer(0).getCardStack().initialize(data.players[0].initialStackCards)
+                        duel.getPlayer(1).getCardStack().initialize(data.players[1].initialStackCards)
 
                         if (onEnd) {
                             onEnd('DrawPhase',null);
                         }
-                    })
+                    }
                 })
             })
         })
@@ -59,6 +85,12 @@ const SetupPhase = {
 
 
     drawInitialHandCard(player, handCardNumber, onEnd) {
+        if (!handCardNumber) {
+            if (onEnd) {
+                onEnd()
+            }
+            return
+        }
 
         player.getDeck().enterDraw(this.duel, handCardNumber, 0, null, (currentDrawCard) => {
             if (currentDrawCard) {

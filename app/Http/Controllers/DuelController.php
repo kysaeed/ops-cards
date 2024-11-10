@@ -40,7 +40,7 @@ class DuelController extends Controller
 
             $duelManager = new DuelManager($resume->turn_state, $this->cardSettings);
 
-            $initialState = $duelManager->initial();
+            $initialState = $duelManager->resume();
 
             // dd($resume?->toArray());
             return response()->json($initialState);

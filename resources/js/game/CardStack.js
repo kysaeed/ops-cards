@@ -1,8 +1,22 @@
+import { initial } from "lodash"
+import Card from './Card.js'
+import CardList from './CardList.js'
 
 export default class CardStack {
-    constructor(duel) {
+    constructor(duel, player) {
         this.duel = duel
+        this.player = player
         this.cards = []
+    }
+
+    initialize(cardList) {
+
+        cardList.forEach((cardId) => {
+            const card = new Card(this.duel, CardList[cardId - 1], this.player, 0, 0)
+            card.setAttackPosition()
+            this.addCard(card)
+        })
+
     }
 
     addCard(card) {
@@ -19,7 +33,6 @@ export default class CardStack {
         //
         let power = 0
         this.cards.forEach((c) => {
-//c.foo() ////
             power += c.getPower(enemyCard)
         })
         return power

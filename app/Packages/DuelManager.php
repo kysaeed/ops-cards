@@ -52,10 +52,12 @@ class DuelManager
         */
 
         return [
+            'isResume' => false,
+            'isPlayerTurn' => ($nextState['turnPalyerIndex'] ?? 0) === 0,
             'players' => [
                 [
                     //
-                    'deck' => null,
+                    //'deck' => null,
                     'handCardNumber' => $nextState['players'][self::Player]['handCardNumber'],
                     'initialStackCards' => [],
                     'cardCount' => count($nextState['players'][self::Player]['deckCardNumbers']),
@@ -63,11 +65,60 @@ class DuelManager
                 ],
                 [
                     //
-                    'deck' => null,
+                    //'deck' => null,
                     'handCardNumber' => $nextState['players'][self::Enemy]['handCardNumber'],
                     'initialStackCards' => [$initialCardStack],
                     'cardCount' => count($nextState['players'][self::Enemy]['deckCardNumbers']),
                     'initialBench' => [],
+                    'initialBench' => $nextState['players'][self::Enemy]['benchCardNumbers'],
+                ],
+            ],
+        ];
+    }
+
+    public function resume()
+    {
+
+        $nextState = $this->state;
+
+        /*
+        foreach ($nextState['players'] as &$player) {
+            $player['handCardNumber'] = array_shift($player['deckCardNumbers']);
+
+        }
+
+        $turnPlayerIndex = $nextState['turnPalyerIndex'];
+        $def = self::Enemy;
+        if (!$turnPlayerIndex) {
+            $def = self::Enemy;
+        } else {
+            $def = self::Player;
+        }
+
+        $initialCardStack = array_shift($nextState['players'][$def]['deckCardNumbers']);
+        $nextState['players'][$def]['cardStackNumbers'][] = $initialCardStack;
+
+        $this->state = $nextState;
+        */
+
+        return [
+            'isResume' => true,
+            'isPlayerTurn' => ($nextState['turnPalyerIndex'] ?? 0) === 0,
+            'players' => [
+                [
+                    //
+                    //'deck' => null,
+                    'handCardNumber' => $nextState['players'][self::Player]['handCardNumber'],
+                    'initialStackCards' => $nextState['players'][self::Player]['cardStackNumbers'],
+                    'cardCount' => count($nextState['players'][self::Player]['deckCardNumbers']),
+                    'initialBench' => $nextState['players'][self::Player]['benchCardNumbers'],
+                ],
+                [
+                    //
+                    //'deck' => null,
+                    'handCardNumber' => $nextState['players'][self::Enemy]['handCardNumber'],
+                    'initialStackCards' => $nextState['players'][self::Enemy]['cardStackNumbers'],
+                    'cardCount' => count($nextState['players'][self::Enemy]['deckCardNumbers']),
                     'initialBench' => $nextState['players'][self::Enemy]['benchCardNumbers'],
                 ],
             ],
@@ -122,9 +173,9 @@ class DuelManager
                 $defenseBench = $nextState['players'][$enemyJsonIndex]['benchCardNumbers'];
 logger('******');
 logger($defenseBench);
-                $a = ($nextState['players'][$enemyJsonIndex]['cardStackNumbers']);
+                $defenseStackCards = ($nextState['players'][$enemyJsonIndex]['cardStackNumbers']);
                 $nextState['players'][$enemyJsonIndex]['benchCardNumbers'] = $this->addCardsToBench(
-                    $a,
+                    $defenseStackCards,
                     $defenseBench,
                 );
 logger($nextState['players'][$enemyJsonIndex]['benchCardNumbers']);
