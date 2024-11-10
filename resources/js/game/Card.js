@@ -307,7 +307,7 @@ export default class Card {
 console.log('******** onEnterToAttackPosition()', data)
 
         // const
-        const attackAbility = data.ability
+        const attackAbility = data.ability.attack
         const add = attackAbility.power
 
         if (add) {
