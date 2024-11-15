@@ -70,7 +70,7 @@ class DuelManager
                     //
                     //'deck' => null,
                     'handCardNumber' => $nextState['players'][self::Enemy]['handCardNumber'],
-                    'initialStackCards' => [$initialCardStack],
+                    'initialStackCards' => $nextState['players'][self::Enemy]['cardStack'],  //[$initialCardStack],
                     'cardCount' => count($nextState['players'][self::Enemy]['deckCardNumbers']),
                     'initialBench' => [],
                     'initialBench' => $nextState['players'][self::Enemy]['benchCardNumbers'],

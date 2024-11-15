@@ -46,7 +46,6 @@ const SetupPhase = {
                     data.players[1].initialStackCards,
                 )
 
-
                 duel.getPlayer(0).getCardStack().initialize(data.players[0].initialStackCards)
                 duel.getPlayer(1).getCardStack().initialize(data.players[1].initialStackCards)
 
@@ -59,6 +58,7 @@ const SetupPhase = {
 
                         ////// デッキから初期防御側カードを出す
                         const initialCardInfo = data.players[defensePlayer.getPlayerId()].initialStackCards[0]
+console.log(initialCardInfo)
                         defensePlayer.getDeck().enterDraw(duel, initialCardInfo.cardNumber, 0, null, (diffenceCardInfo) => {
 
                             let enemyY = -HeightBase
