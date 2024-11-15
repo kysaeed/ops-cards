@@ -96,14 +96,14 @@ class DuelController extends Controller
                 0 => [
                     'handCardNumber' => null,
                     'deckCardNumbers' => $deckCardNumbers[0]->toArray(),
-                    'cardStackNumbers' => [],
+                    'cardStack' => [],
                     'benchCardNumbers' => [],
                     'cardStackPower' => 0,
                 ],
                 1 => [
                     'handCardNumber' => null,
                     'deckCardNumbers' => $deckCardNumbers[1]->toArray(), //
-                    'cardStackNumbers' => [],
+                    'cardStack' => [],
                     'benchCardNumbers' => [],
                     'cardStackPower' => 0,
                 ],

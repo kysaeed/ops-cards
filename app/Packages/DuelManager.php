@@ -39,7 +39,10 @@ class DuelManager
         }
 
         $initialCardStack = array_shift($nextState['players'][$def]['deckCardNumbers']);
-        $nextState['players'][$def]['cardStackNumbers'][] = $initialCardStack;
+
+        $nextState['players'][$def]['cardStack'][] = [
+            'cardNumber' => $initialCardStack,
+        ];
 
         $this->state = $nextState;
 
@@ -96,7 +99,7 @@ class DuelManager
         }
 
         $initialCardStack = array_shift($nextState['players'][$def]['deckCardNumbers']);
-        $nextState['players'][$def]['cardStackNumbers'][] = $initialCardStack;
+        $nextState['players'][$def]['cardStack'][] = $initialCardStack;
 
         $this->state = $nextState;
         */
@@ -109,7 +112,7 @@ class DuelManager
                     //
                     //'deck' => null,
                     'handCardNumber' => $nextState['players'][self::Player]['handCardNumber'],
-                    'initialStackCards' => $nextState['players'][self::Player]['cardStackNumbers'],
+                    'initialStackCards' => $nextState['players'][self::Player]['cardStack'],
                     'cardCount' => count($nextState['players'][self::Player]['deckCardNumbers']),
                     'initialBench' => $nextState['players'][self::Player]['benchCardNumbers'],
                 ],
@@ -117,7 +120,7 @@ class DuelManager
                     //
                     //'deck' => null,
                     'handCardNumber' => $nextState['players'][self::Enemy]['handCardNumber'],
-                    'initialStackCards' => $nextState['players'][self::Enemy]['cardStackNumbers'],
+                    'initialStackCards' => $nextState['players'][self::Enemy]['cardStack'],
                     'cardCount' => count($nextState['players'][self::Enemy]['deckCardNumbers']),
                     'initialBench' => $nextState['players'][self::Enemy]['benchCardNumbers'],
                 ],
@@ -147,7 +150,9 @@ class DuelManager
         }
 
         if ($cardNumber) {
-            array_unshift($nextState['players'][$jsonIndex]['cardStackNumbers'], $cardNumber);
+            array_unshift($nextState['players'][$jsonIndex]['cardStack'], [
+                'cardNumber' => $cardNumber,
+            ]);
 
         }
 
@@ -155,12 +160,12 @@ class DuelManager
 
         /////////
         $prevAttackPower = $nextState['players'][$jsonIndex]['cardStackPower'];
-        $defenseCardNumber = $nextState['players'][$enemyJsonIndex]['cardStackNumbers'][0];
+        $defenseCard = $nextState['players'][$enemyJsonIndex]['cardStack'][0];
 
         $attackResult = $this->onAttack(
             $cardNumber,
             $prevAttackPower,
-            $defenseCardNumber,
+            $defenseCard['cardNumber'],
         );
 
         if ($attackResult) {
@@ -173,13 +178,13 @@ class DuelManager
                 $defenseBench = $nextState['players'][$enemyJsonIndex]['benchCardNumbers'];
 logger('******');
 logger($defenseBench);
-                $defenseStackCards = ($nextState['players'][$enemyJsonIndex]['cardStackNumbers']);
+                $defenseStackCards = ($nextState['players'][$enemyJsonIndex]['cardStack']);
                 $nextState['players'][$enemyJsonIndex]['benchCardNumbers'] = $this->addCardsToBench(
                     $defenseStackCards,
                     $defenseBench,
                 );
 logger($nextState['players'][$enemyJsonIndex]['benchCardNumbers']);
-                $nextState['players'][$enemyJsonIndex]['cardStackNumbers'] = [];
+                $nextState['players'][$enemyJsonIndex]['cardStack'] = [];
             }
         }
 

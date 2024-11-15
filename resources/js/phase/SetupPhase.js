@@ -58,8 +58,8 @@ const SetupPhase = {
                     if (!data.isResume) {
 
                         ////// デッキから初期防御側カードを出す
-                        const initialCard = data.players[defensePlayer.getPlayerId()].initialStackCards[0]
-                        defensePlayer.getDeck().enterDraw(duel, initialCard, 0, null, (diffenceCardInfo) => {
+                        const initialCardInfo = data.players[defensePlayer.getPlayerId()].initialStackCards[0]
+                        defensePlayer.getDeck().enterDraw(duel, initialCardInfo.cardNumber, 0, null, (diffenceCardInfo) => {
 
                             let enemyY = -HeightBase
                             if (turnPlayerId) {
