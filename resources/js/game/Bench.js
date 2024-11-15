@@ -42,15 +42,17 @@ export default class Bench {
 
         this.cards = []
         cardList.forEach((benchElement, i) => {
-            benchElement.forEach((cardId) => {
-                const element = []
-                const cardInfo = CardList[cardId - 1]
-                if (cardInfo) {
-                    const card = new Card(this.duelInfo, cardInfo, player, getBenchX(i, this.playerId), getBenchY(i, this.playerId))
-                    element.push(card)
-                    card.moveToBench(getBenchX(i, this.playerId), getBenchY(i, this.playerId))
+            benchElement.forEach((benchCardInfo) => {
+                if (benchCardInfo) {
+                    const element = []
+                    const cardInfo = CardList[benchCardInfo.cardNumber - 1]
+                    if (benchCardInfo) {
+                        const card = new Card(this.duelInfo, cardInfo, player, getBenchX(i, this.playerId), getBenchY(i, this.playerId))
+                        element.push(card)
+                        card.moveToBench(getBenchX(i, this.playerId), getBenchY(i, this.playerId))
+                    }
+                    this.cards.push(element)
                 }
-                this.cards.push(element)
             })
         })
     }
