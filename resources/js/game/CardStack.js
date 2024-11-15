@@ -11,7 +11,7 @@ export default class CardStack {
 
     initialize(cardList) {
 
-        cardList.forEach((cardId) => {
+        cardList.reverse().forEach((cardId) => {
             const card = new Card(this.duel, CardList[cardId - 1], this.player, 0, 0)
             card.setAttackPosition()
             this.addCard(card)

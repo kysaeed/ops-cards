@@ -38,6 +38,20 @@ const SetupPhase = {
             duel.getPlayer(1).getBench().initialize(data.players[1].initialBench)
 
 
+            if (data.isResume) {
+                console.log(
+                    'stack ! ********',
+
+                    data.players[0].initialStackCards,
+                    data.players[1].initialStackCards,
+                )
+
+
+                duel.getPlayer(0).getCardStack().initialize(data.players[0].initialStackCards)
+                duel.getPlayer(1).getCardStack().initialize(data.players[1].initialStackCards)
+
+            }
+
             this.drawInitialHandCard(duel.getPlayer(1), data.players[1].handCardNumber, () => {
                 this.drawInitialHandCard(duel.getPlayer(0), data.players[0].handCardNumber, () => {
 
@@ -63,17 +77,6 @@ const SetupPhase = {
                         })
 
                     } else {
-                        console.log(
-                            'stack ! ********',
-
-                            data.players[0].initialStackCards,
-                            data.players[1].initialStackCards,
-                        )
-
-
-                        duel.getPlayer(0).getCardStack().initialize(data.players[0].initialStackCards)
-                        duel.getPlayer(1).getCardStack().initialize(data.players[1].initialStackCards)
-
                         if (onEnd) {
                             onEnd('DrawPhase',null);
                         }
