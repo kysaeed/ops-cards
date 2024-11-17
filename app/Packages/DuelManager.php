@@ -128,6 +128,16 @@ class DuelManager
         ];
     }
 
+    protected function clearCardBuf(array $cardStack)
+    {
+        $cards = [];
+        foreach ($cardStack as $card) {
+            $cards[] = $card;
+        }
+
+        return $cards;
+    }
+
     public function subTurn(bool $isPlyaerTurn, bool $isHandCard)
     {
         $nextState = $this->state;
@@ -174,6 +184,8 @@ class DuelManager
                 } else {
                     // 交代時に積み直す
                     $nextState['players'][$jsonIndex]['cardStackPower'] = 0;
+                    $nextState['players'][$jsonIndex]['cardStack'] = $this->clearCardBuf($nextState['players'][$jsonIndex]['cardStack']);
+
                     $nextState['turnPalyerIndex'] = (1 - $nextState['turnPalyerIndex']);
                     $defenseBench = $nextState['players'][$enemyJsonIndex]['benchCardNumbers'];
 logger('******');
