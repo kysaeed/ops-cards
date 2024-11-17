@@ -718,6 +718,20 @@ console.log('******** onEnterToAttackPosition()', data)
 
     }
 
+    setDefensePosition(index) {
+        const stackCount = this.player.getCardStack().getStackCount()
+        //const stackCount = index
+        const direction = this.player.direction
+        const x = (WidthBase * direction) - (stackCount * 4 /* * direction */)
+        const y = HeightBase * direction - (stackCount * 6 /* * direction */)
+
+
+        this.sprite.x = x
+        this.sprite.y = y
+        this.sprite.scale = DefaultCardSize
+
+    }
+
     moveToAttackPosition(onEnd) {
         //
         const scene = this.duel.getScene()

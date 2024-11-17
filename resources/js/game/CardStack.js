@@ -10,11 +10,19 @@ export default class CardStack {
     }
 
     initialize(cardList) {
+        let isAttackTurn = true
+        if (this.player.getPlayerId() != this.duel.getTurnPlayerId()) {
+            isAttackTurn = false
+        }
 
         cardList.reverse().forEach((cardInfo) => {
             if (cardInfo) {
                 const card = new Card(this.duel, CardList[cardInfo.cardNumber - 1], this.player, 0, 0)
-                card.setAttackPosition()
+                if (isAttackTurn) {
+                    card.setAttackPosition()
+                } else {
+                    card.setDefensePosition()
+                }
                 this.addCard(card)
             }
         })
