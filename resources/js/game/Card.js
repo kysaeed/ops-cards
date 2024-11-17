@@ -265,7 +265,7 @@ export default class Card {
     }
 
     setBufParams(params, onEnd) {
-        this.params = params
+        this.bufParams = params
         if (onEnd) {
             onEnd()
         }
@@ -322,7 +322,7 @@ console.log('******** onEnterToAttackPosition()', data)
                         power: add,
                     }
 
-                    this.cardTip.setText(add)
+                    this.cardTip.setText(`+${add}`)
 
                     if (onEnd) {
                         onEnd()
@@ -715,6 +715,14 @@ console.log('******** onEnterToAttackPosition()', data)
         this.sprite.y = y - (stackCount * 8)
         this.sprite.scale = DefaultCardSize
         this.sprite.angle = Bevel + (180 * this.player.getPlayerId())
+
+        const add = this.bufParams.power
+        if (add) {
+            this.cardTip.setText(`+${add}`)
+            this.showStatusTip()
+        } else {
+            this.hideStatusTip()
+        }
 
     }
 

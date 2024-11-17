@@ -70,7 +70,7 @@ class DuelManager
                     //
                     //'deck' => null,
                     'handCardNumber' => $nextState['players'][self::Enemy]['handCardNumber'],
-                    'initialStackCards' => $nextState['players'][self::Enemy]['cardStack'],  //[$initialCardStack],
+                    'initialStackCards' => $nextState['players'][self::Enemy]['cardStack'],
                     'cardCount' => count($nextState['players'][self::Enemy]['deckCardNumbers']),
                     'initialBench' => [],
                     'initialBench' => $nextState['players'][self::Enemy]['benchCardNumbers'],
@@ -149,12 +149,6 @@ class DuelManager
             $cardNumber = array_shift($nextState['players'][$jsonIndex]['deckCardNumbers']);
         }
 
-        if ($cardNumber) {
-            array_unshift($nextState['players'][$jsonIndex]['cardStack'], [
-                'cardNumber' => $cardNumber,
-            ]);
-
-        }
 
         $cardCount = count($nextState['players'][$jsonIndex]['deckCardNumbers']);
 
@@ -162,31 +156,39 @@ class DuelManager
         $prevAttackPower = $nextState['players'][$jsonIndex]['cardStackPower'];
         $defenseCard = $nextState['players'][$enemyJsonIndex]['cardStack'][0];
 
-        $attackResult = $this->onAttack(
-            $cardNumber,
-            $prevAttackPower,
-            $defenseCard['cardNumber'],
-        );
+        if ($cardNumber) {
+            $attackResult = $this->onAttack(
+                $cardNumber,
+                $prevAttackPower,
+                $defenseCard['cardNumber'],
+            );
 
-        if ($attackResult) {
-            if (!$attackResult['isTurnChange']) {
-                $nextState['players'][$jsonIndex]['cardStackPower'] = $attackResult['attackPower'];
-            } else {
-                // 交代時に積み直す
-                $nextState['players'][$jsonIndex]['cardStackPower'] = 0;
-                $nextState['turnPalyerIndex'] = (1 - $nextState['turnPalyerIndex']);
-                $defenseBench = $nextState['players'][$enemyJsonIndex]['benchCardNumbers'];
+            array_unshift($nextState['players'][$jsonIndex]['cardStack'], [
+                'cardNumber' => $cardNumber,
+                'addPower' => $attackResult['addAttackPower'],
+            ]);
+
+            if ($attackResult) {
+                if (!$attackResult['isTurnChange']) {
+                    $nextState['players'][$jsonIndex]['cardStackPower'] = $attackResult['attackPower'];
+                } else {
+                    // 交代時に積み直す
+                    $nextState['players'][$jsonIndex]['cardStackPower'] = 0;
+                    $nextState['turnPalyerIndex'] = (1 - $nextState['turnPalyerIndex']);
+                    $defenseBench = $nextState['players'][$enemyJsonIndex]['benchCardNumbers'];
 logger('******');
 logger($defenseBench);
-                $defenseStackCards = ($nextState['players'][$enemyJsonIndex]['cardStack']);
-                $nextState['players'][$enemyJsonIndex]['benchCardNumbers'] = $this->addCardsToBench(
-                    $defenseStackCards,
-                    $defenseBench,
-                );
+                    $defenseStackCards = ($nextState['players'][$enemyJsonIndex]['cardStack']);
+                    $nextState['players'][$enemyJsonIndex]['benchCardNumbers'] = $this->addCardsToBench(
+                        $defenseStackCards,
+                        $defenseBench,
+                    );
 logger($nextState['players'][$enemyJsonIndex]['benchCardNumbers']);
-                $nextState['players'][$enemyJsonIndex]['cardStack'] = [];
+                    $nextState['players'][$enemyJsonIndex]['cardStack'] = [];
+                }
             }
         }
+
 
         $this->state = $nextState;
 

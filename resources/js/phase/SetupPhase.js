@@ -39,12 +39,6 @@ const SetupPhase = {
 
 
             if (data.isResume) {
-                console.log(
-                    'stack ! ********',
-
-                    data.players[0].initialStackCards,
-                    data.players[1].initialStackCards,
-                )
 
                 duel.getPlayer(0).getCardStack().initialize(data.players[0].initialStackCards)
                 duel.getPlayer(1).getCardStack().initialize(data.players[1].initialStackCards)
