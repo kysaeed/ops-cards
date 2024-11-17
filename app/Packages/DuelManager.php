@@ -42,6 +42,7 @@ class DuelManager
 
         $nextState['players'][$def]['cardStack'][] = [
             'cardNumber' => $initialCardStack,
+            'addCardPower' => 0,
         ];
 
         $this->state = $nextState;
@@ -132,7 +133,10 @@ class DuelManager
     {
         $cards = [];
         foreach ($cardStack as $card) {
-            $cards[] = $card;
+            $cards[] = [
+                'cardNumber' => $card['cardNumber'],
+                'addPower' => 0,
+            ];
         }
 
         return $cards;
