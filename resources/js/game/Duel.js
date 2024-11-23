@@ -13,6 +13,8 @@ export default class Duel {
         this.turnPlayerId = 0
 
         this.cardBoard = scene.add.container(400, 280, [])
+        scene.anchor.add(this.cardBoard)
+
         this.objectManager = new ObjectManager(scene)
 
         this.playerList = []

@@ -79,11 +79,13 @@ const scene = {
 
     },
     create() {
-
-        this.add.image(
-            (Const.Screen.Width * 0.5),
-            (Const.Screen.Height * 0.5),
-            'board'
+        this.anchor = this.add.container(0, 0)
+        this.anchor.add(
+            this.add.image(
+                (Const.Screen.Width * 0.5),
+                (Const.Screen.Height * 0.5),
+                'board'
+            )
         )
 
         // this.add.image(400, 300, 'board');

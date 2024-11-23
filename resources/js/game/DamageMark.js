@@ -13,6 +13,8 @@ export default class DamageMark {
         this.sprite.alpha = 0.8
         this.sprite.visible = false
 
+        scene.anchor.add(this.sprite)
+
     }
 
     setDamage(damage) {

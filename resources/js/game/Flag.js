@@ -2,6 +2,7 @@ export default class Flag {
     constructor(scene, x, y) {
         this.scene = scene
         this.sprite = scene.add.sprite(x, y, 'flag')
+        scene.anchor.add(this.sprite)
 
     }
 
