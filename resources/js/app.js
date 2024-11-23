@@ -89,6 +89,7 @@ const scene = {
         // this.add.image(400, 300, 'board');
 
         this.duel = new Duel(this)
+
         this.cardBoard = this.duel.getCardBoard()
 
         let currentPhase = phase['SetupPhase']
@@ -121,8 +122,12 @@ const config = {
     parent: 'app',
     autoCenter: Phaser.Scale.CENTER_BOTH,
     type: Phaser.AUTO, ////Phaser.WEBGL, ///
-    width: Const.Screen.Width,
-    height: Const.Screen.Height,
+    scale: {
+        mode: Phaser.Scale.FIT,
+        parent: 'app',
+        width: Const.Screen.Width,
+        height: Const.Screen.Height
+    },
     scene,
 };
 
