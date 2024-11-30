@@ -12,6 +12,8 @@ import Duel from './game/Duel.js'
 import DamageMark from './game/DamageMark.js'
 import phase from './phase'
 
+import SoftKeyboard from './game/SoftKeyboard/SoftKeyboard.js'
+
 const BaseUrl = import.meta.env.VITE_BASE_URL || 'http://localhost:8080'
 
 
@@ -47,6 +49,9 @@ const scene = {
         this.load.image('damage', 'assets/damage.png');
 
         this.load.image('desc_effect', 'assets/desc_effect.png')
+
+        this.load.image('key', 'assets/key.png');
+
 
 
         /**
@@ -87,8 +92,8 @@ const scene = {
                 'board'
             )
         )
-
-        // this.add.image(400, 300, 'board');
+        // this.anchor.angle = 90
+        // this.anchor.x = 800
 
         this.duel = new Duel(this)
 
@@ -113,6 +118,12 @@ console.log('to Next State : ', fetchData)
         }
 
         currentPhase.enter(this.duel, {}, toNextPhase)
+
+
+        const softKeyboard = new SoftKeyboard(this)
+
+
+
 
     },
     update() {
