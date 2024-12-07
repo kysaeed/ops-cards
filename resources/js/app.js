@@ -51,6 +51,7 @@ const scene = {
         this.load.image('desc_effect', 'assets/desc_effect.png')
 
         this.load.image('key', 'assets/key.png');
+        this.load.image('key_cursor', 'assets/key_cursor.png');
 
 
 

@@ -1,11 +1,12 @@
 // import Phaser from 'phaser'
-
-import  SoftKey from './SoftKey.js'
+import TextInput from './TextInput.js'
+import SoftKey from './SoftKey.js'
 
 export default class SoftKeyboard {
 
-
     constructor(scene) {
+
+        this.textInput = new TextInput(scene)
 
 
         this.keyBind = this.createKeyBind()
@@ -121,7 +122,7 @@ export default class SoftKeyboard {
     }
 
     onKey(text) {
-        // console.log('*** ' + text)
+console.log(text)
 
         if (text === '*') {
             if (this.bindType === 'a') {
@@ -132,6 +133,8 @@ export default class SoftKeyboard {
 
             console.log('HEY !!! ' + this.bindType)
             this.changeKeyBind(this.bindType)
+        } else {
+            this.textInput.add(text)
         }
     }
 
