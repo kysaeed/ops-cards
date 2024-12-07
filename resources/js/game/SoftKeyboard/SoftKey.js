@@ -1,3 +1,6 @@
+import Phaser from 'phaser'
+
+
 export default class SoftKey {
 
 
@@ -12,11 +15,13 @@ export default class SoftKey {
 
         this.textSprite = scene.add.textSprite = scene.add.text(-10, -20, text, { fontSize: '32px', fill: '#000' })
 
-        this.sprite = scene.add.container(0,0, [
+        this.keyTop = scene.add.container(0, 0, [
             this.bg,
             this.textSprite,
         ])
-
+        this.sprite = scene.add.container(0,0, [
+            this.keyTop,
+        ])
 
         base.add(this.sprite)
 
@@ -24,14 +29,39 @@ export default class SoftKey {
 
         this.bg.on('pointerdown', (pointer) => {
             this.down()
+            if (this.callback) {
+                this.callback(this.text)
+            }
         })
         this.bg.setInteractive()
+    }
+
+    moveTo(x, y, onEnd) {
+
+        this.scene.tweens.chain({
+            targets: this.sprite,
+            tweens: [
+                {
+                    x: x,
+                    y: y,
+                    ease: Phaser.Math.Easing.Back.InOut,
+                    duration: 500,
+                },
+            ],
+
+            onComplete() {
+                if (onEnd) {
+                    onEnd()
+                }
+            },
+        })
+
     }
 
     down(onEnd) {
 
         this.scene.tweens.chain({
-            targets: this.bg,
+            targets: this.keyTop,
             tweens: [
                 {
                     //angle: 0,
@@ -52,7 +82,6 @@ export default class SoftKey {
             ],
 
             onComplete() {
-                // console.log('flag: OK!')
                 if (onEnd) {
                     onEnd()
                 }
