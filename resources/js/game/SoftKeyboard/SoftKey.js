@@ -68,8 +68,8 @@ export default class SoftKey {
                     //x: 0,
                     y: 20,
                     // scale: 2.0,
-                    ease: 'power1',
-                    duration: 300,
+                    ease: 'Back',
+                    duration: 100,
                 },
                 {
                     //angle: 0,
@@ -77,7 +77,7 @@ export default class SoftKey {
                     y: 0,
                     // scale: 2.0,
                     ease: 'power1',
-                    duration: 300,
+                    duration: 100,
                 },
             ],
 
