@@ -314,10 +314,10 @@ console.log('******** onEnterToAttackPosition()', data)
             this.showAbilityEffect(() => {
                 this.showStatusTip(() => { // todo: 引数に表示内容を設定?
 
-                    const player = this.duel.getTurnPlayer()
-                    const bench = player.getBench()
-
+                    // const player = this.duel.getTurnPlayer()
+                    // const bench = player.getBench()
                     //const add = this.getBufPowerByCardAbility(Const.Card.Side.Attack)
+
                     this.bufParams = {
                         power: add,
                     }
@@ -327,8 +327,6 @@ console.log('******** onEnterToAttackPosition()', data)
                     if (onEnd) {
                         onEnd()
                     }
-
-                    return
                 })
             })
         } else {

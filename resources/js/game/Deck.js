@@ -249,12 +249,20 @@ export default class Deck {
         this.sprite.setCount(cardCount)
     }
 
-    enterDraw(duel, idDrawCard, stackCount, onEnter, onEnd) {
+    enterDraw(duel, idDrawCard, deckRemainCount, stackCount, onEnter, onEnd) {
         const turnPlayerId = this.player.getPlayerId()
 
+        /*
         if (this.isEmpty()) {
-            return null
+            if (onEnter) {
+                onEnter(null)
+            }
+            if (onEnd) {
+                onEnd(null)
+            }
+            return
         }
+        */
 
         const x = 400
         const y = -(HeightBase) + (HeightBase * 2 * (turnPlayerId))
@@ -273,7 +281,7 @@ export default class Deck {
         }
 
         this.sprite.setDrawCardPosition(card, () => {
-            let deckRemainCount = this.initialCardCount - this.deckIndex
+            //let deckRemainCount = this.initialCardCount - this.deckIndex
             if (deckRemainCount < 0) {
                 deckRemainCount = 0
             }
@@ -283,10 +291,6 @@ export default class Deck {
             }
         })
 
-
-        // })
-
-        // return card
     }
 
     isEmpty() {

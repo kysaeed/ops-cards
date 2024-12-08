@@ -160,11 +160,11 @@ class DuelController extends Controller
             $isPlayerTurn = true;
             if ($turnPlayerIndex != 0) {
                 $isPlayerTurn = false;
-                $enemyJsonIndex = 1;
-                $enemyState = $prevTurn->turn_state['players'][$enemyJsonIndex];
+                // $enemyJsonIndex = 1;
+                $currentPlayerState = $prevTurn->turn_state['players'][$turnPlayerIndex];
 
                 $isHandCrad = false;
-                if (empty($enemyState['deckCardNumbers'])) {
+                if (empty($currentPlayerState['deckCardNumbers'])) {
                     $isHandCrad = true;
                 } else {
                     $isHandCrad = (bool)mt_rand(0, 1);

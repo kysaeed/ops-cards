@@ -45,15 +45,15 @@ const SetupPhase = {
 
             }
 
-            this.drawInitialHandCard(duel.getPlayer(1), data.players[1].handCardNumber, () => {
-                this.drawInitialHandCard(duel.getPlayer(0), data.players[0].handCardNumber, () => {
+            this.drawInitialHandCard(duel.getPlayer(1), data.players[1].handCardNumber, data.players[1].cardCount, () => {
+                this.drawInitialHandCard(duel.getPlayer(0), data.players[0].handCardNumber, data.players[0].cardCount, () => {
 
                     if (!data.isResume) {
 
                         ////// デッキから初期防御側カードを出す
                         const initialCardInfo = data.players[defensePlayer.getPlayerId()].initialStackCards[0]
 console.log(initialCardInfo)
-                        defensePlayer.getDeck().enterDraw(duel, initialCardInfo.cardNumber, 0, null, (diffenceCardInfo) => {
+                        defensePlayer.getDeck().enterDraw(duel, initialCardInfo.cardNumber, initialCardInfo.cardCount, 0, null, (diffenceCardInfo) => {
 
                             let enemyY = -HeightBase
                             if (turnPlayerId) {
@@ -81,7 +81,7 @@ console.log(initialCardInfo)
     },
 
 
-    drawInitialHandCard(player, handCardNumber, onEnd) {
+    drawInitialHandCard(player, handCardNumber, cardCount, onEnd) {
         if (!handCardNumber) {
             if (onEnd) {
                 onEnd()
@@ -89,7 +89,7 @@ console.log(initialCardInfo)
             return
         }
 
-        player.getDeck().enterDraw(this.duel, handCardNumber, 0, null, (currentDrawCard) => {
+        player.getDeck().enterDraw(this.duel, handCardNumber, cardCount, 0, null, (currentDrawCard) => {
             if (currentDrawCard) {
                 currentDrawCard.showDetial(() => {
                     // ドローしたカードを手札にする

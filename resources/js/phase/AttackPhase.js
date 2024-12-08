@@ -9,15 +9,13 @@ const AttackPhase = {
 
         const ohterPlayer = duel.getOtherPlayer()
         //player.getCardStack().addCard(newAttackCard)
-
-        const total = duel.getTurnPlayer().cardStack.getTotalPower()
+        //const total = duel.getTurnPlayer().cardStack.getTotalPower()
 
 
         const defenseCard = ohterPlayer.getCardStack().getTopCard()
         defenseCard.onEnterToDefense(() => { // defense側のablity判定
 
             duel.getTurnPlayer().cardStack.cards.forEach((c, stackCount) => {
-
                 c.attack(stackCount, () => {
                     if (stackCount < 1) {
                         duel.getScene().damageMark.setDamage(null) // dummy param
@@ -42,14 +40,16 @@ const AttackPhase = {
                                 })
 
                                 enemyPlayer.getBench().addCards(deffenceCards, () => {
+/*
                                     if (enemyPlayer.getBench().getCount() > Const.Bench.Count) {
                                         console.log('***** to EndPhase !')
 
                                         onEnd('EndPhase', fetchData)
                                         return
                                     }
+*/
 
-
+/*
                                     if (enemyPlayer.getDeck().isEmpty() && (!enemyPlayer.getHandCard())) {
 
                                         console.log('END!')
@@ -68,7 +68,7 @@ const AttackPhase = {
                                         onEnd('EndPhase', fetchData)
                                         return
                                     }
-
+*/
                                     onEnd('TurnChangePhase', fetchData)
                                 })
 
