@@ -144,8 +144,10 @@ class DuelController extends Controller
         // $isPlayerTurn = $request->input('isPlayer');
 
         return DB::transaction(function () use ($isHandCrad) {
+            $user = Auth::user();
 
             $duel = Duel::query()
+                ->where('user_id', $user->id)
                 ->first();
 
             $prevTurn = $duel->duelTurns()
