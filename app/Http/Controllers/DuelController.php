@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
@@ -24,13 +25,12 @@ class DuelController extends Controller
 
     }
 
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
+        $user = Auth::user();
 
         $duel = Duel::query()
+            ->where('user_id', $user->id)
             ->first();
 
         if ($duel->duelTurns()->exists()) {

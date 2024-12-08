@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class DeckCard extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'card_number',
+        'order',
+    ];
 }

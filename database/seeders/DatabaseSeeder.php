@@ -87,7 +87,8 @@ class DatabaseSeeder extends Seeder
         }
 
         ///////
-        Duel::create([
+        $duel = new Duel([
+            'user_id' => $users[0]->id,
             'turn' => 1,
             'deck_id' => $deckModels[0]->id,
             'enemy_deck_id' => $deckModels[1]->id,

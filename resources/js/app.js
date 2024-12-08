@@ -109,7 +109,9 @@ console.log('to Next State : ', fetchData)
             })
         }
 
-        currentPhase.enter(this.duel, {}, toNextPhase)
+        axios.post('api/login', {}).then(() => {
+            currentPhase.enter(this.duel, {}, toNextPhase)
+        })
 
     },
     update() {

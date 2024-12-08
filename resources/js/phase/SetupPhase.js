@@ -11,7 +11,7 @@ const SetupPhase = {
     enter(duel, fetchData, onEnd) {
         this.duel = duel
 
-        window.axios.get('api/data/deck').then((res) => {
+        window.axios.post('api/data/deck').then((res) => {
             //console.log('Initial draw : res api/data/deck', res.data)
 
             const data = res.data
