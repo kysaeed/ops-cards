@@ -231,6 +231,18 @@ const CardList = [
       image: 'chara',
       type: 0,
     },
+    {
+      power: 1,
+      name: '夢',
+      image: 'chara',
+      type: 0,
+    },
+    {
+      power: 1,
+      name: '科学者',
+      image: 'chara',
+      type: 0,
+    },
 
 
 

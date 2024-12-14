@@ -6,7 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Carbon\CarbonImmutable;
 use App\Models\User;
+use App\Models\Deck;
+use App\Models\DeckCard;
 use App\Models\Duel;
 use App\Models\DuelTurn;
 use App\Packages\DuelManager;
@@ -25,13 +28,75 @@ class DuelController extends Controller
 
     }
 
+    protected function createDeck(User $user)
+    {
+        return DB::transaction(function () use ($user) {
+            $deck = new Deck([
+                'level' => 1,
+            ]);
+
+            $user->decks()->save($deck);
+
+            $defaultDeck = [
+                1, 1, 1, 2, 3, 4,
+            ];
+
+            $order = 1;
+            foreach ($defaultDeck as $cardNumber) {
+
+                $deckCard = new DeckCard([
+                    'card_number' => $cardNumber,
+                    'order' => $order,
+                ]);
+
+                $deck->deckCards()->save($deckCard);
+
+                $order++;
+            }
+
+            //$testDeckCard = 5;
+            for ($j = 0; $j < 5; $j++) {
+                $cardNumber = 5 + rand(0, 12);
+                //$cardNumber = $testDeckCard;
+                //$testDeckCard++;
+
+                $deckCard = new DeckCard([
+                    'card_number' => $cardNumber,
+                    'order' => $order,
+                ]);
+
+                $deck->deckCards()->save($deckCard);
+
+                $order++;
+            }
+
+            return $deck;
+
+        });
+
+    }
+
     public function index()
     {
         $user = Auth::user();
 
         $duel = Duel::query()
+            ->whereNull('compleated_at')
             ->where('user_id', $user->id)
             ->first();
+
+        if (!$duel) {
+            $deck = $this->createDeck($user);
+
+            $duel = new Duel([
+                'turn' => 1,
+                'user_id' => $user->id,
+                'turn' => 1,
+                'deck_id' => $deck->id,
+                'enemy_deck_id' => 2,
+            ]);
+            $duel->save();
+        }
 
         if ($duel->duelTurns()->exists()) {
             $resume = $duel->duelTurns()
@@ -147,6 +212,7 @@ class DuelController extends Controller
             $user = Auth::user();
 
             $duel = Duel::query()
+                ->whereNull('compleated_at')
                 ->where('user_id', $user->id)
                 ->first();
 
@@ -200,6 +266,11 @@ class DuelController extends Controller
             $turn->is_player_turn = $isPlayerTurn;
 
             $duel->duelTurns()->save($turn);
+
+            if ($step['judge']) {
+                $duel->compleated_at = CarbonImmutable::now();
+                $duel->save();
+            }
 
             return response()->json($step);
         });

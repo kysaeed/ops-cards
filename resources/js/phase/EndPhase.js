@@ -9,11 +9,20 @@ const EndPhase = {
         let text = ''
 
 
+        const palyer = duel.getTurnPlayer()
 
-        if (fetchData.judge > 0) {
-            text = '勝ち'
+        if (palyer.getPlayerId() == 0) {
+            if (fetchData.judge > 0) {
+                text = '勝ち'
+            } else {
+                text = '負け'
+            }
         } else {
-            text = '負け'
+            if (fetchData.judge < 0) {
+                text = '勝ち'
+            } else {
+                text = '負け'
+            }
         }
 
         const endText = duel.getScene().add.text(360, 216, text, { fontSize: '32px', fill: '#000' });
