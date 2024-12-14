@@ -6,6 +6,8 @@ class DuelManager
     public const Player = 0;
     public const Enemy = 1;
 
+
+
     protected array $state;
     protected array $cardSettings;
 
@@ -85,26 +87,6 @@ class DuelManager
 
         $nextState = $this->state;
 
-        /*
-        foreach ($nextState['players'] as &$player) {
-            $player['handCardNumber'] = array_shift($player['deckCardNumbers']);
-
-        }
-
-        $turnPlayerIndex = $nextState['turnPalyerIndex'];
-        $def = self::Enemy;
-        if (!$turnPlayerIndex) {
-            $def = self::Enemy;
-        } else {
-            $def = self::Player;
-        }
-
-        $initialCardStack = array_shift($nextState['players'][$def]['deckCardNumbers']);
-        $nextState['players'][$def]['cardStack'][] = $initialCardStack;
-
-        $this->state = $nextState;
-        */
-
         return [
             'isResume' => true,
             'isPlayerTurn' => ($nextState['turnPalyerIndex'] ?? 0) === 0,
@@ -170,6 +152,7 @@ class DuelManager
         $prevAttackPower = $nextState['players'][$jsonIndex]['cardStackPower'];
         $defenseCard = $nextState['players'][$enemyJsonIndex]['cardStack'][0];
 
+        $judge = 0;
         if ($cardNumber) {
             $attackResult = $this->onAttack(
                 $cardNumber,
@@ -202,13 +185,31 @@ logger($defenseBench);
 logger($nextState['players'][$enemyJsonIndex]['benchCardNumbers']);
                     $nextState['players'][$enemyJsonIndex]['cardStack'] = [];
                 }
+
+
+                if ($attackResult['isTurnChange']) {
+                    if (empty($nextState['players'][$enemyJsonIndex]['deckCardNumbers'])) {
+                        if (empty($nextState['players'][$enemyJsonIndex]['handCardNumber'])) {
+                            $judge = 1;
+                        }
+                    }
+                } else {
+                    if (empty($nextState['players'][$jsonIndex]['deckCardNumbers'])) {
+                        if (empty($nextState['players'][$jsonIndex]['handCardNumber'])) {
+                            $judge = -1;
+                        }
+                    }
+                }
+
             }
+
         }
 
 
         $this->state = $nextState;
 
         return [
+            'judge' => $judge,
             'isHandCard' => $isHandCard,
             'isTurnChange' => $attackResult['isTurnChange'],
             'cardNumber' => $cardNumber,
@@ -262,6 +263,8 @@ logger($attackCardStatus);
         $totalDefensePower = $defensePower + $addDefensePower;
 
 
+        $judge = 0;
+
         // ターンの入れ替えをチェック
         $isTurnChange = false;
         if ($totalAttackPower >= $totalDefensePower) {
@@ -269,6 +272,7 @@ logger($attackCardStatus);
         }
 
         return [
+            'judge' => $judge,
             'isTurnChange' => $isTurnChange,
             'attackPower' => $totalAttackPower,
             'addAttackPower' => $addAttackPower,

@@ -210,6 +210,8 @@ console.log('doDraw')
             // this.deckIndex++
             //const cardInfo = CardList[cardId - 1]
 
+console.log('judge *** ', res.data?.judge)
+
             onEnd(res.data)
 
             //const card = new Card(duel, cardInfo, player, stackCount * 8, y + stackCount * 8)

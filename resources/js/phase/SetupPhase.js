@@ -26,12 +26,27 @@ const SetupPhase = {
             const defensePlayer = duel.getPlayer(1 - turnPlayerId)
 
 
-            duel.playerList.forEach((player) => {
-                const playerId = player.getPlayerId()
-                // const deckData = data.players[playerId].deck
 
-                player.getDeck().setInitilCardCount(data.players[playerId].cardCount)
-            })
+            if (!data.isResume) {
+                duel.playerList.forEach((player) => {
+                    const playerId =  player.getPlayerId()
+                    let initialCardCount = data.players[playerId].cardCount + 1
+                    if (turnPlayerId === playerId) {
+                        initialCardCount++
+                    }
+
+                    player.getDeck().setInitilCardCount(initialCardCount)
+                })
+            } else {
+                duel.playerList.forEach((player) => {
+                    const playerId =  player.getPlayerId()
+                    let initialCardCount = data.players[playerId].cardCount
+                    if (initialCardCount) {
+                        initialCardCount++
+                    }
+                    player.getDeck().setInitilCardCount(initialCardCount)
+                })
+            }
 
             //const initialBench = data.players[1].initialBench
             duel.getPlayer(0).getBench().initialize(data.players[0].initialBench)
@@ -40,7 +55,10 @@ const SetupPhase = {
 
             if (data.isResume) {
 
+
                 duel.getPlayer(0).getCardStack().initialize(data.players[0].initialStackCards)
+
+
                 duel.getPlayer(1).getCardStack().initialize(data.players[1].initialStackCards)
 
             }
@@ -53,7 +71,6 @@ const SetupPhase = {
                         ////// デッキから初期防御側カードを出す
                         const initialCardInfo = data.players[defensePlayer.getPlayerId()].initialStackCards[0]
                         const initialCardCount = data.players[defensePlayer.getPlayerId()].cardCount
-console.log(initialCardInfo)
                         defensePlayer.getDeck().enterDraw(duel, initialCardInfo.cardNumber, initialCardCount, 0, null, (diffenceCardInfo) => {
 
                             let enemyY = -HeightBase
