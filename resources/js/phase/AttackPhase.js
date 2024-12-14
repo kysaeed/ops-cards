@@ -40,41 +40,22 @@ const AttackPhase = {
                                 })
 
                                 enemyPlayer.getBench().addCards(deffenceCards, () => {
-/*
-                                    if (enemyPlayer.getBench().getCount() > Const.Bench.Count) {
-                                        console.log('***** to EndPhase !')
 
+                                    if (fetchData.judge) {
                                         onEnd('EndPhase', fetchData)
                                         return
                                     }
-*/
-
-/*
-                                    if (enemyPlayer.getDeck().isEmpty() && (!enemyPlayer.getHandCard())) {
-
-                                        console.log('END!')
-
-                                        const textModal = duel.getScene().add.sprite(360, 200, 'modal')
-                                        textModal.displayWidth = 400
-
-                                        let text = ''
-                                        if (turnPlayerId == 0) {
-                                            text = '勝ち'
-                                        } else {
-                                            text = '負け'
-                                        }
-
-                                        const endText = duel.getScene().add.text(360, 216, text, { fontSize: '32px', fill: '#000' });
-                                        onEnd('EndPhase', fetchData)
-                                        return
-                                    }
-*/
                                     onEnd('TurnChangePhase', fetchData)
                                 })
 
                             })
                         } else {
                             enemyCard.damaged(() => {
+                                if (fetchData.judge) {
+                                    onEnd('EndPhase', fetchData)
+                                    return
+                                }
+
                                 onEnd('DrawPhase', fetchData)
                             })
                         }
