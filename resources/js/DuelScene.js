@@ -7,6 +7,9 @@ import phase from './phase'
 
 
 const DuelScene = {
+    key: 'DuelScene',
+    active: false,
+
     preload() {
         this.load.spritesheet('number', 'assets/number.png', {
             frameWidth: 20,

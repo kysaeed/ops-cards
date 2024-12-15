@@ -30,6 +30,7 @@ const EndPhase = {
         this.textModal = textModal
         this.endText = endText
 
+        /*
         this.textModal.on('pointerdown', () => {
             this.textModal.destroy(true)
             this.endText.destroy(true)
@@ -38,6 +39,14 @@ const EndPhase = {
         })
 
         this.textModal.setInteractive()
+        */
+
+
+        duel.getScene().input.on('pointerdown', () => {
+            //
+            duel.getScene().scene.start('TitleScene')
+        })
+
 
     },
 

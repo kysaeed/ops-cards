@@ -7,6 +7,8 @@ import Phaser from 'phaser'
 import Axios from 'axios'
 
 import Const from './Const.js'
+
+import TitleScene from './TitleScene.js'
 import DuelScene from './DuelScene.js'
 
 const BaseUrl = import.meta.env.VITE_BASE_URL || 'http://localhost:8080'
@@ -31,7 +33,10 @@ const config = {
         width: Const.Screen.Width,
         height: Const.Screen.Height
     },
-    scene: DuelScene,
+    scene: [
+        TitleScene,
+        DuelScene,
+    ],
 };
 
 window.game = new Phaser.Game(config);
