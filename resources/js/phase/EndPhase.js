@@ -27,6 +27,18 @@ const EndPhase = {
 
         const endText = duel.getScene().add.text(360, 216, text, { fontSize: '32px', fill: '#000' });
 
+        this.textModal = textModal
+        this.endText = endText
+
+        this.textModal.on('pointerdown', () => {
+            this.textModal.destroy(true)
+            this.endText.destroy(true)
+
+            /// onEnd('')
+        })
+
+        this.textModal.setInteractive()
+
     },
 
     onEvent(event, sender, params) {
