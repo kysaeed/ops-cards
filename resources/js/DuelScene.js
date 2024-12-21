@@ -173,8 +173,10 @@ console.log('to Next State : ', fetchData)
         // 回転の初期化
         fit()
 
-        axios.post('api/login', {}).then(() => {
-            currentPhase.enter(this.duel, {}, toNextPhase)
+        window.axios.get('sanctum/csrf-cookie').then(() => {
+            window.axios.post('api/login', {}).then(() => {
+                currentPhase.enter(this.duel, {}, toNextPhase)
+            })
         })
 
     },

@@ -200,35 +200,38 @@ console.log('doDraw')
 
         const turnPlayerId = player.getPlayerId()
 
-        window.axios.post('api/data/deck/draw', {
-            idUser: turnPlayerId,
-            isHandCard: isHandCard,
-            isPlayer: isPlayer, // @todo テスト用なので後で削除
-        }).then((res) => {
-            // console.log(res.data)
+        window.axios.get('sanctum/csrf-cookie').then(() => {
+            window.axios.post('api/data/deck/draw', {
+                idUser: turnPlayerId,
+                isHandCard: isHandCard,
+                isPlayer: isPlayer, // @todo テスト用なので後で削除
+            }).then((res) => {
+                // console.log(res.data)
 
-            // let cardId = res.data.cardNumber
-            // this.deckIndex++
-            //const cardInfo = CardList[cardId - 1]
+                // let cardId = res.data.cardNumber
+                // this.deckIndex++
+                //const cardInfo = CardList[cardId - 1]
 
 console.log('judge *** ', res.data?.judge)
 
-            onEnd(res.data)
+                onEnd(res.data)
 
-            //const card = new Card(duel, cardInfo, player, stackCount * 8, y + stackCount * 8)
-            // this.sprite.setDrawCardPosition(card, () => {
-            //     let deckRemainCount = this.initialCardCount - this.deckIndex
-            //     if (deckRemainCount < 0) {
-            //         deckRemainCount = 0
-            //     }
-            //     this.sprite.setCount(deckRemainCount)
-            //     if (onEnd) {
-            //         onEnd(card)
-            //     }
-            // })
+                //const card = new Card(duel, cardInfo, player, stackCount * 8, y + stackCount * 8)
+                // this.sprite.setDrawCardPosition(card, () => {
+                //     let deckRemainCount = this.initialCardCount - this.deckIndex
+                //     if (deckRemainCount < 0) {
+                //         deckRemainCount = 0
+                //     }
+                //     this.sprite.setCount(deckRemainCount)
+                //     if (onEnd) {
+                //         onEnd(card)
+                //     }
+                // })
 
 
+            })
         })
+
     },
 
 }
