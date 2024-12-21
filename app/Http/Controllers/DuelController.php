@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Carbon\CarbonImmutable;
 use App\Models\User;
+use App\Models\Deck;
+use App\Models\DeckCard;
 use App\Models\Duel;
 use App\Models\DuelTurn;
 use App\Packages\DuelManager;
@@ -24,14 +28,88 @@ class DuelController extends Controller
 
     }
 
-    /**
-     * Display a listing of the resource.
-     */
+    protected function createDeck(User $user)
+    {
+        return DB::transaction(function () use ($user) {
+            $deck = new Deck([
+                'level' => 1,
+            ]);
+
+            $user->decks()->save($deck);
+
+            $defaultDeck = [
+                1, 1, 1, 2, 3, 4,
+            ];
+
+            $order = 1;
+            foreach ($defaultDeck as $cardNumber) {
+
+                $deckCard = new DeckCard([
+                    'card_number' => $cardNumber,
+                    'order' => $order,
+                ]);
+
+                $deck->deckCards()->save($deckCard);
+
+                $order++;
+            }
+
+            //$testDeckCard = 5;
+            for ($j = 0; $j < 5; $j++) {
+                $cardNumber = 5 + rand(0, 12);
+                //$cardNumber = $testDeckCard;
+                //$testDeckCard++;
+
+                $deckCard = new DeckCard([
+                    'card_number' => $cardNumber,
+                    'order' => $order,
+                ]);
+
+                $deck->deckCards()->save($deckCard);
+
+                $order++;
+            }
+
+            return $deck;
+
+        });
+
+    }
+
     public function index()
     {
+        $user = Auth::user();
 
         $duel = Duel::query()
+            ->whereNull('compleated_at')
+            ->where('user_id', $user->id)
             ->first();
+
+        if (!$duel) {
+            $deck = $this->createDeck($user);
+
+            $duel = new Duel([
+                'turn' => 1,
+                'user_id' => $user->id,
+                'turn' => 1,
+                'deck_id' => $deck->id,
+                'enemy_deck_id' => 2,
+            ]);
+            $duel->save();
+        }
+
+        if ($duel->duelTurns()->exists()) {
+            $resume = $duel->duelTurns()
+                ->latest('order')
+                ->first();
+
+            $duelManager = new DuelManager($resume->turn_state, $this->cardSettings);
+
+            $initialState = $duelManager->resume();
+
+            // dd($resume?->toArray());
+            return response()->json($initialState);
+        }
 
         $deckModels = [];
         $deckModels[] = $duel->deck;
@@ -83,13 +161,15 @@ class DuelController extends Controller
                 0 => [
                     'handCardNumber' => null,
                     'deckCardNumbers' => $deckCardNumbers[0]->toArray(),
-                    'cardStackNumbers' => [],
+                    'cardStack' => [],
+                    'benchCardNumbers' => [],
                     'cardStackPower' => 0,
                 ],
                 1 => [
                     'handCardNumber' => null,
                     'deckCardNumbers' => $deckCardNumbers[1]->toArray(), //
-                    'cardStackNumbers' => [],
+                    'cardStack' => [],
+                    'benchCardNumbers' => [],
                     'cardStackPower' => 0,
                 ],
             ],
@@ -117,30 +197,40 @@ class DuelController extends Controller
 
     public function draw(Request $request)
     {
-        $idUser = $request->input('idUser');
+        // @todo チェックに使用？
+        //$idUser = $request->input('idUser');
         //$index = $request->input('index');
+
         $isHandCrad = $request->input('isHandCard');
 
         /**
          * @todo PlayerのturnかをBEで判定する
          */
-        $isPlayerTurn = $request->input('isPlayer');
+        // $isPlayerTurn = $request->input('isPlayer');
 
-        return DB::transaction(function () use ($idUser, $isPlayerTurn, $isHandCrad) {
+        return DB::transaction(function () use ($isHandCrad) {
+            $user = Auth::user();
 
             $duel = Duel::query()
+                ->whereNull('compleated_at')
+                ->where('user_id', $user->id)
                 ->first();
 
             $prevTurn = $duel->duelTurns()
                 ->latest('order')
                 ->first();
 
-            if ($idUser != 0) {
-                $enemyJsonIndex = 1;
-                $enemyState = $prevTurn->turn_state['players'][$enemyJsonIndex];
+            $turnState = $prevTurn->turn_state;
+            $turnPlayerIndex = $turnState['turnPalyerIndex'] ?? 0;
+
+            $isPlayerTurn = true;
+            if ($turnPlayerIndex != 0) {
+                $isPlayerTurn = false;
+                // $enemyJsonIndex = 1;
+                $currentPlayerState = $prevTurn->turn_state['players'][$turnPlayerIndex];
 
                 $isHandCrad = false;
-                if (empty($enemyState['deckCardNumbers'])) {
+                if (empty($currentPlayerState['deckCardNumbers'])) {
                     $isHandCrad = true;
                 } else {
                     $isHandCrad = (bool)mt_rand(0, 1);
@@ -150,8 +240,8 @@ class DuelController extends Controller
 
             $order = $prevTurn->order + 1;
             $turn = new DuelTurn([
-                'user_id' => $idUser, // @todo validation
-                'is_player_turn' => true, // @todo カレントのturnを設定
+                'user_id' => $turnPlayerIndex, // @todo 正しい値をいれる
+                'is_player_turn' => ($turnPlayerIndex === 0),
                 'is_hand' => $isHandCrad,
                 'order' => $order,
                 'turn_state' => $prevTurn->turn_state,
@@ -161,7 +251,6 @@ class DuelController extends Controller
 
 
             $nextHandCardNumber = null;
-            $turnState = $turn->turn_state;
 
             $duelManager = new DuelManager($turnState, $this->cardSettings);
 
@@ -178,8 +267,12 @@ class DuelController extends Controller
 
             $duel->duelTurns()->save($turn);
 
-            return response()->json($step);
+            if ($step['judge']) {
+                $duel->compleated_at = CarbonImmutable::now();
+                $duel->save();
+            }
 
+            return response()->json($step);
         });
 
     }

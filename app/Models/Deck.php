@@ -9,6 +9,10 @@ class Deck extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'level',
+    ];
+
     public function deckCards()
     {
         return $this->hasMany(DeckCard::class);

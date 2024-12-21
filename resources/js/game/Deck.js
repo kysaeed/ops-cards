@@ -150,6 +150,8 @@ class DeckSprite {
         const x = card.sprite.x
         const y = card.sprite.y
 
+        card.sprite.alpha = 0
+
         this.duel.getScene().tweens.chain({
             targets: card.sprite,
             tweens: [
@@ -183,6 +185,7 @@ class DeckSprite {
             },
         })
 
+        this.drawCard.alpha = 0
         this.duel.getScene().tweens.chain({
             targets: this.drawCard,
             tweens: [
@@ -246,49 +249,48 @@ export default class Deck {
         this.sprite.setCount(cardCount)
     }
 
-    enterDraw(duel, idDrawCard, stackCount, onEnd) {
+    enterDraw(duel, idDrawCard, deckRemainCount, stackCount, onEnter, onEnd) {
         const turnPlayerId = this.player.getPlayerId()
 
+        /*
         if (this.isEmpty()) {
-            return null
+            if (onEnter) {
+                onEnter(null)
+            }
+            if (onEnd) {
+                onEnd(null)
+            }
+            return
         }
+        */
 
         const x = 400
         const y = -(HeightBase) + (HeightBase * 2 * (turnPlayerId))
 
+        // console.log(idDrawCard)
+        //let cardId = this.cards.shift()
+        let cardId = idDrawCard
 
-        // let isPlayer = (duel.getTurnPlayer().getPlayerId() === 0) // @todo BEで判定する
-        // window.axios.post('api/data/deck/draw', {
-        //     idUser: turnPlayerId,
-        //     index: this.deckIndex,
-        //     isPlayer: isPlayer, // @todo テスト用なので後で削除
-        // }).then((res) => {
-            console.log(idDrawCard)
+        this.deckIndex++
 
-            //let cardId = this.cards.shift()
-            let cardId = idDrawCard
+        const cardInfo = CardList[cardId - 1]
 
-            this.deckIndex++
+        const card = new Card(duel, cardInfo, this.player, stackCount * 8, y + stackCount * 8)
+        if (onEnter) {
+            onEnter(card)
+        }
 
-            const cardInfo = CardList[cardId - 1]
+        this.sprite.setDrawCardPosition(card, () => {
+            //let deckRemainCount = this.initialCardCount - this.deckIndex
+            if (deckRemainCount < 0) {
+                deckRemainCount = 0
+            }
+            this.sprite.setCount(deckRemainCount)
+            if (onEnd) {
+                onEnd(card)
+            }
+        })
 
-            const card = new Card(duel, cardInfo, this.player, stackCount * 8, y + stackCount * 8)
-
-            this.sprite.setDrawCardPosition(card, () => {
-                let deckRemainCount = this.initialCardCount - this.deckIndex
-                if (deckRemainCount < 0) {
-                    deckRemainCount = 0
-                }
-                this.sprite.setCount(deckRemainCount)
-                if (onEnd) {
-                    onEnd(card)
-                }
-            })
-
-
-        // })
-
-        // return card
     }
 
     isEmpty() {

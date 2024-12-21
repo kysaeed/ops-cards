@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Models\User;
 use App\Models\Deck;
 
 return new class extends Migration
@@ -15,8 +16,10 @@ return new class extends Migration
         Schema::create('duels', function (Blueprint $table) {
             $table->id();
             $table->integer('turn');
+            $table->foreignIdFor(User::class);
             $table->foreignIdFor(Deck::class);
             $table->foreignIdFor(Deck::class, 'enemy_deck_id');
+            $table->timestamp('compleated_at')->nullable();
             $table->timestamps();
         });
     }

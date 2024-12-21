@@ -95,7 +95,7 @@ export default class Card {
 
         this.cardType = scene.add.sprite(50, -67, 'card_type')
         this.cardTextType = scene.add.text(38, -74, '種別', { fontSize: '13px', fill: '#000' }).setPadding(0, 2, 0, 2);;
-        this.cardTextTitle = scene.add.text(-26, -98, `${cardInfo.name}`, { fontSize: '15px', fill: '#000' }).setPadding(0, 4, 0, 4);
+        this.cardTextTitle = scene.add.text(-28, -98, `${cardInfo.name}`, { fontSize: '20px', fill: '#000' }).setPadding(0, 4, 0, 4);
 
         const descPosition = {
             x: -68,
@@ -257,9 +257,7 @@ export default class Card {
     }
 
     showStatusTip(onEnd) {
-        this.showAbilityEffect(() => {
-            this.cardTip.showStatusTip(onEnd)
-        })
+        this.cardTip.showStatusTip(onEnd)
     }
 
     hideStatusTip() {
@@ -267,7 +265,7 @@ export default class Card {
     }
 
     setBufParams(params, onEnd) {
-        this.params = params
+        this.bufParams = params
         if (onEnd) {
             onEnd()
         }
@@ -304,63 +302,37 @@ export default class Card {
 
     }
 
-    onEnterToAttackPosition(add, onEnd) {
+    onEnterToAttackPosition(data, onEnd) {
 
-console.log('******** onEnterToAttackPosition()')
+console.log('******** onEnterToAttackPosition()', data)
 
-        this.showStatusTip(() => { // todo: 引数に表示内容を設定?
+        // const
+        const attackAbility = data.ability.attack
+        const add = attackAbility.power
 
+        if (add) {
+            this.showAbilityEffect(() => {
+                this.showStatusTip(() => { // todo: 引数に表示内容を設定?
 
-            const player = this.duel.getTurnPlayer()
-            const bench = player.getBench()
+                    // const player = this.duel.getTurnPlayer()
+                    // const bench = player.getBench()
+                    //const add = this.getBufPowerByCardAbility(Const.Card.Side.Attack)
 
-            // const recycleCard = bench.takeLatestCard()
-            // if (recycleCard) {
-
-            //     /// move to abyss
-            //     const x = 330 * player.getDirection()
-            //     const y = (180 * player.getDirection()) + 30
-            //     recycleCard.moveToAbyss(x, y, () => {
-            //         //
-            //     })
-
-            //     // move to deck
-            //     const x = -160 * player.getDirection()
-            //     const y = (210 * player.getDirection()) + 30
-            //     recycleCard.moveToDeck(x, y, () => {
-            //         //
-            //     })
-
-            // }
-
-            /*
-            const ability = this.cardInfo.ability
-            if (ability) {
-                if (ability.attack) {
-                    if (ability.attack.power) {
-                        this.bufParams = {
-                            attack: {
-                                power: ability.attack.power,
-                            }
-                        }
+                    this.bufParams = {
+                        power: add,
                     }
-                }
-            }
-            */
 
+                    this.cardTip.setText(`+${add}`)
 
+                    if (onEnd) {
+                        onEnd()
+                    }
+                })
+            })
+        } else {
+            onEnd()
+        }
 
-            //const add = this.getBufPowerByCardAbility(Const.Card.Side.Attack)
-            this.bufParams = {
-                power: add,
-            }
-
-            this.cardTip.setText(add)
-
-            if (onEnd) {
-                onEnd()
-            }
-        })
     }
 
     onEnterToDefense(onEnd) {
@@ -720,6 +692,49 @@ console.log('******** onEnterToAttackPosition()')
             }
         })
 
+
+    }
+
+    setAttackPosition() {
+        //
+        const scene = this.duel.getScene()
+
+        let direction = 1
+        if (this.player.getPlayerId()) {
+            direction = -1
+        }
+
+        const stackCount = this.player.getCardStack().getStackCount()
+        const x = (WidthBase * direction) - (stackCount * 32 * -direction)
+        const y = (-HeightBase) + (HeightBase * 2 * (1 - this.player.getPlayerId()))
+
+
+        this.sprite.x = x
+        this.sprite.y = y - (stackCount * 8)
+        this.sprite.scale = DefaultCardSize
+        this.sprite.angle = Bevel + (180 * this.player.getPlayerId())
+
+        const add = this.bufParams.power
+        if (add) {
+            this.cardTip.setText(`+${add}`)
+            this.showStatusTip()
+        } else {
+            this.hideStatusTip()
+        }
+
+    }
+
+    setDefensePosition(index) {
+        const stackCount = this.player.getCardStack().getStackCount()
+        //const stackCount = index
+        const direction = this.player.direction
+        const x = (WidthBase * direction) - (stackCount * 4 /* * direction */)
+        const y = HeightBase * direction - (stackCount * 6 /* * direction */)
+
+
+        this.sprite.x = x
+        this.sprite.y = y
+        this.sprite.scale = DefaultCardSize
 
     }
 

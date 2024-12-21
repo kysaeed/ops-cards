@@ -2,6 +2,8 @@
 
 const TurnChangePhase = {
     enter(duel, fetchData, onEnd) {
+console.log('TurnChangePhase +++++++')
+
         duel.getTurnPlayer().getCardStack().each((c, i) => {
             c.hideStatusTip()
         })

@@ -13,7 +13,7 @@ export default class Player {
 
         this.bench = new Bench(duel, duel.getScene(), id)
 
-        this.cardStack = new CardStack(duel)
+        this.cardStack = new CardStack(duel, this)
 
     }
 
