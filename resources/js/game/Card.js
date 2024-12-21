@@ -95,7 +95,7 @@ export default class Card {
 
         this.cardType = scene.add.sprite(50, -67, 'card_type')
         this.cardTextType = scene.add.text(38, -74, '種別', { fontSize: '13px', fill: '#000' }).setPadding(0, 2, 0, 2);;
-        this.cardTextTitle = scene.add.text(-26, -98, `${cardInfo.name}`, { fontSize: '15px', fill: '#000' }).setPadding(0, 4, 0, 4);
+        this.cardTextTitle = scene.add.text(-28, -98, `${cardInfo.name}`, { fontSize: '20px', fill: '#000' }).setPadding(0, 4, 0, 4);
 
         const descPosition = {
             x: -68,

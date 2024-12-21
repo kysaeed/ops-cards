@@ -146,20 +146,21 @@ console.log('attackByHandCard')
 
             return
         }
+
 console.log(data)
         player.getDeck().enterDraw(duel, data.cardNumber, data.cardCount, 0, (currentDrawCard) => {
             if (currentDrawCard) {
                 // ドローしたカードを手札にする
                 player.setHandCard(currentDrawCard)
             }
-            if (onEnd) {
-                onEnd()
-            }
         }, (currentDrawCard) => {
             if (currentDrawCard) {
                 currentDrawCard.moveToHandPosition(() => {
                     currentDrawCard.setShadowParams(1.4, 0.2, 6) // todo moveToHandPosition内へ
                 })
+            }
+            if (onEnd) {
+                onEnd()
             }
         })
     },
