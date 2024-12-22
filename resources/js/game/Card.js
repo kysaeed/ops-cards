@@ -657,8 +657,8 @@ console.log('******** onEnterToAttackPosition()', data)
         const direction = this.player.getDirection()
 
         const stackCount = 0 //this.player.getCardStack().getStackCount()
-        const x = (210 * direction) //-(WidthBase * 2 /* * direction */ )
-        const y = 220 * direction /* + (HeightBase * 2 * (1 - this.player.getPlayerId())) */
+        const x = (230 * direction) //-(WidthBase * 2 /* * direction */ )
+        const y = 230 * direction /* + (HeightBase * 2 * (1 - this.player.getPlayerId())) */
         const angle = this.player.getPlayerId() * 180
 
         scene.tweens.chain({
