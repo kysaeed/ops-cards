@@ -85,7 +85,7 @@ const DuelScene = {
         const scene = this;
         this.objectManager = this.duel.getObjectManager()
 
-        this.damageMark = new DamageMark(scene, 400, 280)
+        this.damageMark = new DamageMark(scene, 480, 280)
 
         const toNextPhase = (next, fetchData) => {
 console.log('to Next State : ', fetchData)
@@ -100,6 +100,8 @@ console.log('to Next State : ', fetchData)
         // 90度回転の中心点を設定
         this.cameras.main.originX = 0.5
         this.cameras.main.originY = (Const.Screen.Height * 0.5) / Const.Screen.Width
+console.log(this.cameras.main)
+        //this.cameras.main.zoom = 2
 
         const isVertical = () => {
 

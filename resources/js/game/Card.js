@@ -779,7 +779,7 @@ console.log('******** onEnterToAttackPosition()', data)
 
     moveToBench(x, y, onEnd) {
         const max = 6
-        const angle = Math.floor((90 + 12) + (Math.random() * max) - (max / 2))
+        const angle = Math.floor((90 + 22) + (Math.random() * max) - (max / 2))
 
         this.duel.getScene().tweens.chain({
             targets: this.sprite,

@@ -5,8 +5,10 @@ import Card from './Card.js'
 
 
 const HeightBase = 100
-const WidthBase = -30
+//const WidthBase = -30
 
+const BenchXBase = 100
+const BenchXStride = 48
 
 export default class Bench {
     constructor(duelInfo, scene, playerId /*, x, y*/) {
@@ -25,9 +27,9 @@ export default class Bench {
 
         const getBenchX = (benchIndex, playerId) => {
             if (playerId == 0) {
-                return 200 + (benchIndex * 20)
+                return BenchXBase + (benchIndex * BenchXStride)
             }
-            return -200 - (benchIndex * 20)
+            return -BenchXBase - (benchIndex * BenchXStride)
         }
 
         const getBenchY = (benchIndex, playerId) => {
@@ -94,9 +96,9 @@ export default class Bench {
 
         const getBenchX = (benchIndex, playerId) => {
             if (playerId == 0) {
-                return 200 + (benchIndex * 20)
+                return BenchXBase + (benchIndex * BenchXStride)
             }
-            return -200 - (benchIndex * 20)
+            return -BenchXBase - (benchIndex * BenchXStride)
         }
 
         const getBenchY = (benchIndex, playerId) => {
