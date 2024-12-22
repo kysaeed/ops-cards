@@ -23,7 +23,7 @@ const AttackPhase = {
                         if (fetchData.isTurnChange) {
                             ohterPlayer.getCardStack().criticalDamaged(() => {
 
-                                duel.getFlag().moveTo(520, 170 + (200 * (1 - turnPlayerId)))
+                                duel.getFlag().moveTo(620, 170 + (200 * (1 - turnPlayerId)))
 
                                 // 攻撃側から見た敵プレイヤー
                                 const enemyPlayer = duel.getOtherPlayer()

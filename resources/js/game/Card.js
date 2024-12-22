@@ -654,14 +654,11 @@ console.log('******** onEnterToAttackPosition()', data)
         //
         const scene = this.duel.getScene()
 
-        let direction = 1
-        if (this.player.getPlayerId()) {
-            direction = -1
-        }
+        const direction = this.player.getDirection()
 
         const stackCount = 0 //this.player.getCardStack().getStackCount()
-        const x = -(WidthBase * 2 /* * direction */ )
-        const y = (HeightBase) * 2.4 * direction /* + (HeightBase * 2 * (1 - this.player.getPlayerId())) */
+        const x = (230 * direction) //-(WidthBase * 2 /* * direction */ )
+        const y = 230 * direction /* + (HeightBase * 2 * (1 - this.player.getPlayerId())) */
         const angle = this.player.getPlayerId() * 180
 
         scene.tweens.chain({
@@ -782,7 +779,7 @@ console.log('******** onEnterToAttackPosition()', data)
 
     moveToBench(x, y, onEnd) {
         const max = 6
-        const angle = Math.floor((90 + 12) + (Math.random() * max) - (max / 2))
+        const angle = Math.floor((90 + 22) + (Math.random() * max) - (max / 2))
 
         this.duel.getScene().tweens.chain({
             targets: this.sprite,
