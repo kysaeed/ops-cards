@@ -12,7 +12,7 @@ export default class Duel {
         this.currentPhase = null
         this.turnPlayerId = 0
 
-        this.cardBoard = scene.add.container(400, 280, [])
+        this.cardBoard = scene.add.container(Const.Screen.Width * 0.5, 280, [])
         scene.anchor.add(this.cardBoard)
 
         this.objectManager = new ObjectManager(scene)

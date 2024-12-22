@@ -8,7 +8,7 @@ import CardList from './CardList'
 
 const Bevel = Const.Bevel
 const HeightBase = 100
-const WidthBase = -30
+const WidthBase = 0
 
 const DefaultScale = 0.4
 const DefaultAngle = 60
@@ -226,12 +226,12 @@ export default class Deck {
         this.initialCardCount = 0
         this.deckIndex = 0
 
-        const x = -180 * player.getDirection() + 30
-        const y = (220 * player.getDirection()) + 30
+        const x = 380 * player.getDirection() //+ 30
+        const y = (180 * player.getDirection()) //+ 30
 
         // const isPlyaer = (player.getPlayerId() === 0)
 
-        this.sprite = new DeckSprite(duel, x, y, 10)
+        this.sprite = new DeckSprite(duel, x, y, 20) // @todo 初期枚数
     }
 
     setClickableState(isClickable) {
