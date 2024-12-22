@@ -35,7 +35,7 @@ const DuelScene = {
 
         /**
          * todo :
-         *　  表示するカードだけプリロードする
+         *　  表示するカードだけプリロードする？
          */
         this.load.image('chara', 'assets/chara.png');
         this.load.image('ch_kage', 'assets/ch_kage.png');
