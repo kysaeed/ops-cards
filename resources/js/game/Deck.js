@@ -254,6 +254,21 @@ export default class Deck {
         this.sprite.setCount(cardCount)
     }
 
+    createDrawCard(duel, idDrawCard) {
+
+        //
+        const cardInfo = CardList[idDrawCard - 1]
+        if (!cardInfo) {
+            return null
+        }
+
+        const card = new Card(duel, cardInfo, this.player, 0, 0)
+
+        return card
+
+    }
+
+
     enterDraw(duel, idDrawCard, deckRemainCount, stackCount, onEnter, onEnd) {
         const turnPlayerId = this.player.getPlayerId()
 

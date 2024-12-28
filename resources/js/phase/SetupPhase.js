@@ -56,46 +56,56 @@ const SetupPhase = {
 
                 if (data.isResume) {
 
-
                     duel.getPlayer(0).getCardStack().initialize(data.players[0].initialStackCards)
-
-
                     duel.getPlayer(1).getCardStack().initialize(data.players[1].initialStackCards)
 
-                }
+                    for (let i = 0; i < 2; i++) {
+                        const player = duel.getPlayer(i)
+                        let currentDrawCard = player.getDeck().createDrawCard(duel, data.players[i].handCardNumber)
+                        if (currentDrawCard) {
+                            currentDrawCard.setToHandPosition()
+                            player.setHandCard(currentDrawCard)
+                        }
+                    }
+                    onEnd('DrawPhase',null);
 
-                this.drawInitialHandCard(duel.getPlayer(1), data.players[1].handCardNumber, data.players[1].cardCount, () => {
-                    this.drawInitialHandCard(duel.getPlayer(0), data.players[0].handCardNumber, data.players[0].cardCount, () => {
 
-                        if (!data.isResume) {
+                } else {
+                    this.drawInitialHandCard(duel.getPlayer(1), data.players[1].handCardNumber, data.players[1].cardCount, () => {
+                        this.drawInitialHandCard(duel.getPlayer(0), data.players[0].handCardNumber, data.players[0].cardCount, () => {
 
-                            ////// デッキから初期防御側カードを出す
-                            const initialCardInfo = data.players[defensePlayer.getPlayerId()].initialStackCards[0]
-                            const initialCardCount = data.players[defensePlayer.getPlayerId()].cardCount
-                            defensePlayer.getDeck().enterDraw(duel, initialCardInfo.cardNumber, initialCardCount, 0, null, (diffenceCardInfo) => {
+                            if (!data.isResume) {
 
-                                let enemyY = -HeightBase
-                                if (turnPlayerId) {
-                                    enemyY = HeightBase
-                                }
-                                diffenceCardInfo.sprite.angle = Bevel + (180 * (1 - turnPlayerId)) // todo enterToにマージ
+                                ////// デッキから初期防御側カードを出す
+                                const initialCardInfo = data.players[defensePlayer.getPlayerId()].initialStackCards[0]
+                                const initialCardCount = data.players[defensePlayer.getPlayerId()].cardCount
+                                defensePlayer.getDeck().enterDraw(duel, initialCardInfo.cardNumber, initialCardCount, 0, null, (diffenceCardInfo) => {
 
-                                ///////
-                                defensePlayer.cardStack.addCard(diffenceCardInfo)
-                                diffenceCardInfo.enterTo(-WidthBase, enemyY, 1 - turnPlayerId)
+                                    let enemyY = -HeightBase
+                                    if (turnPlayerId) {
+                                        enemyY = HeightBase
+                                    }
+                                    diffenceCardInfo.sprite.angle = Bevel + (180 * (1 - turnPlayerId)) // todo enterToにマージ
 
+                                    ///////
+                                    defensePlayer.cardStack.addCard(diffenceCardInfo)
+                                    diffenceCardInfo.enterTo(-WidthBase, enemyY, 1 - turnPlayerId)
+
+                                    if (onEnd) {
+                                        onEnd('DrawPhase',null);
+                                    }
+                                })
+
+                            } else {
                                 if (onEnd) {
                                     onEnd('DrawPhase',null);
                                 }
-                            })
-
-                        } else {
-                            if (onEnd) {
-                                onEnd('DrawPhase',null);
                             }
-                        }
+                        })
                     })
-                })
+
+                }
+
             })
         })
     },

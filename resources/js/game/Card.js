@@ -650,6 +650,21 @@ console.log('******** onEnterToAttackPosition()', data)
         })
     }
 
+    setToHandPosition() {
+        const direction = this.player.getDirection()
+
+        const x = (230 * direction) //-(WidthBase * 2 /* * direction */ )
+        const y = 230 * direction /* + (HeightBase * 2 * (1 - this.player.getPlayerId())) */
+        const angle = this.player.getPlayerId() * 180
+
+
+        this.sprite.x = x
+        this.sprite.y = y
+        this.sprite.scale = 0.60
+        this.sprite.duration = 100
+        this.sprite.angle = angle
+    }
+
     moveToHandPosition(onEnd) {
         //
         const scene = this.duel.getScene()
