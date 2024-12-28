@@ -51,7 +51,8 @@ export default class Bench {
                     if (benchCardInfo) {
                         const card = new Card(this.duelInfo, cardInfo, player, getBenchX(i, this.playerId), getBenchY(i, this.playerId))
                         element.push(card)
-                        card.moveToBench(getBenchX(i, this.playerId), getBenchY(i, this.playerId))
+                        //card.moveToBench(getBenchX(i, this.playerId), getBenchY(i, this.playerId))
+                        card.setToBench(getBenchX(i, this.playerId), getBenchY(i, this.playerId))
                     }
                     this.cards.push(element)
                 }

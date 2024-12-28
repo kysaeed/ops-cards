@@ -802,6 +802,17 @@ console.log('******** onEnterToAttackPosition()', data)
 
     }
 
+    setToBench(x, y) {
+        const max = 6
+        const angle = Math.floor((90 + 22) + (Math.random() * max) - (max / 2))
+
+        this.sprite.x = x
+        this.sprite.y = y
+        this.sprite.angle = angle
+        this.sprite.scale = DefaultCardSize * 0.6
+        //
+    }
+
     moveToDeck(x, y, onEnd) {
         // const max = 6
         // const angle = Math.floor((90 + 12) + (Math.random() * max) - (max / 2))
