@@ -7,7 +7,7 @@ import Card from './Card.js'
 const HeightBase = 100
 //const WidthBase = -30
 
-const BenchXBase = 100
+const BenchXBase = 94
 const BenchXStride = 48
 
 export default class Bench {

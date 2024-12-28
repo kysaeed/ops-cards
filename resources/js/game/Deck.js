@@ -13,12 +13,14 @@ const WidthBase = 0
 const DefaultScale = 0.4
 const DefaultAngle = 60
 
+const MaxDeckCard = 20
+
 
 class DeckSprite {
     constructor(duel, x, y, count) {
         this.duel = duel
         this.scene = duel.getScene()
-        this.count = count
+        this.count = 0
         this.isClickable = false
 
 
@@ -27,13 +29,15 @@ class DeckSprite {
         this.deckShadow = this.scene.add.sprite(0, 1, 'deck_shadow')
         this.deckShadow.scale = DefaultScale * 1.02
         this.deckShadow.angle = DefaultAngle
+        this.deckShadow.visible = false
         spriteList.push(this.deckShadow)
 
         this.under = []
-        for (let i = 0; i < (this.count); i++) {
+        for (let i = 0; i < MaxDeckCard; i++) {
             const d = this.scene.add.sprite(0, - (i * 4), 'card_back')
             d.scale = DefaultScale
             d.angle = DefaultAngle
+            d.visible = false
             this.under.push(d)
             spriteList.push(d)
         }
@@ -42,6 +46,7 @@ class DeckSprite {
         this.deckSprite.setInteractive()
         this.deckSprite.scale = DefaultScale
         this.deckSprite.angle = DefaultAngle
+        this.deckSprite.visible = false
         this.deckSprite.on('pointerdown', (pointer) => {
             if (!this.isClickable) {
                 return
