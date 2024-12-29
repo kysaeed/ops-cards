@@ -156,7 +156,7 @@ console.log(data)
         }, (currentDrawCard) => {
             if (currentDrawCard) {
                 currentDrawCard.moveToHandPosition(() => {
-                    currentDrawCard.setShadowParams(1.4, 0.2, 6) // todo moveToHandPosition内へ
+                    //
                 })
             }
             if (onEnd) {

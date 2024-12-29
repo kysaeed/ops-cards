@@ -663,6 +663,9 @@ console.log('******** onEnterToAttackPosition()', data)
         this.sprite.scale = 0.60
         this.sprite.duration = 100
         this.sprite.angle = angle
+
+        this.setShadowParams(0.8, 0.6, 28)
+
     }
 
     moveToHandPosition(onEnd) {
@@ -697,7 +700,8 @@ console.log('******** onEnterToAttackPosition()', data)
                     ease: 'power1',
             },
             ],
-            onComplete() {
+            onComplete: () => {
+                this.setShadowParams(1.0, 0.6, 28)
                 if (onEnd) {
                     onEnd()
                 }

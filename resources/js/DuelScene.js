@@ -16,19 +16,19 @@ const DuelScene = {
             frameHeight: 20,
         });
 
-        this.load.image('flag', 'assets/flag.png');
-        this.load.image('card', 'assets/card.png'); // (160 * 220) * 0.5
-        this.load.image('card_pow', 'assets/card_pow.png');
-        this.load.image('card_type', 'assets/card_type.png');
-        this.load.image('card_back', 'assets/card_back.png');
-        this.load.image('card_shadow', 'assets/card_shadow.png');
+        this.load.image('flag', 'assets/flag.png')
+        this.load.image('card', 'assets/card.png') // (160 * 220) * 0.5
+        this.load.image('card_pow', 'assets/card_pow.png')
+        this.load.image('card_type', 'assets/card_type.png')
+        this.load.image('card_back', 'assets/card_back.png')
+        this.load.image('card_shadow', 'assets/card_shadow.png')
         this.load.image('deck_shadow', 'assets/deck_shadow.png');
-        this.load.image('card_tip', 'assets/card_tip.png');
-        this.load.image('card_tip_shadow', 'assets/card_tip_shadow.png');
-        this.load.image('deck_clickable', 'assets/deck_clickable.png');
-        this.load.image('board', 'assets/board.png');
-        this.load.image('modal', 'assets/modal.png');
-        this.load.image('damage', 'assets/damage.png');
+        this.load.image('card_tip', 'assets/card_tip.png')
+        this.load.image('card_tip_shadow', 'assets/card_tip_shadow.png')
+        this.load.image('deck_clickable', 'assets/deck_clickable.png')
+        this.load.image('board', 'assets/board.png')
+        this.load.image('modal', 'assets/modal.png')
+        this.load.image('damage', 'assets/damage.png')
 
         this.load.image('desc_effect', 'assets/desc_effect.png')
 
@@ -37,29 +37,29 @@ const DuelScene = {
          * todo :
          *　  表示するカードだけプリロードする？
          */
-        this.load.image('chara', 'assets/chara.png');
-        this.load.image('ch_kage', 'assets/ch_kage.png');
-        this.load.image('ch_magi', 'assets/ch_magi.png');
-        this.load.image('ch_whell', 'assets/ch_whell.png');
-        this.load.image('ch_eye', 'assets/ch_eye.png');
-        this.load.image('ch_oddc', 'assets/ch_oddc.png');
-        this.load.image('ch_snake', 'assets/ch_snake.png');
-        this.load.image('ch_moon', 'assets/ch_moon.png');
-        this.load.image('ch_mono', 'assets/ch_mono.png');
-        this.load.image('ch_star', 'assets/ch_star.png');
-        this.load.image('ch_mass', 'assets/ch_mass.png');
-        this.load.image('ch_db', 'assets/ch_db.png');
-        this.load.image('ch_clown', 'assets/ch_clown.png');
-        this.load.image('ch_dog', 'assets/ch_dog.png');
-        this.load.image('ch_machine', 'assets/ch_machine.png');
-        this.load.image('ch_scarecrow', 'assets/ch_scarecrow.png');
-        this.load.image('ch_frasco', 'assets/ch_frasco.png');
-        this.load.image('cat', 'assets/cat.png');
+        this.load.image('chara', 'assets/chara.png')
+        this.load.image('ch_kage', 'assets/ch_kage.png')
+        this.load.image('ch_magi', 'assets/ch_magi.png')
+        this.load.image('ch_whell', 'assets/ch_whell.png')
+        this.load.image('ch_eye', 'assets/ch_eye.png')
+        this.load.image('ch_oddc', 'assets/ch_oddc.png')
+        this.load.image('ch_snake', 'assets/ch_snake.png')
+        this.load.image('ch_moon', 'assets/ch_moon.png')
+        this.load.image('ch_mono', 'assets/ch_mono.png')
+        this.load.image('ch_star', 'assets/ch_star.png')
+        this.load.image('ch_mass', 'assets/ch_mass.png')
+        this.load.image('ch_db', 'assets/ch_db.png')
+        this.load.image('ch_clown', 'assets/ch_clown.png')
+        this.load.image('ch_dog', 'assets/ch_dog.png')
+        this.load.image('ch_machine', 'assets/ch_machine.png')
+        this.load.image('ch_scarecrow', 'assets/ch_scarecrow.png')
+        this.load.image('ch_frasco', 'assets/ch_frasco.png')
+        this.load.image('cat', 'assets/cat.png')
 
         // this.load.spritesheet('dude',
         //   'assets/dude.png',
         //   { frameWidth: 32, frameHeight: 48 }
-        // );
+        // )
 
     },
     create() {
@@ -72,7 +72,7 @@ const DuelScene = {
             )
         )
 
-        // this.add.image(400, 300, 'board');
+        // this.add.image(400, 300, 'board')
 
         this.duel = new Duel(this)
 
