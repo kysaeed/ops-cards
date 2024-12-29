@@ -23,6 +23,8 @@ export default class Duel {
 
         this.flag = new Flag(this.scene, 580, 170)
 
+        this.curtain = this.scene.add.rectangle(Const.Screen.Width / 2, Const.Screen.Height / 2, Const.Screen.Width + 1, Const.Screen.Height + 1, 0x000000)
+
     }
 
     getScene() {
@@ -71,6 +73,42 @@ export default class Duel {
         }
 
         return false
+    }
+
+    show(onEnd) {
+        this.scene.tweens.chain({
+            targets: this.curtain,
+            tweens: [
+                {
+                    duration: 500,
+                    alpha: 0.0,
+                },
+            ],
+            onComplete: () => {
+                this.curtain.visible = false
+                if (onEnd) {
+                    onEnd()
+                }
+            }
+        })
+    }
+
+    hide(onEnd) {
+        this.scene.tweens.chain({
+            targets: this.curtain,
+            tweens: [
+                {
+                    duration: 500,
+                    alpha: 1.0,
+                },
+            ],
+            onComplete: () => {
+                this.curtain.visible = false
+                if (onEnd) {
+                    onEnd()
+                }
+            }
+        })
     }
 
     onUpdate() {

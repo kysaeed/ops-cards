@@ -63,6 +63,7 @@ const DuelScene = {
 
     },
     create() {
+
         this.anchor = this.add.container(0, 0)
         this.anchor.add(
             this.add.image(
@@ -100,7 +101,7 @@ console.log('to Next State : ', fetchData)
         // 90度回転の中心点を設定
         this.cameras.main.originX = 0.5
         this.cameras.main.originY = (Const.Screen.Height * 0.5) / Const.Screen.Width
-console.log(this.cameras.main)
+
         //this.cameras.main.zoom = 2
 
         const isVertical = () => {
@@ -175,6 +176,7 @@ console.log(this.cameras.main)
         // 回転の初期化
         fit()
 
+        // ログイン処理 @todo タイトルから
         window.axios.get('sanctum/csrf-cookie').then(() => {
             window.axios.post('api/login', {}).then(() => {
                 currentPhase.enter(this.duel, {}, toNextPhase)

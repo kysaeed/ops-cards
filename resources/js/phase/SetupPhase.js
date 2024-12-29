@@ -13,96 +13,103 @@ const SetupPhase = {
 
         window.axios.get('sanctum/csrf-cookie').then(() => {
             window.axios.post('api/data/deck').then((res) => {
-                //console.log('Initial draw : res api/data/deck', res.data)
+                this.duel.show(() => {
 
-                const data = res.data
+                    //console.log('Initial draw : res api/data/deck', res.data)
 
-                if (data.isPlayerTurn) {
-                    this.duel.turnPlayerId = 0
-                } else {
-                    this.duel.turnPlayerId = 1
-                }
+                    const data = res.data
 
-                const turnPlayerId = duel.getTurnPlayerId()
-                const defensePlayer = duel.getPlayer(1 - turnPlayerId)
-
-                if (!data.isResume) {
-                    duel.playerList.forEach((player) => {
-                        const playerId =  player.getPlayerId()
-                        let initialCardCount = data.players[playerId].cardCount + 1
-                        if (turnPlayerId === playerId) {
-                            initialCardCount++
-                        }
-
-                        player.getDeck().setInitilCardCount(initialCardCount)
-                    })
-                } else {
-                    duel.playerList.forEach((player) => {
-                        const playerId =  player.getPlayerId()
-                        let initialCardCount = data.players[playerId].cardCount
-                        if (initialCardCount) {
-                            initialCardCount++
-                        }
-                        player.getDeck().setInitilCardCount(initialCardCount)
-                    })
-                }
-
-                //const initialBench = data.players[1].initialBench
-                duel.getPlayer(0).getBench().initialize(data.players[0].initialBench)
-                duel.getPlayer(1).getBench().initialize(data.players[1].initialBench)
-
-
-                if (data.isResume) {
-
-                    duel.getPlayer(0).getCardStack().initialize(data.players[0].initialStackCards)
-                    duel.getPlayer(1).getCardStack().initialize(data.players[1].initialStackCards)
-
-                    for (let i = 0; i < 2; i++) {
-                        const player = duel.getPlayer(i)
-                        let currentDrawCard = player.getDeck().createDrawCard(duel, data.players[i].handCardNumber)
-                        if (currentDrawCard) {
-                            currentDrawCard.setToHandPosition()
-                            player.setHandCard(currentDrawCard)
-                        }
+                    if (data.isPlayerTurn) {
+                        this.duel.turnPlayerId = 0
+                    } else {
+                        this.duel.turnPlayerId = 1
                     }
-                    onEnd('DrawPhase',null)
+
+                    const turnPlayerId = duel.getTurnPlayerId()
+                    const defensePlayer = duel.getPlayer(1 - turnPlayerId)
+
+                    if (!data.isResume) {
+                        duel.playerList.forEach((player) => {
+                            const playerId =  player.getPlayerId()
+                            let initialCardCount = data.players[playerId].cardCount + 1
+                            if (turnPlayerId === playerId) {
+                                initialCardCount++
+                            }
+
+                            player.getDeck().setInitilCardCount(initialCardCount)
+                        })
+                    } else {
+                        duel.playerList.forEach((player) => {
+                            const playerId =  player.getPlayerId()
+                            let initialCardCount = data.players[playerId].cardCount
+                            if (initialCardCount) {
+                                initialCardCount++
+                            }
+                            player.getDeck().setInitilCardCount(initialCardCount)
+                        })
+                    }
+
+                    //const initialBench = data.players[1].initialBench
+                    duel.getPlayer(0).getBench().initialize(data.players[0].initialBench)
+                    duel.getPlayer(1).getBench().initialize(data.players[1].initialBench)
 
 
-                } else {
-                    this.drawInitialHandCard(duel.getPlayer(1), data.players[1].handCardNumber, data.players[1].cardCount, () => {
-                        this.drawInitialHandCard(duel.getPlayer(0), data.players[0].handCardNumber, data.players[0].cardCount, () => {
+                    if (data.isResume) {
 
-                            if (!data.isResume) {
+                        duel.getPlayer(0).getCardStack().initialize(data.players[0].initialStackCards)
+                        duel.getPlayer(1).getCardStack().initialize(data.players[1].initialStackCards)
 
-                                ////// デッキから初期防御側カードを出す
-                                const initialCardInfo = data.players[defensePlayer.getPlayerId()].initialStackCards[0]
-                                const initialCardCount = data.players[defensePlayer.getPlayerId()].cardCount
-                                defensePlayer.getDeck().enterDraw(duel, initialCardInfo.cardNumber, initialCardCount, 0, null, (diffenceCardInfo) => {
+                        for (let i = 0; i < 2; i++) {
+                            const player = duel.getPlayer(i)
+                            let currentDrawCard = player.getDeck().createDrawCard(duel, data.players[i].handCardNumber)
+                            if (currentDrawCard) {
+                                currentDrawCard.setToHandPosition()
+                                player.setHandCard(currentDrawCard)
+                            }
+                        }
+                        onEnd('DrawPhase',null)
 
-                                    let enemyY = -HeightBase
-                                    if (turnPlayerId) {
-                                        enemyY = HeightBase
-                                    }
-                                    diffenceCardInfo.sprite.angle = Bevel + (180 * (1 - turnPlayerId)) // todo enterToにマージ
 
-                                    ///////
-                                    defensePlayer.cardStack.addCard(diffenceCardInfo)
-                                    diffenceCardInfo.enterTo(-WidthBase, enemyY, 1 - turnPlayerId)
+                    } else {
+                        this.drawInitialHandCard(duel.getPlayer(1), data.players[1].handCardNumber, data.players[1].cardCount, () => {
+                            this.drawInitialHandCard(duel.getPlayer(0), data.players[0].handCardNumber, data.players[0].cardCount, () => {
 
+                                if (!data.isResume) {
+
+                                    ////// デッキから初期防御側カードを出す
+                                    const initialCardInfo = data.players[defensePlayer.getPlayerId()].initialStackCards[0]
+                                    const initialCardCount = data.players[defensePlayer.getPlayerId()].cardCount
+                                    defensePlayer.getDeck().enterDraw(duel, initialCardInfo.cardNumber, initialCardCount, 0, null, (diffenceCardInfo) => {
+
+                                        let enemyY = -HeightBase
+                                        if (turnPlayerId) {
+                                            enemyY = HeightBase
+                                        }
+                                        diffenceCardInfo.sprite.angle = Bevel + (180 * (1 - turnPlayerId)) // todo enterToにマージ
+
+                                        ///////
+                                        defensePlayer.cardStack.addCard(diffenceCardInfo)
+                                        diffenceCardInfo.enterTo(-WidthBase, enemyY, 1 - turnPlayerId)
+
+                                        if (onEnd) {
+                                            onEnd('DrawPhase',null);
+                                        }
+                                    })
+
+                                } else {
                                     if (onEnd) {
                                         onEnd('DrawPhase',null);
                                     }
-                                })
-
-                            } else {
-                                if (onEnd) {
-                                    onEnd('DrawPhase',null);
                                 }
-                            }
+                            })
                         })
-                    })
 
-                }
+                    }
+
+                })
+
+
+
 
             })
         })
