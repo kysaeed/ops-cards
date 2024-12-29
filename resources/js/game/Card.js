@@ -40,7 +40,7 @@ class CardTip {
 
     showStatusTip(onEnd) {
 
-        // @todo
+        // @todo 表示がちらつかないようにする
         this.sprite.visible = true
         this.sprite.alpha = 0
 
@@ -61,6 +61,7 @@ class CardTip {
     }
 
     hideStatusTip() {
+        // @todo 表示がちらつかないようにする
         this.sprite.visible = false
 
     }
