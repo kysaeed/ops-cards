@@ -12,7 +12,7 @@ const SetupPhase = {
         this.duel = duel
 
         window.axios.get('sanctum/csrf-cookie').then(() => {
-                window.axios.post('api/data/deck').then((res) => {
+            window.axios.post('api/data/deck').then((res) => {
                 //console.log('Initial draw : res api/data/deck', res.data)
 
                 const data = res.data
@@ -25,8 +25,6 @@ const SetupPhase = {
 
                 const turnPlayerId = duel.getTurnPlayerId()
                 const defensePlayer = duel.getPlayer(1 - turnPlayerId)
-
-
 
                 if (!data.isResume) {
                     duel.playerList.forEach((player) => {
@@ -67,7 +65,7 @@ const SetupPhase = {
                             player.setHandCard(currentDrawCard)
                         }
                     }
-                    onEnd('DrawPhase',null);
+                    onEnd('DrawPhase',null)
 
 
                 } else {
