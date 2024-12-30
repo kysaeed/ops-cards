@@ -8,7 +8,9 @@ const HeightBase = 100
 //const WidthBase = -30
 
 const BenchXBase = 94
-const BenchXStride = 48
+const BenchYBase = 240
+const BenchXStride = 42
+const BenchYStride = 58
 
 export default class Bench {
     constructor(duelInfo, scene, playerId /*, x, y*/) {
@@ -34,9 +36,9 @@ export default class Bench {
 
         const getBenchY = (benchIndex, playerId) => {
             if (playerId == 0) {
-                return 200 - (benchIndex * 70)
+                return BenchYBase - (benchIndex * BenchYStride)
             }
-            return (-200 + (benchIndex * 70));
+            return (-BenchYBase + (benchIndex * BenchYStride));
         }
 
 
@@ -104,9 +106,9 @@ export default class Bench {
 
         const getBenchY = (benchIndex, playerId) => {
             if (playerId == 0) {
-                return 200 - (benchIndex * 70)
+                return BenchYBase - (benchIndex * BenchYStride)
             }
-            return (-200 + (benchIndex * 70));
+            return (-BenchYBase + (benchIndex * BenchYStride));
         }
 
         for (let i = 0; i < this.cards.length; i++) {
