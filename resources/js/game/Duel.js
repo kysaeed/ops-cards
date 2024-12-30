@@ -19,7 +19,7 @@ export default class Duel {
 
         this.playerList = []
         this.playerList.push(new Player(this, 0, 1, 'プレイヤー1'))
-        this.playerList.push(new Player(this, 1, -1, 'プレイヤー2'))
+        this.playerList.push(new Player(this, 1, -1, '**プレイヤー2**'))
 
         this.flag = new Flag(this.scene, 580, 170)
 

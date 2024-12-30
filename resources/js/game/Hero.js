@@ -11,11 +11,10 @@ class Hero {
         const direction = player.getDirection()
 
         let text = player.getName()
-console.log('*****' + text)
         this.heroImage = scene.add.image(0, 0, 'hero')
         this.heroImage.scale = 0.8
 
-        this.name = scene.add.text(-20, 30, text, { fontSize: '18px', fill: '#000' })
+        this.name = scene.add.text(0, 45, text, { fontSize: '18px', fill: '#000' }).setOrigin(0.5, 0.5)
 
         this.sprite = scene.add.container(heroX * direction, heroY * direction, [
             this.heroImage,
