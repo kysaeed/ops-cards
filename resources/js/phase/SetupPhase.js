@@ -183,7 +183,6 @@ const SetupPhase = {
                 currentDrawCard.showDetial(() => {
                     // ドローしたカードを手札にする
                     currentDrawCard.moveToHandPosition(() => {
-                        currentDrawCard.setShadowParams(1.4, 0.2, 6) // todo moveToHandPosition内へ
                         player.setHandCard(currentDrawCard)
 
                         if (onEnd) {

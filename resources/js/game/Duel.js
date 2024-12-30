@@ -23,6 +23,13 @@ export default class Duel {
 
         this.flag = new Flag(this.scene, 580, 170)
 
+        const heroX = 0 + (-40)
+        const hero = scene.add.image(heroX, 220, 'hero')
+        hero.scale = 0.8
+        this.cardBoard.add([
+            hero,
+        ])
+
         this.curtain = this.scene.add.rectangle(Const.Screen.Width / 2, Const.Screen.Height / 2, Const.Screen.Width + 1, Const.Screen.Height + 1, 0x000000)
 
     }
