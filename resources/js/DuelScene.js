@@ -93,6 +93,8 @@ const DuelScene = {
 
         this.damageMark = new DamageMark(scene, 480, 280)
 
+        const keybo = new SoftKeyboard(this)
+
         const toNextPhase = (next, fetchData) => {
 console.log('to Next State : ', fetchData)
             currentPhase = phase[next]
