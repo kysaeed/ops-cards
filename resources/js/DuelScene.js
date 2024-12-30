@@ -32,7 +32,7 @@ const DuelScene = {
 
         this.load.image('desc_effect', 'assets/desc_effect.png')
 
-        this.load.image('hero', 'assets/hero.png')
+        this.load.image('hero', 'assets/hero/hero.png')
 
 
         /**
