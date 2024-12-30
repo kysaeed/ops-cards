@@ -18,17 +18,10 @@ export default class Duel {
         this.objectManager = new ObjectManager(scene)
 
         this.playerList = []
-        this.playerList.push(new Player(this, 0, 1))
-        this.playerList.push(new Player(this, 1, -1))
+        this.playerList.push(new Player(this, 0, 1, 'プレイヤー1'))
+        this.playerList.push(new Player(this, 1, -1, 'プレイヤー2'))
 
         this.flag = new Flag(this.scene, 580, 170)
-
-        const heroX = 0 + (-40)
-        const hero = scene.add.image(heroX, 220, 'hero')
-        hero.scale = 0.8
-        this.cardBoard.add([
-            hero,
-        ])
 
         this.curtain = this.scene.add.rectangle(Const.Screen.Width / 2, Const.Screen.Height / 2, Const.Screen.Width + 1, Const.Screen.Height + 1, 0x000000)
 

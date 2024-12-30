@@ -1,20 +1,29 @@
 
+import Hero from './Hero.js'
 import CardStack from './CardStack.js'
 import Deck from './Deck.js'
 import Bench from './Bench.js'
 
 export default class Player {
-    constructor(duel, id, direction) {
+    constructor(duel, id, direction, name) {
         this.duel = duel
         this.id = id
         this.direction = direction
         this.hand = null /////
         this.deck = new Deck(duel, this)
+        this.name = name
 
         this.bench = new Bench(duel, duel.getScene(), id)
 
         this.cardStack = new CardStack(duel, this)
 
+        this.hero = new Hero(this.duel, this)
+
+
+    }
+
+    getName() {
+        return this.name
     }
 
     setCardClickableState(isClickable) {
