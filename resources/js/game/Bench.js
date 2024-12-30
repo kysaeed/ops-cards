@@ -5,8 +5,12 @@ import Card from './Card.js'
 
 
 const HeightBase = 100
-const WidthBase = -30
+//const WidthBase = -30
 
+const BenchXBase = 94
+const BenchYBase = 240
+const BenchXStride = 42
+const BenchYStride = 58
 
 export default class Bench {
     constructor(duelInfo, scene, playerId /*, x, y*/) {
@@ -25,16 +29,16 @@ export default class Bench {
 
         const getBenchX = (benchIndex, playerId) => {
             if (playerId == 0) {
-                return 200 + (benchIndex * 20)
+                return BenchXBase + (benchIndex * BenchXStride)
             }
-            return -200 - (benchIndex * 20)
+            return -BenchXBase - (benchIndex * BenchXStride)
         }
 
         const getBenchY = (benchIndex, playerId) => {
             if (playerId == 0) {
-                return 200 - (benchIndex * 70)
+                return BenchYBase - (benchIndex * BenchYStride)
             }
-            return (-200 + (benchIndex * 70));
+            return (-BenchYBase + (benchIndex * BenchYStride));
         }
 
 
@@ -49,7 +53,8 @@ export default class Bench {
                     if (benchCardInfo) {
                         const card = new Card(this.duelInfo, cardInfo, player, getBenchX(i, this.playerId), getBenchY(i, this.playerId))
                         element.push(card)
-                        card.moveToBench(getBenchX(i, this.playerId), getBenchY(i, this.playerId))
+                        //card.moveToBench(getBenchX(i, this.playerId), getBenchY(i, this.playerId))
+                        card.setToBench(getBenchX(i, this.playerId), getBenchY(i, this.playerId))
                     }
                     this.cards.push(element)
                 }
@@ -94,16 +99,16 @@ export default class Bench {
 
         const getBenchX = (benchIndex, playerId) => {
             if (playerId == 0) {
-                return 200 + (benchIndex * 20)
+                return BenchXBase + (benchIndex * BenchXStride)
             }
-            return -200 - (benchIndex * 20)
+            return -BenchXBase - (benchIndex * BenchXStride)
         }
 
         const getBenchY = (benchIndex, playerId) => {
             if (playerId == 0) {
-                return 200 - (benchIndex * 70)
+                return BenchYBase - (benchIndex * BenchYStride)
             }
-            return (-200 + (benchIndex * 70));
+            return (-BenchYBase + (benchIndex * BenchYStride));
         }
 
         for (let i = 0; i < this.cards.length; i++) {

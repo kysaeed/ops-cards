@@ -40,7 +40,7 @@ class CardTip {
 
     showStatusTip(onEnd) {
 
-        // @todo
+        // @todo 表示がちらつかないようにする
         this.sprite.visible = true
         this.sprite.alpha = 0
 
@@ -61,6 +61,7 @@ class CardTip {
     }
 
     hideStatusTip() {
+        // @todo 表示がちらつかないようにする
         this.sprite.visible = false
 
     }
@@ -650,18 +651,33 @@ console.log('******** onEnterToAttackPosition()', data)
         })
     }
 
+    setToHandPosition() {
+        const direction = this.player.getDirection()
+
+        const x = (230 * direction) //-(WidthBase * 2 /* * direction */ )
+        const y = 230 * direction /* + (HeightBase * 2 * (1 - this.player.getPlayerId())) */
+        const angle = this.player.getPlayerId() * 180
+
+
+        this.sprite.x = x
+        this.sprite.y = y
+        this.sprite.scale = 0.60
+        this.sprite.duration = 100
+        this.sprite.angle = angle
+
+        this.setShadowParams(0.8, 0.6, 28)
+
+    }
+
     moveToHandPosition(onEnd) {
         //
         const scene = this.duel.getScene()
 
-        let direction = 1
-        if (this.player.getPlayerId()) {
-            direction = -1
-        }
+        const direction = this.player.getDirection()
 
         const stackCount = 0 //this.player.getCardStack().getStackCount()
-        const x = -(WidthBase * 2 /* * direction */ )
-        const y = (HeightBase) * 2.4 * direction /* + (HeightBase * 2 * (1 - this.player.getPlayerId())) */
+        const x = (230 * direction) //-(WidthBase * 2 /* * direction */ )
+        const y = 230 * direction /* + (HeightBase * 2 * (1 - this.player.getPlayerId())) */
         const angle = this.player.getPlayerId() * 180
 
         scene.tweens.chain({
@@ -685,7 +701,8 @@ console.log('******** onEnterToAttackPosition()', data)
                     ease: 'power1',
             },
             ],
-            onComplete() {
+            onComplete: () => {
+                this.setShadowParams(1.0, 0.6, 28)
                 if (onEnd) {
                     onEnd()
                 }
@@ -782,7 +799,7 @@ console.log('******** onEnterToAttackPosition()', data)
 
     moveToBench(x, y, onEnd) {
         const max = 6
-        const angle = Math.floor((90 + 12) + (Math.random() * max) - (max / 2))
+        const angle = Math.floor((90 + 22) + (Math.random() * max) - (max / 2))
 
         this.duel.getScene().tweens.chain({
             targets: this.sprite,
@@ -803,6 +820,17 @@ console.log('******** onEnterToAttackPosition()', data)
             },
         })
 
+    }
+
+    setToBench(x, y) {
+        const max = 6
+        const angle = Math.floor((90 + 22) + (Math.random() * max) - (max / 2))
+
+        this.sprite.x = x
+        this.sprite.y = y
+        this.sprite.angle = angle
+        this.sprite.scale = DefaultCardSize * 0.6
+        //
     }
 
     moveToDeck(x, y, onEnd) {

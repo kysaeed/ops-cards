@@ -8,17 +8,19 @@ import CardList from './CardList'
 
 const Bevel = Const.Bevel
 const HeightBase = 100
-const WidthBase = -30
+const WidthBase = 0
 
 const DefaultScale = 0.4
 const DefaultAngle = 60
+
+const MaxDeckCard = 20
 
 
 class DeckSprite {
     constructor(duel, x, y, count) {
         this.duel = duel
         this.scene = duel.getScene()
-        this.count = count
+        this.count = 0
         this.isClickable = false
 
 
@@ -27,13 +29,15 @@ class DeckSprite {
         this.deckShadow = this.scene.add.sprite(0, 1, 'deck_shadow')
         this.deckShadow.scale = DefaultScale * 1.02
         this.deckShadow.angle = DefaultAngle
+        this.deckShadow.visible = false
         spriteList.push(this.deckShadow)
 
         this.under = []
-        for (let i = 0; i < (this.count); i++) {
+        for (let i = 0; i < MaxDeckCard; i++) {
             const d = this.scene.add.sprite(0, - (i * 4), 'card_back')
             d.scale = DefaultScale
             d.angle = DefaultAngle
+            d.visible = false
             this.under.push(d)
             spriteList.push(d)
         }
@@ -42,6 +46,7 @@ class DeckSprite {
         this.deckSprite.setInteractive()
         this.deckSprite.scale = DefaultScale
         this.deckSprite.angle = DefaultAngle
+        this.deckSprite.visible = false
         this.deckSprite.on('pointerdown', (pointer) => {
             if (!this.isClickable) {
                 return
@@ -226,12 +231,12 @@ export default class Deck {
         this.initialCardCount = 0
         this.deckIndex = 0
 
-        const x = -180 * player.getDirection() + 30
-        const y = (220 * player.getDirection()) + 30
+        const x = 380 * player.getDirection() //+ 30
+        const y = (180 * player.getDirection()) //+ 30
 
         // const isPlyaer = (player.getPlayerId() === 0)
 
-        this.sprite = new DeckSprite(duel, x, y, 10)
+        this.sprite = new DeckSprite(duel, x, y, 20) // @todo 初期枚数
     }
 
     setClickableState(isClickable) {
@@ -248,6 +253,21 @@ export default class Deck {
         this.initialCardCount = cardCount // this.cards.length
         this.sprite.setCount(cardCount)
     }
+
+    createDrawCard(duel, idDrawCard) {
+
+        //
+        const cardInfo = CardList[idDrawCard - 1]
+        if (!cardInfo) {
+            return null
+        }
+
+        const card = new Card(duel, cardInfo, this.player, 0, 0)
+
+        return card
+
+    }
+
 
     enterDraw(duel, idDrawCard, deckRemainCount, stackCount, onEnter, onEnd) {
         const turnPlayerId = this.player.getPlayerId()
