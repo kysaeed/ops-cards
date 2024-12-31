@@ -56,6 +56,7 @@ const DuelScene = {
         this.load.image('ch_machine', 'assets/ch_machine.png')
         this.load.image('ch_scarecrow', 'assets/ch_scarecrow.png')
         this.load.image('ch_frasco', 'assets/ch_frasco.png')
+        this.load.image('ch_parade', 'assets/ch_parade.png')
         this.load.image('cat', 'assets/cat.png')
 
         // this.load.spritesheet('dude',

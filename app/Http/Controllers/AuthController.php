@@ -51,11 +51,16 @@ class AuthController extends Controller
                     $order++;
                 }
 
-                $testDeckCard = 5;
+
+                $cardSettings = [];
+                $string = file_get_contents(resource_path('settings/cards.json'));
+                if (!empty($string)) {
+                    $cardSettings = json_decode($string, true);
+                }
+
                 for ($j = 0; $j < 5; $j++) {
-                    //$cardNumber = 5 + rand(0, 12);
-                    $cardNumber = $testDeckCard;
-                    $testDeckCard++;
+                    $count = count($cardSettings);
+                    $cardNumber = mt_rand(5, $count - 1);
 
                     $deckCard = new DeckCard([
                         'card_number' => $cardNumber,

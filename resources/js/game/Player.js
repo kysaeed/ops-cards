@@ -22,6 +22,10 @@ export default class Player {
 
     }
 
+    setName(name) {
+        this.name = name
+        this.hero.setName(this.name)
+    }
     getName() {
         return this.name
     }

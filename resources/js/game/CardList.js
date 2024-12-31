@@ -147,6 +147,13 @@ const CardList = [
       type: 0,
     },
     {
+      power: 2,
+      name: 'パレード',
+      image: 'ch_parade',
+      type: 0,
+    },
+    /*
+    {
       power: 1,
       name: '尖兵',
       image: 'chara',
@@ -209,12 +216,6 @@ const CardList = [
     },
     {
       power: 1,
-      name: 'パレード',
-      image: 'chara',
-      type: 0,
-    },
-    {
-      power: 1,
       name: '聖人',
       image: 'chara',
       type: 0,
@@ -243,7 +244,13 @@ const CardList = [
       image: 'chara',
       type: 0,
     },
-
+    {
+      power: 1,
+      name: '夜',
+      image: 'chara',
+      type: 0,
+    },
+    */
 
 
 ];
