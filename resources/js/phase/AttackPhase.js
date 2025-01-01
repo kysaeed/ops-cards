@@ -45,6 +45,7 @@ const AttackPhase = {
                                         onEnd('EndPhase', fetchData)
                                         return
                                     }
+
                                     onEnd('TurnChangePhase', fetchData)
                                 })
 
