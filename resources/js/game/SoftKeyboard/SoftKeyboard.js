@@ -2,6 +2,8 @@
 import TextInput from './TextInput.js'
 import SoftKey from './SoftKey.js'
 
+const KeySize = 80
+
 export default class SoftKeyboard {
 
     constructor(scene) {
@@ -69,12 +71,12 @@ export default class SoftKeyboard {
                     }
 
                     keyBind[keyText][name] = {
-                        x: baseX + x * 54,
-                        y: y * 54,
+                        x: baseX + x * KeySize,
+                        y: y * KeySize,
                     }
                 })
                 if (isHalfSlide) {
-                    baseX += 30
+                    baseX += (KeySize * 0.5)
                 }
             })
         })

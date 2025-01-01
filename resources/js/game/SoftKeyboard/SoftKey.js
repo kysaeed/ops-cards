@@ -25,7 +25,7 @@ export default class SoftKey {
 
         base.add(this.sprite)
 
-        this.sprite.scale = 0.5
+        this.sprite.scale = 0.8
 
         this.bg.on('pointerdown', (pointer) => {
             this.down()
