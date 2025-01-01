@@ -139,4 +139,14 @@ export default class Bench {
         card.moveToBench(getBenchX(benchIndex, playerId), getBenchY(benchIndex, playerId), onEnd);
 
     }
+
+    getCount() {
+        let count = 0
+        this.cards.forEach((elements) => {
+            if (elements.length) {
+                count++
+            }
+        })
+        return count
+    }
 }
