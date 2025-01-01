@@ -2,7 +2,7 @@
 import TextInput from './TextInput.js'
 import SoftKey from './SoftKey.js'
 
-const KeySize = 80
+const KeySize = 84
 
 export default class SoftKeyboard {
 
@@ -87,7 +87,7 @@ export default class SoftKeyboard {
 
     createKeySprites(scene, keyBind) {
 
-        this.base = scene.add.container(100,100)
+        this.base = scene.add.container(100,180)
 
         const name = 'a'
         const keyList = Object.keys(keyBind)

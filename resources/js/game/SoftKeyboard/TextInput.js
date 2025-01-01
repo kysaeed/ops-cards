@@ -1,10 +1,19 @@
+const CharWidth = 50
+
 export default class TextInput {
 
     constructor(scene) {
         this.scene = scene
         this.text = ''
+        this.cursorPosition = 0
 
-        this.inputText = scene.add.text(0, 0, this.text, { fontSize: '50px', fill: '#000' }).setPadding(0, 4, 0, 4);
+        this.inputList = []
+
+        for(let i = 0; i < 10; i++) {
+            const inputCahr = this.scene.add.text(i * CharWidth, 0, '', { fontSize: '50px', fill: '#000' }).setPadding(0, 4, 0, 4);
+            this.inputList.push(inputCahr)
+        }
+
         this.cursor = scene.add.image(
             0, 0,
             'key_cursor'
@@ -43,8 +52,9 @@ export default class TextInput {
             ],
         })
 
-        this.sprite = scene.add.container(50, 20, [
-            this.inputText,
+        this.sprite = scene.add.container(50, 20, this.inputList)
+        this.sprite.add([
+            //this.inputText,
             this.cursor,
         ])
 
@@ -53,18 +63,30 @@ export default class TextInput {
     }
 
     add(text) {
+        if (this.cursorPosition >= (this.inputList.length - 1)) {
+            return
+        }
+
+        const textObj = this.inputList[this.cursorPosition]
+        textObj.text = text
+
+        this.cursorPosition++
         this.text += '' + text
         this.update()
     }
 
     del() {
+        textObj.text = ''
+        this.cursorPosition--
         this.text = this.text.substring(0, -1)
         this.update()
     }
 
     update() {
-        this.inputText.text = this.text
-        this.cursor.x = (this.text.length) * 50
+        //this.inputText.text = this.text
+
+        this.cursor.x = this.cursorPosition * CharWidth
+        //this.cursor.x = (this.text.length) * 50
 
 console.log(this.inputText)
 

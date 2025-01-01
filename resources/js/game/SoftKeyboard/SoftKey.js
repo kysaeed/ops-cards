@@ -3,7 +3,6 @@ import Phaser from 'phaser'
 
 export default class SoftKey {
 
-
     constructor(scene, base, text) {
         this.scene = scene
         this.text = text
