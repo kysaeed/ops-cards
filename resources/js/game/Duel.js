@@ -1,8 +1,10 @@
+import _ from 'lodash'
 
 import Const from '../Const.js'
 import ObjectManager from './ObjectManager.js'
 import Player from './Player.js'
 import Flag from './Flag.js'
+import CardList from './CardList'
 
 
 
@@ -41,6 +43,17 @@ export default class Duel {
 
     getCurrentPhase() {
         return this.currentPhase
+    }
+
+    getCardInfo(idCard) {
+        if (idCard < 1) {
+            return null
+        }
+
+        const cardInfo = _.cloneDeep(CardList[idCard - 1])
+        cardInfo['id'] = idCard
+
+        return cardInfo
     }
 
     getFlag() {

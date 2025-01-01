@@ -3,8 +3,9 @@ import Const from "../Const"
 import CardList from './CardList.js'
 import Card from './Card.js'
 
+const BenchMax = 7
 
-const HeightBase = 100
+//const HeightBase = 100
 //const WidthBase = -30
 
 const BenchXBase = 94
@@ -49,8 +50,8 @@ export default class Bench {
             benchElement.forEach((benchCardInfo) => {
                 if (benchCardInfo) {
                     const element = []
-                    const cardInfo = CardList[benchCardInfo.cardNumber - 1]
-                    if (benchCardInfo) {
+                    const cardInfo = this.duelInfo.getCardInfo(benchCardInfo.cardNumber)
+                    if (cardInfo) {
                         const card = new Card(this.duelInfo, cardInfo, player, getBenchX(i, this.playerId), getBenchY(i, this.playerId))
                         element.push(card)
                         //card.moveToBench(getBenchX(i, this.playerId), getBenchY(i, this.playerId))
@@ -119,7 +120,7 @@ export default class Bench {
 
                 return
             } else {
-                if (list[0].cardInfo.name == card.cardInfo.name) {
+                if (list[0].cardInfo.id == card.cardInfo.id) {
                     const stackCount = list.length
                     list.push(card)
                     card.moveToBench(
@@ -131,7 +132,7 @@ export default class Bench {
                 }
             }
         }
-
+console.log('Bench : ADD ******** ', card)
         const benchIndex = this.cards.length
         this.cards.push([
             card

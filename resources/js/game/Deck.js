@@ -257,7 +257,8 @@ export default class Deck {
     createDrawCard(duel, idDrawCard) {
 
         //
-        const cardInfo = CardList[idDrawCard - 1]
+        const cardInfo = duel.getCardInfo(idDrawCard)
+
         if (!cardInfo) {
             return null
         }
@@ -293,7 +294,7 @@ export default class Deck {
 
         this.deckIndex++
 
-        const cardInfo = CardList[cardId - 1]
+        const cardInfo = duel.getCardInfo(cardId)
 
         const card = new Card(duel, cardInfo, this.player, stackCount * 8, y + stackCount * 8)
         if (onEnter) {
