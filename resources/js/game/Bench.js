@@ -1,6 +1,5 @@
 
 import Const from "../Const"
-import CardList from './CardList.js'
 import Card from './Card.js'
 
 const BenchMax = 7
@@ -83,6 +82,15 @@ export default class Bench {
 
     addCards(cardList, onEnd) {
 
+        /**
+         * @todo　最大オーバーのチェック
+         */
+        /*
+        if ((this.getCount() + cardList.length) > BenchMax) {
+            //
+        }
+        */
+
         let addCardCount = 0
         cardList.forEach((c, i) => {
             this.addCardElement(this.playerId, c, () => {
@@ -132,7 +140,7 @@ export default class Bench {
                 }
             }
         }
-console.log('Bench : ADD ******** ', card)
+
         const benchIndex = this.cards.length
         this.cards.push([
             card
