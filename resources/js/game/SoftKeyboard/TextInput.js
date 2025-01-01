@@ -1,4 +1,5 @@
 const CharWidth = 50
+const TextLengthMax = 20
 
 export default class TextInput {
 
@@ -9,7 +10,7 @@ export default class TextInput {
 
         this.inputList = []
 
-        for(let i = 0; i < 10; i++) {
+        for(let i = 0; i < TextLengthMax; i++) {
             const inputCahr = this.scene.add.text(i * CharWidth, 0, '', { fontSize: '50px', fill: '#000' }).setPadding(0, 4, 0, 4);
             this.inputList.push(inputCahr)
         }

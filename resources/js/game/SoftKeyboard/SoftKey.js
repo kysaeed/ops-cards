@@ -12,7 +12,7 @@ export default class SoftKey {
             'key'
         )
 
-        this.textSprite = scene.add.textSprite = scene.add.text(-10, -20, text, { fontSize: '32px', fill: '#000' })
+        this.textSprite = scene.add.textSprite = scene.add.text(-10, -20, text, { fontSize: '40px', fill: '#000' })
 
         this.keyTop = scene.add.container(0, 0, [
             this.bg,
