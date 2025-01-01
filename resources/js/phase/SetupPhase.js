@@ -22,6 +22,10 @@ const SetupPhase = {
                     this.duel.turnPlayerId = 1
                 }
 
+                // for (let i = 0; i < 2; i++) {
+                //     duel.playerList[i].setName(data.players[i].name)
+                // }
+
                 //console.log('Initial draw : res api/data/deck', res.data)
 
                 //const playerId =  player.getPlayerId()
@@ -29,6 +33,9 @@ const SetupPhase = {
                 if (!data.isResume) {
                     duel.playerList.forEach((player) => {
                         const playerId =  player.getPlayerId()
+
+                        player.setName(data.players[playerId].name)
+
                         let initialCardCount = data.players[playerId].cardCount + 1
                         if (this.duel.getTurnPlayerId() === playerId) {
                             initialCardCount++
@@ -39,6 +46,9 @@ const SetupPhase = {
                 } else {
                     duel.playerList.forEach((player) => {
                         const playerId =  player.getPlayerId()
+
+                        player.setName(data.players[playerId].name)
+
                         let initialCardCount = data.players[playerId].cardCount
                         if (initialCardCount) {
                             initialCardCount++
@@ -183,7 +193,6 @@ const SetupPhase = {
                 currentDrawCard.showDetial(() => {
                     // ドローしたカードを手札にする
                     currentDrawCard.moveToHandPosition(() => {
-                        currentDrawCard.setShadowParams(1.4, 0.2, 6) // todo moveToHandPosition内へ
                         player.setHandCard(currentDrawCard)
 
                         if (onEnd) {

@@ -54,11 +54,9 @@ class DuelController extends Controller
                 $order++;
             }
 
-            //$testDeckCard = 5;
             for ($j = 0; $j < 5; $j++) {
-                $cardNumber = 5 + rand(0, 12);
-                //$cardNumber = $testDeckCard;
-                //$testDeckCard++;
+                $count = count($this->cardSettings);
+                $cardNumber = mt_rand(5, $count - 1);
 
                 $deckCard = new DeckCard([
                     'card_number' => $cardNumber,
@@ -85,6 +83,7 @@ class DuelController extends Controller
             ->where('user_id', $user->id)
             ->first();
 
+
         if (!$duel) {
             $deck = $this->createDeck($user);
 
@@ -106,6 +105,12 @@ class DuelController extends Controller
             $duelManager = new DuelManager($resume->turn_state, $this->cardSettings);
 
             $initialState = $duelManager->resume();
+
+
+            /////
+            $initialState['players'][0]['name'] = $user->name;
+            $initialState['players'][1]['name'] = '敵キャラ';
+
 
             // dd($resume?->toArray());
             return response()->json($initialState);
@@ -180,6 +185,7 @@ class DuelController extends Controller
 
         $initialState = $duelManager->initial();
 
+
         $turn = new DuelTurn([
             'user_id' => 1, // @todo validation
             'is_player_turn' => true,
@@ -192,6 +198,9 @@ class DuelController extends Controller
         $duel->duelTurns()->save($turn);
 
         /////
+        $initialState['players'][0]['name'] = $user->name;
+        $initialState['players'][1]['name'] = '敵キャラ';
+
         return response()->json($initialState);
     }
 
