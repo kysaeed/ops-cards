@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import _, { isNull } from 'lodash'
 
 import Const from '../Const.js'
 import ObjectManager from './ObjectManager.js'
@@ -51,6 +51,9 @@ export default class Duel {
         }
 
         const cardInfo = _.cloneDeep(CardList[idCard - 1])
+        if (!cardInfo) {
+            return isNull
+        }
         cardInfo['id'] = idCard
 
         return cardInfo

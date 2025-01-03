@@ -822,6 +822,33 @@ console.log('******** onEnterToAttackPosition()', data)
 
     }
 
+
+    moveToBenchBreak(x, y, onEnd) {
+
+        const max = 360
+        const angle =(Math.random() * max)
+
+        this.duel.getScene().tweens.chain({
+            targets: this.sprite,
+            tweens: [
+                {
+                    x: x,
+                    y: y,
+                    angle: angle,
+                    //scale: DefaultCardSize * 0.6,
+                    duration: 100,
+                    ease: 'power1',
+                },
+            ],
+            onComplete() {
+                if (onEnd) {
+                    onEnd();
+                }
+            },
+        })
+
+    }
+
     setToBench(x, y) {
         const max = 6
         const angle = Math.floor((90 + 22) + (Math.random() * max) - (max / 2))

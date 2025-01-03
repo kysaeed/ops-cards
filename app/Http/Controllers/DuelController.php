@@ -54,7 +54,7 @@ class DuelController extends Controller
                 $order++;
             }
 
-            for ($j = 0; $j < 5; $j++) {
+            for ($j = 0; $j < 15; $j++) {
                 $count = count($this->cardSettings);
                 $cardNumber = mt_rand(5, $count - 1);
 

@@ -53,7 +53,7 @@ class DatabaseSeeder extends Seeder
                 $order++;
             }
 
-            for ($j = 0; $j < 5; $j++) {
+            for ($j = 0; $j < 15; $j++) {
                 //$cardNumber = 5 + rand(0, 12);
                 $cardNumber = $testDeckCard;
                 $testDeckCard++;

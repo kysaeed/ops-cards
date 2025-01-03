@@ -39,15 +39,22 @@ const AttackPhase = {
                                     c.hideStatusTip()
                                 })
 
-                                enemyPlayer.getBench().addCards(deffenceCards, () => {
+                                if (fetchData.judge !== 2) {
+                                    enemyPlayer.getBench().addCards(deffenceCards, () => {
 
-                                    if (fetchData.judge) {
+                                        if (fetchData.judge) {
+                                            onEnd('EndPhase', fetchData)
+                                            return
+                                        }
+
+                                        onEnd('TurnChangePhase', fetchData)
+                                    })
+                                } else {
+console.log('enemyPlayer.getBench().breakCards()')
+                                    enemyPlayer.getBench().breakCards(deffenceCards, () => {
                                         onEnd('EndPhase', fetchData)
-                                        return
-                                    }
-
-                                    onEnd('TurnChangePhase', fetchData)
-                                })
+                                    })
+                                }
 
                             })
                         } else {
