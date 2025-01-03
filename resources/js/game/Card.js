@@ -822,6 +822,46 @@ console.log('******** onEnterToAttackPosition()', data)
 
     }
 
+    moveToBenchBounce(x, y, onEnd) {
+        const max = 6
+        const angle = Math.floor((90 + 22) + (Math.random() * max) - (max / 2))
+
+        this.duel.getScene().tweens.chain({
+            targets: this.sprite,
+            tweens: [
+                {
+                    x: (x * 0.9),
+                    y: (y * 0.9),
+                    angle: angle,
+                    scale: DefaultCardSize * 0.6,
+                    duration: 400,
+                    ease: 'power1',
+                },
+            ],
+            onComplete: () => {
+                if (onEnd) {
+                    onEnd();
+                }
+
+                const angle = Math.floor((90 + 22) + (Math.random() * max) - (max / 2))
+                this.duel.getScene().tweens.chain({
+                    targets: this.sprite,
+                    tweens: [
+                        {
+                            x: (x * 0.6),
+                            y: (y * 0.6),
+                            angle: angle,
+                            // scale: DefaultCardSize * 0.6,
+                            duration: 100,
+                            ease: 'power1',
+                        },
+                    ],
+                })
+
+            },
+        })
+
+    }
 
     moveToBenchBreak(x, y, onEnd) {
 

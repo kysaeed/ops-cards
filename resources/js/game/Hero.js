@@ -15,7 +15,7 @@ class Hero {
         this.heroImage.scale = 0.8
 
         this.heroWord = scene.add.image(80, -30, 'hero_word')
-        this.heroWordText = scene.add.text(80, -30, '平地が溢れた', { fontSize: '14px', fill: '#000' }).setOrigin(0.5, 0.5)
+        this.heroWordText = scene.add.text(80, -30, '平地があふれた', { fontSize: '14px', fill: '#000' }).setOrigin(0.5, 0.5)
 
         this.name = scene.add.text(0, 45, text, { fontSize: '18px', fill: '#000' }).setOrigin(0.5, 0.5)
 

@@ -111,7 +111,7 @@ export default class Bench {
         const player = this.duel.getPlayer(playerId)
         let addCardCount = 0
         cardList.forEach((c) => {
-            c.moveToBench(getBenchX(3.5, playerId), getBenchY(3.5, playerId), () => {
+            c.moveToBenchBounce(getBenchX(3.5, playerId), getBenchY(3.5, playerId), () => {
                 addCardCount++
                 if (addCardCount >= cardList.length) {
                     let breakCardCount = this.getCardCount() + cardList.length
