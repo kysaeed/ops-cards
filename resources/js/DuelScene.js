@@ -40,6 +40,7 @@ const DuelScene = {
 
         // HERO
         this.load.image('hero', 'assets/hero/hero.png')
+        this.load.image('hero_word', 'assets/hero/hero_word.png')
 
 
         /**

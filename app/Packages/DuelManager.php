@@ -175,23 +175,28 @@ class DuelManager
 
                     $nextState['turnPalyerIndex'] = (1 - $nextState['turnPalyerIndex']);
                     $defenseBench = $nextState['players'][$enemyJsonIndex]['benchCardNumbers'];
-logger('******');
-logger($defenseBench);
+// logger('******');
+// logger($defenseBench);
                     $defenseStackCards = ($nextState['players'][$enemyJsonIndex]['cardStack']);
                     $nextState['players'][$enemyJsonIndex]['benchCardNumbers'] = $this->addCardsToBench(
                         $defenseStackCards,
                         $defenseBench,
                     );
-logger($nextState['players'][$enemyJsonIndex]['benchCardNumbers']);
+
+
+// logger($nextState['players'][$enemyJsonIndex]['benchCardNumbers']);
                     $nextState['players'][$enemyJsonIndex]['cardStack'] = [];
                 }
-
 
                 if ($attackResult['isTurnChange']) {
                     if (empty($nextState['players'][$enemyJsonIndex]['deckCardNumbers'])) {
                         if (empty($nextState['players'][$enemyJsonIndex]['handCardNumber'])) {
                             $judge = 1;
                         }
+                    }
+// logger('def-bench : ' . count($nextState['players'][$enemyJsonIndex]['benchCardNumbers']));
+                    if (count($nextState['players'][$enemyJsonIndex]['benchCardNumbers']) >= 8) {
+                        $judge = 2;
                     }
                 } else {
                     if (empty($nextState['players'][$jsonIndex]['deckCardNumbers'])) {
@@ -202,7 +207,6 @@ logger($nextState['players'][$enemyJsonIndex]['benchCardNumbers']);
                 }
 
             }
-
         }
 
 

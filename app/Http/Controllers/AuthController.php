@@ -15,6 +15,10 @@ class AuthController extends Controller
     public function login()
     {
         $user = Auth::user();
+// $user = User::find(3);
+// Auth::login($user);
+
+
         if (!$user) {
             $user = DB::transaction(function () {
                 $maxNumber = User::max('id') ?? 0;

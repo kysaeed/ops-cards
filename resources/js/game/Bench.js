@@ -1,11 +1,12 @@
-
+import _ from 'lodash'
 import Const from "../Const"
-import CardList from './CardList.js'
 import Card from './Card.js'
 
+const BenchMax = 7
 
-const HeightBase = 100
-//const WidthBase = -30
+const HeroX = -55
+const HeroY = 232
+
 
 const BenchXBase = 94
 const BenchYBase = 240
@@ -13,8 +14,8 @@ const BenchXStride = 42
 const BenchYStride = 58
 
 export default class Bench {
-    constructor(duelInfo, scene, playerId /*, x, y*/) {
-        this.duelInfo = duelInfo
+    constructor(duel, scene, playerId /*, x, y*/) {
+        this.duel = duel
         this.playerId = playerId
         this.scene = scene
         this.cards = []
@@ -42,16 +43,16 @@ export default class Bench {
         }
 
 
-        const player = this.duelInfo.getPlayer(this.playerId)
+        const player = this.duel.getPlayer(this.playerId)
 
         this.cards = []
         cardList.forEach((benchElement, i) => {
             benchElement.forEach((benchCardInfo) => {
                 if (benchCardInfo) {
                     const element = []
-                    const cardInfo = CardList[benchCardInfo.cardNumber - 1]
-                    if (benchCardInfo) {
-                        const card = new Card(this.duelInfo, cardInfo, player, getBenchX(i, this.playerId), getBenchY(i, this.playerId))
+                    const cardInfo = this.duel.getCardInfo(benchCardInfo.cardNumber)
+                    if (cardInfo) {
+                        const card = new Card(this.duel, cardInfo, player, getBenchX(i, this.playerId), getBenchY(i, this.playerId))
                         element.push(card)
                         //card.moveToBench(getBenchX(i, this.playerId), getBenchY(i, this.playerId))
                         card.setToBench(getBenchX(i, this.playerId), getBenchY(i, this.playerId))
@@ -76,10 +77,6 @@ export default class Bench {
 
     }
 
-    getCount() {
-        return this.cards.length
-    }
-
     addCards(cardList, onEnd) {
 
         let addCardCount = 0
@@ -93,6 +90,57 @@ export default class Bench {
                 }
             })
         })
+    }
+
+    breakCards(cardList, onEnd) {
+        const getBenchX = (benchIndex, playerId) => {
+            if (playerId == 0) {
+                return BenchXBase + (benchIndex * (BenchXStride * 1.05) + 30)
+            }
+            return -BenchXBase - (benchIndex * (BenchXStride * 1.05) + 30)
+        }
+
+        const getBenchY = (benchIndex, playerId) => {
+            if (playerId == 0) {
+                return BenchYBase - (benchIndex * (BenchYStride * 1.05))
+            }
+            return (-BenchYBase + (benchIndex * (BenchYStride * 1.05)));
+        }
+
+        const playerId = this.playerId
+        const player = this.duel.getPlayer(playerId)
+        let addCardCount = 0
+        cardList.forEach((c) => {
+            c.moveToBenchBounce(getBenchX(3.5, playerId), getBenchY(3.5, playerId), () => {
+                addCardCount++
+                if (addCardCount >= cardList.length) {
+                    let breakCardCount = this.getCardCount()
+                    const cards = this.cards
+
+                    cards.forEach((element, i) => {
+                        element.forEach((c) => {
+                            const x = getBenchX(i, playerId)
+                            const y = getBenchY(i, playerId)
+
+                            c.moveToBenchBreak(x, y, () => {
+                                breakCardCount--
+                                if (breakCardCount < 1) {
+                                    const hero = player.getHero()
+console.log(hero)
+                                    hero.moveToBench(80 * player.getDirection(), 180 * player.getDirection(), () => {
+                                        if (onEnd) {
+                                            onEnd()
+                                        }
+                                    })
+                                }
+                            })
+                        })
+
+                    })
+                }
+            });
+        })
+
     }
 
     addCardElement(playerId, card, onEnd) {
@@ -119,14 +167,14 @@ export default class Bench {
 
                 return
             } else {
-                if (list[0].cardInfo.name == card.cardInfo.name) {
+                if (list[0].cardInfo.id == card.cardInfo.id) {
                     const stackCount = list.length
                     list.push(card)
                     card.moveToBench(
                         getBenchX(i, playerId) - (stackCount * 4),
                         getBenchY(i, playerId) - (stackCount * 4),
                         onEnd
-                    );
+                    )
                     return
                 }
             }
@@ -138,5 +186,25 @@ export default class Bench {
         ])
         card.moveToBench(getBenchX(benchIndex, playerId), getBenchY(benchIndex, playerId), onEnd);
 
+    }
+
+    getCount() {
+        let count = 0
+        this.cards.forEach((elements) => {
+            if (elements.length) {
+                count++
+            }
+        })
+        return count
+    }
+
+    getCardCount() {
+        let count = 0
+        this.cards.forEach((elements) => {
+            if (elements.length) {
+                count += elements.length
+            }
+        })
+        return count
     }
 }

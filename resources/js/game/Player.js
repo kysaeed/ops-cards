@@ -79,4 +79,7 @@ export default class Player {
         return this.cardStack
     }
 
+    getHero() {
+        return this.hero
+    }
 }
