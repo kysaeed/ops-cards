@@ -114,28 +114,24 @@ export default class Bench {
             c.moveToBenchBounce(getBenchX(3.5, playerId), getBenchY(3.5, playerId), () => {
                 addCardCount++
                 if (addCardCount >= cardList.length) {
-                    let breakCardCount = this.getCardCount() + cardList.length
-console.log(`all card count ${breakCardCount}`)
-                    const cards = _.clone(this.cards)
-                    // cards.push(cardList)
+                    let breakCardCount = this.getCardCount()
+                    const cards = this.cards
 
                     cards.forEach((element, i) => {
                         element.forEach((c) => {
-                            /*
-                            const x = (HeroX) + (i * 10)
-                            const y = (HeroY * player.getDirection()) + (i * 30)
-                            */
                             const x = getBenchX(i, playerId)
                             const y = getBenchY(i, playerId)
 
                             c.moveToBenchBreak(x, y, () => {
                                 breakCardCount--
-                                if (!breakCardCount) {
-
-
-                                    if (onEnd) {
-                                        onEnd()
-                                    }
+                                if (breakCardCount < 1) {
+                                    const hero = player.getHero()
+console.log(hero)
+                                    hero.moveToBench(80 * player.getDirection(), 180 * player.getDirection(), () => {
+                                        if (onEnd) {
+                                            onEnd()
+                                        }
+                                    })
                                 }
                             })
                         })

@@ -848,8 +848,8 @@ console.log('******** onEnterToAttackPosition()', data)
                     targets: this.sprite,
                     tweens: [
                         {
-                            x: (x * 0.6),
-                            y: (y * 0.6),
+                            x: (x * 0.55),
+                            y: (y * 0.55),
                             angle: angle,
                             // scale: DefaultCardSize * 0.6,
                             duration: 100,
@@ -880,7 +880,7 @@ console.log('******** onEnterToAttackPosition()', data)
                     ease: 'power1',
                 },
             ],
-            onComplete() {
+            onComplete: () => {
                 if (onEnd) {
                     onEnd();
                 }
