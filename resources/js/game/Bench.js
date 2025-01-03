@@ -95,16 +95,16 @@ export default class Bench {
     breakCards(cardList, onEnd) {
         const getBenchX = (benchIndex, playerId) => {
             if (playerId == 0) {
-                return BenchXBase + (benchIndex * BenchXStride)
+                return BenchXBase + (benchIndex * (BenchXStride * 1.05) + 30)
             }
-            return -BenchXBase - (benchIndex * BenchXStride)
+            return -BenchXBase - (benchIndex * (BenchXStride * 1.05) + 30)
         }
 
         const getBenchY = (benchIndex, playerId) => {
             if (playerId == 0) {
-                return BenchYBase - (benchIndex * BenchYStride)
+                return BenchYBase - (benchIndex * (BenchYStride * 1.05))
             }
-            return (-BenchYBase + (benchIndex * BenchYStride));
+            return (-BenchYBase + (benchIndex * (BenchYStride * 1.05)));
         }
 
         const playerId = this.playerId
@@ -117,16 +117,22 @@ export default class Bench {
                     let breakCardCount = this.getCardCount() + cardList.length
 console.log(`all card count ${breakCardCount}`)
                     const cards = _.clone(this.cards)
-                    cards.push(cardList)
+                    // cards.push(cardList)
 
                     cards.forEach((element, i) => {
                         element.forEach((c) => {
+                            /*
                             const x = (HeroX) + (i * 10)
                             const y = (HeroY * player.getDirection()) + (i * 30)
+                            */
+                            const x = getBenchX(i, playerId)
+                            const y = getBenchY(i, playerId)
 
                             c.moveToBenchBreak(x, y, () => {
                                 breakCardCount--
                                 if (!breakCardCount) {
+
+
                                     if (onEnd) {
                                         onEnd()
                                     }
