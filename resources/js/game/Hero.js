@@ -54,6 +54,9 @@ console.log('hero.moveToBench : ', x, y)
 
             ],
             onComplete: () => {
+                const board = this.duel.getCardBoard()
+                board.bringToTop(this.sprite)
+
                 this.heroWord.show('平地があふれた')
                 if (onEnd) {
                     onEnd()

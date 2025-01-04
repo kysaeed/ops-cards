@@ -823,8 +823,8 @@ console.log('******** onEnterToAttackPosition()', data)
     }
 
     moveToBenchBounce(x, y, onEnd) {
-        const max = 6
-        const angle = Math.floor((90 + 22) + (Math.random() * max) - (max / 2))
+        const max = 360
+        const angle =(Math.random() * max)
 
         this.duel.getScene().tweens.chain({
             targets: this.sprite,
@@ -843,7 +843,10 @@ console.log('******** onEnterToAttackPosition()', data)
                     onEnd();
                 }
 
-                const angle = Math.floor((90 + 22) + (Math.random() * max) - (max / 2))
+
+                const max = 360
+                const angle =(Math.random() * max)
+
                 this.duel.getScene().tweens.chain({
                     targets: this.sprite,
                     tweens: [
