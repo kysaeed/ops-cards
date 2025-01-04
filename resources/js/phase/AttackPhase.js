@@ -43,17 +43,6 @@ for (let e in Phaser.Math.Easing) {
 
 
                 c.attack(stackCount, () => {
-                    duel.getScene().tweens.chain({
-                        targets: camera,
-                        tweens: [
-                            {
-                                delay: 30,
-                                duration: 360,
-                                zoom: 1.0,
-                                ease: Phaser.Math.Easing.Cubic.InOut,
-                            },
-                        ],
-                    })
 
 
 
@@ -61,6 +50,23 @@ for (let e in Phaser.Math.Easing) {
                         duel.getScene().damageMark.setDamage(null) // dummy param
 
                         if (fetchData.isTurnChange) {
+
+                            duel.getScene().tweens.chain({
+                                targets: camera,
+                                tweens: [
+                                    {
+                                        duration: 200,
+                                        zoom: 1.02,
+                                        ease: Phaser.Math.Easing.Cubic.InOut,
+                                    },
+                                    {
+                                        duration: 200,
+                                        zoom: 1.0,
+                                        ease: Phaser.Math.Easing.Cubic.InOut,
+                                    },
+                                ],
+                            })
+
                             ohterPlayer.getCardStack().criticalDamaged(() => {
 
                                 duel.getFlag().moveTo(620, 170 + (200 * (1 - turnPlayerId)))

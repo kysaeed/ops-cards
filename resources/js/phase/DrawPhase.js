@@ -68,13 +68,15 @@ console.log('onEvent hand-card click!!!', data)
     },
 
     attack(card, data, onEnd) {
+
+        /*
         const camera = this.duel.getScene().cameras.main
         this.duel.getScene().tweens.chain({
             targets: camera,
             tweens: [
                 {
-                    duration: 180,
-                    zoom: 1.5,
+                    duration: 2000,
+                    zoom: 1.2,
                     ease: Phaser.Math.Easing.Cubic.InOut,
                 },
             ],
@@ -82,6 +84,7 @@ console.log('onEvent hand-card click!!!', data)
                 //
             },
         })
+        */
 
         //
         const duel = this.duel
