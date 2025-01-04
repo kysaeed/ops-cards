@@ -30,9 +30,11 @@ const AttackPhase = {
         */
 
 
-for (let e in Phaser.Math.Easing) {
-    console.log(e)
-}
+        /*
+        for (let e in Phaser.Math.Easing) {
+            console.log(e)
+        }
+        */
 
         const defenseCard = ohterPlayer.getCardStack().getTopCard()
         defenseCard.onEnterToDefense(() => { // defense側のablity判定
@@ -43,7 +45,6 @@ for (let e in Phaser.Math.Easing) {
 
 
                 c.attack(stackCount, () => {
-
 
 
                     if (stackCount < 1) {
