@@ -9,15 +9,6 @@ const DrawPhase = {
         this.onEnd = onEnd
 
         const player = duel.getTurnPlayer()
-console.log('******* ' + player.getPlayerId())
-        /*
-        if (player.getDeck().isEmpty()) {
-            if (!player.getHandCard()) {
-                /// todo!!!
-                onEnd('EndPhase', fetchData) // todo 勝敗表示へ
-            }
-        }
-        */
 
         /**
          * プレイヤー側のUIでのドローと敵側の処理を分岐
@@ -77,6 +68,20 @@ console.log('onEvent hand-card click!!!', data)
     },
 
     attack(card, data, onEnd) {
+        const camera = this.duel.getScene().cameras.main
+        this.duel.getScene().tweens.chain({
+            targets: camera,
+            tweens: [
+                {
+                    duration: 180,
+                    zoom: 1.5,
+                },
+            ],
+            onComplete: () => {
+                //
+            },
+        })
+
         //
         const duel = this.duel
         card.moveToAttackPosition(() => {

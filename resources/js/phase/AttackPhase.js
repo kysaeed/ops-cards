@@ -2,6 +2,7 @@ import Const from "../Const"
 
 const AttackPhase = {
     enter(duel, fetchData, onEnd) {
+
         this.onEnd = onEnd
 
         const turnPlayerId = duel.getTurnPlayerId()
@@ -11,12 +12,45 @@ const AttackPhase = {
         //player.getCardStack().addCard(newAttackCard)
         //const total = duel.getTurnPlayer().cardStack.getTotalPower()
 
+        const camera = duel.getScene().cameras.main
+        /*
+        duel.getScene().tweens.chain({
+            targets: camera,
+            tweens: [
+                {
+                    duration: 180,
+                    zoom: 1.2,
+                },
+            ],
+            onComplete: () => {
+                //
+            },
+        })
+        */
+
 
         const defenseCard = ohterPlayer.getCardStack().getTopCard()
         defenseCard.onEnterToDefense(() => { // defense側のablity判定
 
+            //camera.zoom = 1.4
+
             duel.getTurnPlayer().cardStack.cards.forEach((c, stackCount) => {
+
+
                 c.attack(stackCount, () => {
+
+                    duel.getScene().tweens.chain({
+                        targets: camera,
+                        tweens: [
+                            {
+                                duration: 300,
+                                zoom: 1.0,
+                            },
+                        ],
+                    })
+
+
+
                     if (stackCount < 1) {
                         duel.getScene().damageMark.setDamage(null) // dummy param
 
@@ -50,7 +84,6 @@ const AttackPhase = {
                                         onEnd('TurnChangePhase', fetchData)
                                     })
                                 } else {
-console.log('enemyPlayer.getBench().breakCards()')
                                     enemyPlayer.getBench().breakCards(deffenceCards, () => {
                                         onEnd('EndPhase', fetchData)
                                     })
@@ -73,8 +106,6 @@ console.log('enemyPlayer.getBench().breakCards()')
                 })
             })
         })
-
-
 
 
     },
