@@ -1,3 +1,4 @@
+import Phaser from 'phaser'
 import Const from "../Const"
 
 const AttackPhase = {
@@ -29,6 +30,10 @@ const AttackPhase = {
         */
 
 
+for (let e in Phaser.Math.Easing) {
+    console.log(e)
+}
+
         const defenseCard = ohterPlayer.getCardStack().getTopCard()
         defenseCard.onEnterToDefense(() => { // defense側のablity判定
 
@@ -38,13 +43,15 @@ const AttackPhase = {
 
 
                 c.attack(stackCount, () => {
-
+// console.log('*****************************')
+// console.log(Phaser.Math.Easing.Bounce.InOut)
                     duel.getScene().tweens.chain({
                         targets: camera,
                         tweens: [
                             {
-                                duration: 300,
+                                duration: 360,
                                 zoom: 1.0,
+                                ease: Phaser.Math.Easing.Cubic.InOut,
                             },
                         ],
                     })

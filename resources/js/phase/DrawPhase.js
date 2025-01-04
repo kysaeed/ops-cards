@@ -1,4 +1,4 @@
-
+import Phaser from 'phaser'
 
 const DrawPhase = {
 
@@ -75,6 +75,7 @@ console.log('onEvent hand-card click!!!', data)
                 {
                     duration: 180,
                     zoom: 1.5,
+                    ease: Phaser.Math.Easing.Cubic.InOut,
                 },
             ],
             onComplete: () => {
