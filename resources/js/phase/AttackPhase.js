@@ -43,12 +43,11 @@ for (let e in Phaser.Math.Easing) {
 
 
                 c.attack(stackCount, () => {
-// console.log('*****************************')
-// console.log(Phaser.Math.Easing.Bounce.InOut)
                     duel.getScene().tweens.chain({
                         targets: camera,
                         tweens: [
                             {
+                                delay: 30,
                                 duration: 360,
                                 zoom: 1.0,
                                 ease: Phaser.Math.Easing.Cubic.InOut,
