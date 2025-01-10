@@ -253,8 +253,7 @@ logger($attackCardStatus);
 
 
         $attackPower = $attackCardStatus['power'];
-        $totalAttackPower = $attackPower + $prevAttackPower;
-
+        $totalAttackPower = ($attackPower + $addAttackPower) + $prevAttackPower;
 
         $defensePower = $defenseCardStatus['power'];
         $addDefensePower = 0;
