@@ -119,7 +119,27 @@ export default class Duel {
                 },
             ],
             onComplete: () => {
-                this.curtain.visible = false
+                this.curtain.visible = true
+                if (onEnd) {
+                    onEnd()
+                }
+            }
+        })
+    }
+
+    toDark(onEnd) {
+        this.curtain.alpha = 0.0
+        this.curtain.visible = true
+        this.scene.tweens.chain({
+            targets: this.curtain,
+            tweens: [
+                {
+                    duration: 500,
+                    alpha: 0.6,
+                },
+            ],
+            onComplete: () => {
+                this.curtain.visible = true
                 if (onEnd) {
                     onEnd()
                 }

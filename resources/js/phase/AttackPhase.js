@@ -61,7 +61,7 @@ const AttackPhase = {
                                         ease: Phaser.Math.Easing.Cubic.InOut,
                                     },
                                     {
-                                        duration: 200,
+                                        duration: 400,
                                         zoom: 1.0,
                                         ease: Phaser.Math.Easing.Cubic.InOut,
                                     },
