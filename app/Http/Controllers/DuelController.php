@@ -12,7 +12,7 @@ use App\Models\Deck;
 use App\Models\DeckCard;
 use App\Models\Duel;
 use App\Models\DuelTurn;
-use App\Packages\DuelManager;
+use App\Packages\Duel\DuelManager;
 
 class DuelController extends Controller
 {
@@ -56,7 +56,7 @@ class DuelController extends Controller
 
             for ($j = 0; $j < 5; $j++) {
                 $count = count($this->cardSettings);
-                $cardNumber = mt_rand(5, $count - 1);
+                $cardNumber = mt_rand(5, $count);
 
                 $deckCard = new DeckCard([
                     'card_number' => $cardNumber,

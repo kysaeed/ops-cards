@@ -1,5 +1,5 @@
 <?php
-namespace App\Packages;
+namespace App\Packages\Duel;
 
 class DuelManager
 {
@@ -266,6 +266,7 @@ logger($attackCardStatus);
         $totalDefensePower = $defensePower + $addDefensePower;
 
 
+        // 勝敗判定
         $judge = 0;
 
         // ターンの入れ替えをチェック
