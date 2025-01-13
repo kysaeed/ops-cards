@@ -173,12 +173,14 @@ console.log('to Next State : ', fetchData)
         }
         */
 
-        screen.orientation.onchange = () => {
-            onResize()
-        }
+        if (!game.device.os.desktop) { // PCの場合は、ディレプレイの持ち方を変えないので回転しない
+            screen.orientation.onchange = () => {
+                onResize()
+            }
 
-        // 回転の初期化
-        fit()
+            // 回転の初期化
+            fit()
+        }
 
         // ログイン処理 @todo タイトルから
         window.axios.get('sanctum/csrf-cookie').then(() => {

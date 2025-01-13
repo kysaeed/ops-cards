@@ -1,4 +1,5 @@
 
+import Phaser from 'phaser'
 // import _ from 'lodash'
 import Const from '../Const.js'
 
@@ -19,7 +20,7 @@ class DeckCutin {
 
         this.cardTextDesc = scene.add
             .text(
-                0, 200,
+                0, 300,
                 cardInfo.text,
                 { fontSize: '22px', fill: '#fff' })
             .setPadding(0, 2, 0, 2)
@@ -34,7 +35,6 @@ class DeckCutin {
             this.cardTextDesc,
         ])
         this.sprite.visible = false
-
     }
 
     show(onEnd) {
@@ -43,34 +43,48 @@ class DeckCutin {
         this.sprite.visible = true
 
         this.cardChara.alpha = 0
-        this.cardChara.scale = 10.2
+        this.cardChara.scale = 0.0
         this.cutinTweens = scene.tweens.chain({
             targets: this.cardChara,
             tweens: [
                 {
-                    scale: 1.5,
+                    scale: 2.0,
                     alpha: 0.8,
-                    duration: 500,
-                    ease: 'power1',
+                    duration: 200,
+                    ease: Phaser.Math.Easing.Cubic.InOut,
                 },
             ],
             onComplete: () => {
                 if (onEnd) {
                     onEnd()
                 }
-
             },
-
         })
-
 
     }
 
     hide(onEnd) {
-        this.sprite.visible = false
-        if (onEnd) {
-            onEnd()
-        }
+        const scene = this.duel.getScene()
+
+        this.cutinTweens = scene.tweens.chain({
+            targets: this.cardChara,
+            tweens: [
+                {
+                    scale: 10.0,
+                    alpha: 0.0,
+                    duration: 500,
+                    ease: Phaser.Math.Easing.Cubic.InOut,
+                },
+            ],
+            onComplete: () => {
+                this.sprite.visible = false
+                if (onEnd) {
+                    onEnd()
+                }
+            },
+        })
+
+
     }
 
 }

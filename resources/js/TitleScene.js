@@ -78,12 +78,15 @@ const TitleScene = {
         }
         */
 
-        screen.orientation.onchange = () => {
-            onResize()
-        }
 
-        // 回転の初期化
-        fit()
+        if (!game.device.os.desktop) { // PCの場合は、ディレプレイの持ち方を変えないので回転しない
+            screen.orientation.onchange = () => {
+                onResize()
+            }
+
+            // 回転の初期化
+            fit()
+        }
 
 
         const txtTitle = this.add.text(200, 100, 'カードゲームのタイトル画面', { fontSize: '42px', fill: '#fff' });
