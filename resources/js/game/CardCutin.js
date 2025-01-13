@@ -19,7 +19,7 @@ class DeckCutin {
         this.cardTextDesc = scene.add
             .text(
                 0, 200,
-                cardInfo.text,
+                cardInfo.text ?? 'テスト文字列、テスト文字列、テスト文字列、',
                 { fontSize: '22px', fill: '#fff' })
             .setPadding(0, 2, 0, 2)
             .setOrigin(0.5, 0.5)
@@ -37,6 +37,22 @@ class DeckCutin {
 
     show(onEnd) {
         const scene = this.duel.getScene()
+
+        this.cardTextDesc.scale = 3.0
+        this.cardTextDesc.alpha = 0.0
+        this.cutinTextTweens = scene.tweens.chain({
+            targets: this.cardTextDesc,
+            tweens: [
+                {
+                    scale: 1.0,
+                    alpha: 0.8,
+                    duration: 200,
+                    ease: Phaser.Math.Easing.Cubic.InOut,
+                },
+            ],
+        })
+
+
 
         this.sprite.visible = true
 
@@ -63,6 +79,20 @@ class DeckCutin {
 
     hide(onEnd) {
         const scene = this.duel.getScene()
+
+
+        this.cutinTextTweens = scene.tweens.chain({
+            targets: this.cardTextDesc,
+            tweens: [
+                {
+                    //scale: 1.0,
+                    alpha: 0.0,
+                    duration: 500,
+                    ease: Phaser.Math.Easing.Cubic.InOut,
+                },
+            ],
+        })
+
 
         this.cutinTweens = scene.tweens.chain({
             targets: this.cardChara,
