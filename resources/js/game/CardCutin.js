@@ -8,19 +8,17 @@ class DeckCutin {
     constructor(duel, cardInfo) {
         this.duel = duel
 
-        const x = 400
-        const y = 200
+        const x = Const.Screen.Width * 0.5
+        const y = Const.Screen.Height * 0.5
 
 
         const scene = this.duel.getScene()
 
         this.cardChara = scene.add.sprite(0, 0, cardInfo.image)
-        this.cardChara.x = this.cardChara.width * 0.5
-        this.cardChara.y = this.cardChara.height * 0.5
 
         this.cardTextDesc = scene.add
             .text(
-                0, 300,
+                0, 200,
                 cardInfo.text,
                 { fontSize: '22px', fill: '#fff' })
             .setPadding(0, 2, 0, 2)
@@ -48,7 +46,7 @@ class DeckCutin {
             targets: this.cardChara,
             tweens: [
                 {
-                    scale: 2.0,
+                    scale: 2.4,
                     alpha: 0.8,
                     duration: 200,
                     ease: Phaser.Math.Easing.Cubic.InOut,
@@ -83,7 +81,6 @@ class DeckCutin {
                 }
             },
         })
-
 
     }
 
