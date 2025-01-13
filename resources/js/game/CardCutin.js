@@ -18,8 +18,8 @@ class DeckCutin {
 
         this.cardTextDesc = scene.add
             .text(
-                0, 200,
-                cardInfo.text ?? 'テスト文字列、テスト文字列、テスト文字列、',
+                0, 210,
+                cardInfo.text ?? 'テスト文字列、テスト文字列、テスト文字列\nテスト文字列、テスト文字列、テスト文字列',
                 { fontSize: '22px', fill: '#fff' })
             .setPadding(0, 2, 0, 2)
             .setOrigin(0.5, 0.5)
