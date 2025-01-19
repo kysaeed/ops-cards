@@ -28,7 +28,7 @@ class Deck
             return null;
         }
 
-        return new Card($cardNumber, $cardInfo);
+        return new Card($cardNumber, 0, $cardInfo);
     }
 
 }

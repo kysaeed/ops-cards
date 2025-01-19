@@ -7,13 +7,12 @@ class Card
     protected int $power;
     protected int $addPower;
 
-    public function __construct(int $cardNumber, array $cardInfo)
+    public function __construct(int $cardNumber, int $addPower = 0, array $cardInfo)
     {
         $this->cardNumber = $cardNumber;
 
         $this->power = $cardInfo['power'];
-        $this->addPower = 0;
-
+        $this->addPower = $addPower;
     }
 
     public function getCardNumber(): int
@@ -31,13 +30,16 @@ class Card
         $this->addPower = 0;
     }
 
-    public function fromJson(array $json, array $cardSettrings)
+    public static function fromJson(array $json, array $cardSettrings): Card
     {
-        $this->cardNumber = $json['cardNumber'];
-        $this->addPower = $json['addPower'];
+        $cardNumber = $json['cardNumber'];
+        $cardInfo = $cardSettrings[$cardNumber - 1];
 
-        $cardInfo = $cardSettrings[$this->cardNumber - 1];
-        $this->power = $cardInfo['power'];
+        return new Card(
+            $cardNumber,
+            $json['addPower'],
+            $cardInfo,
+        );
     }
 
     public function toJson(): array

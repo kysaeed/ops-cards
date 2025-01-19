@@ -58,7 +58,7 @@ class DuelManager
 
         $nextState['players'][$def]['cardStack'][] = [
             'cardNumber' => $initialCardStackTop,
-            'addCardPower' => 0,
+            'addPower' => 0,
         ];
 
         $this->state = $nextState;
@@ -66,13 +66,8 @@ class DuelManager
 
         foreach ($this->cardStackList as $i => $stack) {
             $stackArray = $nextState['players'][$i]['cardStack'];
-logger("** initial card stack {$i} ***");
-logger($stackArray);
             $this->cardStackList[$i]->fromJson($stackArray, $this->cardSettings);
         }
-        logger($this->cardStackList[self::Player]->toJson());
-        logger($this->cardStackList[self::Enemy]->toJson());
-
 
         return [
             'isResume' => false,
@@ -100,12 +95,10 @@ logger($stackArray);
 
         $nextState = $this->state;
 
-
         foreach ($this->cardStackList as $i => $stack) {
             $stackArray = $nextState['players'][$i]['cardStack'];
             $this->cardStackList[$i]->fromJson($stackArray, $this->cardSettings);
         }
-
 
         return [
             'isResume' => true,
@@ -177,7 +170,6 @@ logger($stackArray);
 
         /////////
         $prevAttackPower = $nextState['players'][$jsonIndex]['cardStackPower'];
-        // $defenseCard = $nextState['players'][$enemyJsonIndex]['cardStack'][0];
         $defCard = $this->cardStackList[$enemyJsonIndex]->getTop();
 
         $judge = 0;
@@ -186,7 +178,7 @@ logger($stackArray);
             $attackResult = $this->onAttack(
                 $cardNumber,
                 $prevAttackPower,
-                $defCard->getCardNumber(),
+                $defCard,
             );
 
             array_unshift($nextState['players'][$jsonIndex]['cardStack'], [
@@ -260,8 +252,10 @@ logger($stackArray);
         ];
     }
 
-    protected function onAttack(int $attackCardNumber, int $prevAttackPower, ?int $defenseCardNumber)
+    protected function onAttack(int $attackCardNumber, int $prevAttackPower, ?Card $defenseCard)
     {
+
+        $defenseCardNumber = $defenseCard?->getCardNumber();
 
         /**
          * @todo それぞれのパラメータを取得

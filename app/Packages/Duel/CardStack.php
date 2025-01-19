@@ -40,8 +40,7 @@ class CardStack
     {
         $cards = [];
         foreach ($json as $j) {
-            $cardNumber = $j['cardNumber'];
-            $cards[] = new Card($cardNumber, $cardSettings[$cardNumber - 1]);
+            $cards[] = Card::fromJson($j, $cardSettings);
         }
         $this->cards = $cards;
     }
