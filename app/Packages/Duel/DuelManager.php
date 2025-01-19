@@ -14,6 +14,7 @@ class DuelManager
 
     protected array $players;
     protected array $cardStackList; // @todo
+    protected array $deckList;
 
     public function __construct(array $state, array $cardSettings)
     {
@@ -21,14 +22,19 @@ class DuelManager
         $this->cardSettings = $cardSettings;
 
         $this->players = [
-            0 => new Player($this->cardSettings),
-            1 => new Player($this->cardSettings),
+            // 0 => new Player($this->cardSettings),
+            // 1 => new Player($this->cardSettings),
         ];
 
 
         $this->cardStackList = [
             0 => new CardStack(),
             1 => new CardStack(),
+        ];
+
+        $this->deckList = [
+            0 => new Deck([], $this->cardSettings),
+            1 => new Deck([], $this->cardSettings),
         ];
     }
 
@@ -41,9 +47,16 @@ class DuelManager
     {
 
         $nextState = $this->state;
-        foreach ($nextState['players'] as &$player) {
-            $player['handCardNumber'] = array_shift($player['deckCardNumbers']);
 
+        foreach ($nextState['players'] as $i => $player) {
+            $this->deckList[$i] = Deck::fromJson($player['deckCardNumbers'], $this->cardSettings);
+        }
+
+        foreach ($this->cardStackList as $i) {
+            $c = $this->deckList[$i]->draw();
+            if ($c) {
+                $nextState['players'][$i]['handCardNumber'] = $c->getCardNumber();
+            }
         }
 
         $turnPlayerIndex = $nextState['turnPalyerIndex'];
@@ -66,7 +79,7 @@ class DuelManager
 
         foreach ($this->cardStackList as $i => $stack) {
             $stackArray = $nextState['players'][$i]['cardStack'];
-            $this->cardStackList[$i]->fromJson($stackArray, $this->cardSettings);
+            $this->cardStackList[$i] = CardStack::fromJson($stackArray, $this->cardSettings);
         }
 
         return [
@@ -97,7 +110,7 @@ class DuelManager
 
         foreach ($this->cardStackList as $i => $stack) {
             $stackArray = $nextState['players'][$i]['cardStack'];
-            $this->cardStackList[$i]->fromJson($stackArray, $this->cardSettings);
+            $this->cardStackList[$i] = CardStack::fromJson($stackArray, $this->cardSettings);
         }
 
         return [
@@ -163,7 +176,7 @@ class DuelManager
         /////
         foreach ($this->cardStackList as $i => $stack) {
             $stackArray = $nextState['players'][$i]['cardStack'];
-            $this->cardStackList[$i]->fromJson($stackArray, $this->cardSettings);
+            $this->cardStackList[$i] = CardStack::fromJson($stackArray, $this->cardSettings);
         }
 
         $cardCount = count($nextState['players'][$jsonIndex]['deckCardNumbers']);
@@ -181,10 +194,13 @@ class DuelManager
                 $defCard,
             );
 
+
             array_unshift($nextState['players'][$jsonIndex]['cardStack'], [
                 'cardNumber' => $cardNumber,
                 'addPower' => $attackResult['addAttackPower'],
             ]);
+
+
 
             if ($attackResult) {
                 if (!$attackResult['isTurnChange']) {

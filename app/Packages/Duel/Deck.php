@@ -6,7 +6,7 @@ class Deck
     protected array $cardNumberList;
     protected array $cardSettings;
 
-    public function __construct(array $cardNumberList, array $cardSettings)
+    public function __construct(array $cardNumberList = [], array $cardSettings)
     {
         $this->cardNumberList = $cardNumberList;
         $this->cardSettings = $cardSettings;
@@ -31,4 +31,18 @@ class Deck
         return new Card($cardNumber, 0, $cardInfo);
     }
 
+    public function getCount(): int
+    {
+        return count($this->cardNumberList);
+    }
+
+    public static function fromJson(array $json, array $cardSettings): Deck
+    {
+        return new Deck($json, $cardSettings);
+    }
+
+    public function toJson(): array
+    {
+        return $this->cardNumberList;
+    }
 }

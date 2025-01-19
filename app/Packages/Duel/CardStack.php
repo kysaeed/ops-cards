@@ -36,7 +36,17 @@ class CardStack
         return $cards;
     }
 
-    public function fromJson(array $json, array $cardSettings)
+    public static function fromJson(array $json, array $cardSettings): CardStack
+    {
+        $cards = [];
+        foreach ($json as $j) {
+            $cards[] = Card::fromJson($j, $cardSettings);
+        }
+
+        return new CardStack($cards);
+    }
+
+    public function _fromJson(array $json, array $cardSettings)
     {
         $cards = [];
         foreach ($json as $j) {
