@@ -1,6 +1,7 @@
 <?php
 namespace App\Packages\Duel;
 
+
 class DuelManager
 {
     public const Player = 0;
@@ -11,11 +12,24 @@ class DuelManager
     protected array $state;
     protected array $cardSettings;
 
+    protected array $players;
+    protected array $cardStackList; // @todo
+
     public function __construct(array $state, array $cardSettings)
     {
         $this->state = $state;
         $this->cardSettings = $cardSettings;
 
+        $this->players = [
+            0 => new Player($this->cardSettings),
+            1 => new Player($this->cardSettings),
+        ];
+
+
+        $this->cardStackList = [
+            0 => new CardStack(),
+            1 => new CardStack(),
+        ];
     }
 
     public function getState()
@@ -40,40 +54,39 @@ class DuelManager
             $def = self::Player;
         }
 
-        $initialCardStack = array_shift($nextState['players'][$def]['deckCardNumbers']);
+        $initialCardStackTop = array_shift($nextState['players'][$def]['deckCardNumbers']);
 
         $nextState['players'][$def]['cardStack'][] = [
-            'cardNumber' => $initialCardStack,
+            'cardNumber' => $initialCardStackTop,
             'addCardPower' => 0,
         ];
 
         $this->state = $nextState;
 
-        /*
-        $this->onAttack(
-            $nextState['players'][self::Player]['handCardNumber'],
-            0,
-            $initialCardStack,
-        );
-        */
+
+        foreach ($this->cardStackList as $i => $stack) {
+            $stackArray = $nextState['players'][$i]['cardStack'];
+logger("** initial card stack {$i} ***");
+logger($stackArray);
+            $this->cardStackList[$i]->fromJson($stackArray, $this->cardSettings);
+        }
+        logger($this->cardStackList[self::Player]->toJson());
+        logger($this->cardStackList[self::Enemy]->toJson());
+
 
         return [
             'isResume' => false,
             'isPlayerTurn' => ($nextState['turnPalyerIndex'] ?? 0) === 0,
             'players' => [
                 [
-                    //
-                    //'deck' => null,
                     'handCardNumber' => $nextState['players'][self::Player]['handCardNumber'],
-                    'initialStackCards' => [],
+                    'initialStackCards' => $this->cardStackList[self::Player]->toJson(),
                     'cardCount' => count($nextState['players'][self::Player]['deckCardNumbers']),
                     'initialBench' => $nextState['players'][self::Player]['benchCardNumbers'],
                 ],
                 [
-                    //
-                    //'deck' => null,
                     'handCardNumber' => $nextState['players'][self::Enemy]['handCardNumber'],
-                    'initialStackCards' => $nextState['players'][self::Enemy]['cardStack'],
+                    'initialStackCards' => $this->cardStackList[self::Enemy]->toJson(),
                     'cardCount' => count($nextState['players'][self::Enemy]['deckCardNumbers']),
                     'initialBench' => [],
                     'initialBench' => $nextState['players'][self::Enemy]['benchCardNumbers'],
@@ -87,23 +100,26 @@ class DuelManager
 
         $nextState = $this->state;
 
+
+        foreach ($this->cardStackList as $i => $stack) {
+            $stackArray = $nextState['players'][$i]['cardStack'];
+            $this->cardStackList[$i]->fromJson($stackArray, $this->cardSettings);
+        }
+
+
         return [
             'isResume' => true,
             'isPlayerTurn' => ($nextState['turnPalyerIndex'] ?? 0) === 0,
             'players' => [
                 [
-                    //
-                    //'deck' => null,
                     'handCardNumber' => $nextState['players'][self::Player]['handCardNumber'],
-                    'initialStackCards' => $nextState['players'][self::Player]['cardStack'],
+                    'initialStackCards' => $this->cardStackList[self::Player]->toJson(),
                     'cardCount' => count($nextState['players'][self::Player]['deckCardNumbers']),
                     'initialBench' => $nextState['players'][self::Player]['benchCardNumbers'],
                 ],
                 [
-                    //
-                    //'deck' => null,
                     'handCardNumber' => $nextState['players'][self::Enemy]['handCardNumber'],
-                    'initialStackCards' => $nextState['players'][self::Enemy]['cardStack'],
+                    'initialStackCards' => $this->cardStackList[self::Enemy]->toJson(),
                     'cardCount' => count($nextState['players'][self::Enemy]['deckCardNumbers']),
                     'initialBench' => $nextState['players'][self::Enemy]['benchCardNumbers'],
                 ],
@@ -111,17 +127,22 @@ class DuelManager
         ];
     }
 
-    protected function clearCardBuf(array $cardStack)
+    protected function clearCardsBuf(array $cardStack)
     {
         $cards = [];
         foreach ($cardStack as $card) {
-            $cards[] = [
-                'cardNumber' => $card['cardNumber'],
-                'addPower' => 0,
-            ];
+            $cards[] = $this->clearBuf($card);
         }
 
         return $cards;
+    }
+
+    protected function clearBuf(array $card)
+    {
+        return [
+            'cardNumber' => $card['cardNumber'],
+            'addPower' => 0,
+        ];
     }
 
     public function subTurn(bool $isPlyaerTurn, bool $isHandCard)
@@ -146,18 +167,26 @@ class DuelManager
         }
 
 
+        /////
+        foreach ($this->cardStackList as $i => $stack) {
+            $stackArray = $nextState['players'][$i]['cardStack'];
+            $this->cardStackList[$i]->fromJson($stackArray, $this->cardSettings);
+        }
+
         $cardCount = count($nextState['players'][$jsonIndex]['deckCardNumbers']);
 
         /////////
         $prevAttackPower = $nextState['players'][$jsonIndex]['cardStackPower'];
-        $defenseCard = $nextState['players'][$enemyJsonIndex]['cardStack'][0];
+        // $defenseCard = $nextState['players'][$enemyJsonIndex]['cardStack'][0];
+        $defCard = $this->cardStackList[$enemyJsonIndex]->getTop();
 
         $judge = 0;
         if ($cardNumber) {
+            // $defenseCardNumber = $defenseCard['cardNumber'];
             $attackResult = $this->onAttack(
                 $cardNumber,
                 $prevAttackPower,
-                $defenseCard['cardNumber'],
+                $defCard->getCardNumber(),
             );
 
             array_unshift($nextState['players'][$jsonIndex]['cardStack'], [
@@ -168,16 +197,20 @@ class DuelManager
             if ($attackResult) {
                 if (!$attackResult['isTurnChange']) {
                     $nextState['players'][$jsonIndex]['cardStackPower'] = $attackResult['attackPower'];
+
                 } else {
                     // 交代時に積み直す
                     $nextState['players'][$jsonIndex]['cardStackPower'] = 0;
-                    $nextState['players'][$jsonIndex]['cardStack'] = $this->clearCardBuf($nextState['players'][$jsonIndex]['cardStack']);
+                    $nextState['players'][$jsonIndex]['cardStack'] = $this->clearCardsBuf($nextState['players'][$jsonIndex]['cardStack']);
+
 
                     $nextState['turnPalyerIndex'] = (1 - $nextState['turnPalyerIndex']);
                     $defenseBench = $nextState['players'][$enemyJsonIndex]['benchCardNumbers'];
 // logger('******');
 // logger($defenseBench);
                     $defenseStackCards = ($nextState['players'][$enemyJsonIndex]['cardStack']);
+
+
                     $nextState['players'][$enemyJsonIndex]['benchCardNumbers'] = $this->addCardsToBench(
                         $defenseStackCards,
                         $defenseBench,
@@ -186,6 +219,8 @@ class DuelManager
 
 // logger($nextState['players'][$enemyJsonIndex]['benchCardNumbers']);
                     $nextState['players'][$enemyJsonIndex]['cardStack'] = [];
+
+                    $st = $this->cardStackList[$enemyJsonIndex]->takeAll();
                 }
 
                 if ($attackResult['isTurnChange']) {
@@ -240,11 +275,13 @@ class DuelManager
             'defense' => [],
         ];
 
-logger('attakc cared status **');
-logger($attackCardStatus);
+// logger('attakc cared status **');
+// logger($attackCardStatus);
+
         $addAttackPower = 0;
         $attackAbility = $attackCardStatus['ability']['attack'] ?? null;
         if ($attackAbility) {
+
             $addAttackPower = $attackAbility['power'] ?? 0;
             if ($addAttackPower) {
                 $ability['attack']['power'] = $addAttackPower;
