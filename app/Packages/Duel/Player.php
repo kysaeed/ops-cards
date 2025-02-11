@@ -14,10 +14,20 @@ class Player
         $this->cardSettings = $cardSettings;
     }
 
+    public function getDeck(): Deck
+    {
+        return $this->deck;
+    }
+
+    public function getCardStack(): CardStack
+    {
+        return $this->cardStack;
+    }
+
     public static function fromJson(array $json, array $cardSettings): Player
     {
-        $deck = Deck::fromJson($json['cardStack'], $cardSettings);
-        $cardStack = CardStack::fromJson($json[], $cardSettings);
+        $deck = Deck::fromJson($json['deckCardNumbers'], $cardSettings);
+        $cardStack = CardStack::fromJson($json['cardStack'], $cardSettings);
 
         return new Player($deck, $cardStack, $cardSettings);
     }

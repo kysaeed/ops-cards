@@ -30,6 +30,12 @@ class Card
         $this->addPower = 0;
     }
 
+    public static function fromCardNumber(int $cardNumber, array $cardSettrings): Card
+    {
+        $cardInfo = $cardSettrings[$cardNumber - 1];
+        return new Card($cardNumber, 0, $cardInfo);
+    }
+
     public static function fromJson(array $json, array $cardSettrings): Card
     {
         $cardNumber = $json['cardNumber'];
