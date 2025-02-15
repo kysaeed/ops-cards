@@ -11,6 +11,18 @@ class Bench
         $this->benchItems = $benchItems;
     }
 
+    public function addCard(Card $card): bool
+    {
+        foreach ($this->benchItems as $item) {
+            if ($item->isAcceptableCard($card)) {
+                $item->addCard($card);
+                return true;
+            }
+        }
+
+        $this->benchItems[] = new BenchItem([$card]);
+        return true;
+    }
 
     public static function fromJson(array $json, array $cardSettings): self
     {

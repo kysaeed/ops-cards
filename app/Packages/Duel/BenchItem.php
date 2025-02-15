@@ -11,6 +11,27 @@ class BenchItem
         $this->cardList = $cardList;
     }
 
+    public function isAcceptableCard(Card $card): bool
+    {
+        if (empty($this->cardList)) {
+            return true;
+        }
+
+        $cardElement = $this->cardList[0] ?? null;
+        if ($cardElement?->getCardNumber() === $card->getCardNumber()) {
+            return true;
+        }
+        return false;
+    }
+
+    public function addCard(Card $card): bool
+    {
+        if (!$this->isAcceptableCard($card)) {
+            return false;
+        }
+        $this->cardList[] = $card;
+        return true;
+    }
 
     public static function fromJson(array $json, array $cardSettings): self
     {
