@@ -30,10 +30,10 @@ class Card
         $this->addPower = 0;
     }
 
-    public static function fromCardNumber(int $cardNumber, array $cardSettrings): Card
+    public static function fromCardNumber(int $cardNumber, array $cardSettrings): self
     {
         $cardInfo = $cardSettrings[$cardNumber - 1];
-        return new Card($cardNumber, 0, $cardInfo);
+        return new self($cardNumber, 0, $cardInfo);
     }
 
     public static function fromJson(array $json, array $cardSettrings): Card
@@ -41,7 +41,7 @@ class Card
         $cardNumber = $json['cardNumber'];
         $cardInfo = $cardSettrings[$cardNumber - 1];
 
-        return new Card(
+        return new self(
             $cardNumber,
             $json['addPower'],
             $cardInfo,

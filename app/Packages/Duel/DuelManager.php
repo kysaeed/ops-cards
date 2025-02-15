@@ -67,6 +67,7 @@ class DuelManager
         ];
 
 
+        // 初期配置
         $initialCard = $this->players[$def]->getDeck()->draw();
         $this->players[$def]->getCardStack()->add($initialCard);
 
@@ -82,14 +83,13 @@ class DuelManager
                     'handCardNumber' => $nextState['players'][self::Player]['handCardNumber'],
                     'initialStackCards' => $this->players[self::Player]->getCardStack()->toJson(),
                     'cardCount' => $this->players[self::Player]->getDeck()->getCount(),
-                    'initialBench' => $nextState['players'][self::Player]['benchCardNumbers'],
+                    'initialBench' => $this->players[self::Player]->getDeck()->getBench()->toJson(),
                 ],
                 [
                     'handCardNumber' => $nextState['players'][self::Enemy]['handCardNumber'],
                     'initialStackCards' => $this->players[self::Enemy]->getCardStack()->toJson(),
                     'cardCount' => $this->players[self::Enemy]->getDeck()->getCount(),
-                    'initialBench' => [],
-                    'initialBench' => $nextState['players'][self::Enemy]['benchCardNumbers'],
+                    'initialBench' => $this->players[self::Enemy]->getDeck()->getBench()->toJson(),
                 ],
             ],
         ];
@@ -104,7 +104,6 @@ class DuelManager
             $this->players[$i] = Player::fromJson($nextState['players'][$i], $this->cardSettings);
         }
 
-
         return [
             'isResume' => true,
             'isPlayerTurn' => ($nextState['turnPalyerIndex'] ?? 0) === 0,
@@ -113,13 +112,13 @@ class DuelManager
                     'handCardNumber' => $nextState['players'][self::Player]['handCardNumber'],
                     'initialStackCards' => $this->players[self::Player]->getCardStack()->toJson(),
                     'cardCount' => $this->players[self::Player]->getDeck()->getCount(),
-                    'initialBench' => $nextState['players'][self::Player]['benchCardNumbers'],
+                    'initialBench' => $this->players[self::Player]->getDeck()->getBench()->toJson(),
                 ],
                 [
                     'handCardNumber' => $nextState['players'][self::Enemy]['handCardNumber'],
                     'initialStackCards' => $this->players[self::Enemy]->getCardStack()->toJson(),
                     'cardCount' => $this->players[self::Enemy]->getDeck()->getCount(),
-                    'initialBench' => $nextState['players'][self::Enemy]['benchCardNumbers'],
+                    'initialBench' => $this->players[self::Enemy]->getDeck()->getBench()->toJson(),
                 ],
             ],
         ];

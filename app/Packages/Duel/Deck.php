@@ -19,7 +19,6 @@ class Deck
             return null;
         }
 
-
         //// @todo
         $cardNumber = array_shift($this->cardNumberList);
 
@@ -36,9 +35,9 @@ class Deck
         return count($this->cardNumberList);
     }
 
-    public static function fromJson(array $json, array $cardSettings): Deck
+    public static function fromJson(array $json, array $cardSettings): self
     {
-        return new Deck($json, $cardSettings);
+        return new self($json, $cardSettings);
     }
 
     public function toJson(): array
