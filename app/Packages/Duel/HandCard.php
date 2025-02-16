@@ -11,7 +11,7 @@ class HandCard
         $this->card = $card;
     }
 
-    public function setCard(Card $card): bool
+    public function setCard(?Card $card): bool
     {
         $this->card = $card;
 

@@ -23,9 +23,19 @@ class Card
         return $this->cardNumber;
     }
 
-    public function getPower(): int
+    public function getCardPower(): int
     {
         return $this->power;
+    }
+
+    public function getTotalPower(): int
+    {
+        return ($this->power + $this->addPower);
+    }
+
+    public function setAddPower(int $addPower): void
+    {
+        $this->addPower = $addPower;
     }
 
     public function getStatus(): array

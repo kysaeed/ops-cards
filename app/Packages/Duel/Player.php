@@ -50,5 +50,14 @@ class Player
         return new Player($handCard, $deck, $cardStack, $bench, $cardSettings);
     }
 
+    public function toJson(): array
+    {
+        return [
+            'handCardNumber' => $this->handCared->toJson(),
+            'deckCardNumbers' => $this->deck->toJson(),
+            'cardStack' => $this->cardStack->toJson(),
+            'benchCardNumbers' => $this->bench->toJson(),
+        ];
+    }
 
 }

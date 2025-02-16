@@ -292,18 +292,22 @@ class DuelManager
             $addAttackPower = $attackAbility['power'] ?? 0;
             if ($addAttackPower) {
                 $ability['attack']['power'] = $addAttackPower;
+
+                $attackCard->setAddPower($addAttackPower);
             }
         }
 
-        $attackPower = $attackCard->getPower();
+        $attackPower = $attackCard->getCardPower();
 
         $totalAttackPower = ($attackPower + $addAttackPower) + $prevAttackPower;
 
-        $defensePower = $defenseCard->getPower();
+        $defensePower = $defenseCard->getCardPower();
         $addDefensePower = 0;
         $defenseAbility = $defenseCardStatus['ability']['defense'] ?? null;
         if ($defenseAbility) {
             $addDefensePower = $defenseAbility['power'];
+            $defenseCard->setAddPower($addDefensePower);
+
             $ability['defense']['power'] = $addDefensePower;
         }
 
