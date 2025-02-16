@@ -199,6 +199,8 @@ class DuelManager
                 'addPower' => $attackResult['addAttackPower'],
             ]);
 
+            $this->players[$jsonIndex]->getCardStack()->add($card);
+
 
             if ($attackResult) {
                 if (!$attackResult['isTurnChange']) {
@@ -271,16 +273,12 @@ class DuelManager
     protected function onAttack(Card $attackCard, int $prevAttackPower, ?Card $defenseCard)
     {
 
+        $attackCardNumber = $attackCard->getCardNumber();
         $defenseCardNumber = $defenseCard?->getCardNumber();
 
-        /**
-         * @todo それぞれのパラメータを取得
-         *  カードIDは1起点なので合わせやすいように修正する
-         * */
-        $attackCardNumber = $attackCard->getCardNumber();
 
-        $attackCardStatus = $this->cardSettings[$attackCardNumber - 1];
-        $defenseCardStatus = $this->cardSettings[$defenseCardNumber - 1];
+        $attackCardStatus = $attackCard->getStatus();
+        $defenseCardStatus = $defenseCard->getStatus();
 
         $ability = [
             'attack' => [],
@@ -297,11 +295,11 @@ class DuelManager
             }
         }
 
+        $attackPower = $attackCard->getPower();
 
-        $attackPower = $attackCardStatus['power'];
         $totalAttackPower = ($attackPower + $addAttackPower) + $prevAttackPower;
 
-        $defensePower = $defenseCardStatus['power'];
+        $defensePower = $defenseCard->getPower();
         $addDefensePower = 0;
         $defenseAbility = $defenseCardStatus['ability']['defense'] ?? null;
         if ($defenseAbility) {

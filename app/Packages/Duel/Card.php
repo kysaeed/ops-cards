@@ -6,6 +6,7 @@ class Card
     protected int $cardNumber;
     protected int $power;
     protected int $addPower;
+    protected array $status;
 
     public function __construct(int $cardNumber, int $addPower = 0, array $cardInfo)
     {
@@ -13,6 +14,8 @@ class Card
 
         $this->power = $cardInfo['power'];
         $this->addPower = $addPower;
+
+        $this->status = $cardInfo;
     }
 
     public function getCardNumber(): int
@@ -25,6 +28,11 @@ class Card
         return $this->power;
     }
 
+    public function getStatus(): array
+    {
+        return $this->status;
+    }
+
     public function clearBuf(): void
     {
         $this->addPower = 0;
@@ -32,6 +40,11 @@ class Card
 
     public static function fromCardNumber(int $cardNumber, array $cardSettrings): self
     {
+        /**
+         * @todo それぞれのパラメータを取得
+         *  カードIDは1起点なので合わせやすいように修正する
+         * */
+
         $cardInfo = $cardSettrings[$cardNumber - 1];
         return new self($cardNumber, 0, $cardInfo);
     }
