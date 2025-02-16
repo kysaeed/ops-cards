@@ -292,7 +292,10 @@ class DuelManager
             }
         }
 
-        $totalAttackPower = $attackCard->getTotalPower();
+        /**
+         * @todo prevAttackPowerをstackから計算する
+         */
+        $totalAttackPower = $attackCard->getTotalPower() + $prevAttackPower;
 
         $addDefensePower = 0;
         $defenseAbility = $defenseCardStatus['ability']['defense'] ?? null;
