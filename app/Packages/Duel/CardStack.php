@@ -24,6 +24,15 @@ class CardStack
         return $this->cards[0];
     }
 
+    public function getTotalPower(): int
+    {
+        $totalPower = 0;
+        foreach ($this->cards as $card) {
+            $totalPower += $card->getTotalPower();
+        }
+        return $totalPower;
+    }
+
     public function getCount(): int
     {
         return count($this->cards);

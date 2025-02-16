@@ -182,7 +182,6 @@ class DuelManager
         $cardCount = $this->players[$jsonIndex]->getDeck()->getCount();
 
         /////////
-        $prevAttackPower = $nextState['players'][$jsonIndex]['cardStackPower'];
         $defCard = $this->players[$enemyJsonIndex]->getCardStack()->getTop();
 
         $judge = 0;
@@ -190,7 +189,7 @@ class DuelManager
             // $defenseCardNumber = $defenseCard['cardNumber'];
             $attackResult = $this->onAttack(
                 $card,
-                $prevAttackPower,
+                $this->players[$jsonIndex]->getCardStack(),
                 $defCard,
             );
 
@@ -270,10 +269,12 @@ class DuelManager
         ];
     }
 
-    protected function onAttack(Card $attackCard, int $prevAttackPower, ?Card $defenseCard)
+    protected function onAttack(Card $attackCard, CardStack $attackCardStack, ?Card $defenseCard)
     {
         $attackCardStatus = $attackCard->getStatus();
         $defenseCardStatus = $defenseCard->getStatus();
+
+        $prevAttackPower = $attackCardStack->getTotalPower();
 
         $ability = [
             'attack' => [],
