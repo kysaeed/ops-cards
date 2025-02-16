@@ -272,11 +272,6 @@ class DuelManager
 
     protected function onAttack(Card $attackCard, int $prevAttackPower, ?Card $defenseCard)
     {
-
-        $attackCardNumber = $attackCard->getCardNumber();
-        $defenseCardNumber = $defenseCard?->getCardNumber();
-
-
         $attackCardStatus = $attackCard->getStatus();
         $defenseCardStatus = $defenseCard->getStatus();
 
@@ -297,11 +292,8 @@ class DuelManager
             }
         }
 
-        $attackPower = $attackCard->getCardPower();
+        $totalAttackPower = $attackCard->getTotalPower();
 
-        $totalAttackPower = ($attackPower + $addAttackPower) + $prevAttackPower;
-
-        $defensePower = $defenseCard->getCardPower();
         $addDefensePower = 0;
         $defenseAbility = $defenseCardStatus['ability']['defense'] ?? null;
         if ($defenseAbility) {
@@ -311,8 +303,7 @@ class DuelManager
             $ability['defense']['power'] = $addDefensePower;
         }
 
-        $totalDefensePower = $defensePower + $addDefensePower;
-
+        $totalDefensePower = $defenseCard->getTotalPower();
 
         // 勝敗判定
         $judge = 0;
