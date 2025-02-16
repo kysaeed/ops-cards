@@ -11,6 +11,21 @@ class HandCard
         $this->card = $card;
     }
 
+    public function setCard(Card $card): bool
+    {
+        $this->card = $card;
+
+        return true;
+    }
+
+    public function takeCard(): ?Card
+    {
+        $card = $this->card;
+        $this->card = null;
+
+        return $card;
+    }
+
     public function getCard(): ?Card
     {
         return $this->card;

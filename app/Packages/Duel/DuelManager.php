@@ -42,12 +42,13 @@ class DuelManager
             $this->players[$i] = Player::fromJson($nextState['players'][$i], $this->cardSettings);
         }
 
-        foreach ($this->players as $i => $deck) {
+        foreach ($this->players as $i => $player) {
 
             $c = $this->players[$i]->getDeck()->draw();
 
             if ($c) {
                 $nextState['players'][$i]['handCardNumber'] = $c->getCardNumber();
+                $player->getHandCard()->setCard($c);
             }
         }
 

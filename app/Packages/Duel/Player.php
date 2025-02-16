@@ -20,6 +20,11 @@ class Player
         $this->cardSettings = $cardSettings;
     }
 
+    public function getHandCard(): HandCard
+    {
+        return $this->handCared;
+    }
+
     public function getDeck(): Deck
     {
         return $this->deck;
