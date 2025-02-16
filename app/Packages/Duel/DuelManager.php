@@ -146,6 +146,12 @@ class DuelManager
     {
         $nextState = $this->state;
 
+
+        /////
+        foreach ($this->players as $i => $player) {
+            $this->players[$i] = Player::fromJson($nextState['players'][$i], $this->cardSettings);
+        }
+
         $jsonIndex = self::Player;
         $enemyJsonIndex = self::Enemy;
         if (!$isPlyaerTurn) {
@@ -154,31 +160,36 @@ class DuelManager
         }
 
         $nextHandCardNumber = null;
+        $nextHandCard = null;
+        $card = null;
         if ($isHandCard) {
+
             $cardNumber = $nextState['players'][$jsonIndex]['handCardNumber'];
             $nextHandCardNumber = array_shift($nextState['players'][$jsonIndex]['deckCardNumbers']);
             $nextState['players'][$jsonIndex]['handCardNumber'] = $nextHandCardNumber;
 
+            $card = $this->players[$jsonIndex]->getHandCard()->takeCard();
+            $nextHandCard = $this->players[$jsonIndex]->getDeck()->draw();
+            $this->players[$jsonIndex]->getHandCard()->setCard($nextHandCard);
+
+
         } else {
             $cardNumber = array_shift($nextState['players'][$jsonIndex]['deckCardNumbers']);
+            $card = $this->players[$jsonIndex]->getDeck()->draw();
         }
 
-        /////
-        foreach ($this->players as $i => $stack) {
-            $this->players[$i] = Player::fromJson($nextState['players'][$i], $this->cardSettings);
-        }
-
-        $cardCount = count($nextState['players'][$jsonIndex]['deckCardNumbers']);
+        // $cardCount = count($nextState['players'][$jsonIndex]['deckCardNumbers']);
+        $cardCount = $this->players[$jsonIndex]->getDeck()->getCount();
 
         /////////
         $prevAttackPower = $nextState['players'][$jsonIndex]['cardStackPower'];
         $defCard = $this->players[$enemyJsonIndex]->getCardStack()->getTop();
 
         $judge = 0;
-        if ($cardNumber) {
+        if ($card) {
             // $defenseCardNumber = $defenseCard['cardNumber'];
             $attackResult = $this->onAttack(
-                $cardNumber,
+                $card,
                 $prevAttackPower,
                 $defCard,
             );
@@ -257,7 +268,7 @@ class DuelManager
         ];
     }
 
-    protected function onAttack(int $attackCardNumber, int $prevAttackPower, ?Card $defenseCard)
+    protected function onAttack(Card $attackCard, int $prevAttackPower, ?Card $defenseCard)
     {
 
         $defenseCardNumber = $defenseCard?->getCardNumber();
@@ -266,6 +277,8 @@ class DuelManager
          * @todo それぞれのパラメータを取得
          *  カードIDは1起点なので合わせやすいように修正する
          * */
+        $attackCardNumber = $attackCard->getCardNumber();
+
         $attackCardStatus = $this->cardSettings[$attackCardNumber - 1];
         $defenseCardStatus = $this->cardSettings[$defenseCardNumber - 1];
 
