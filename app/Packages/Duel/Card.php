@@ -36,7 +36,7 @@ class Card
         return new self($cardNumber, 0, $cardInfo);
     }
 
-    public static function fromJson(array $json, array $cardSettrings): Card
+    public static function fromJson(array $json, array $cardSettrings): self
     {
         $cardNumber = $json['cardNumber'];
         $cardInfo = $cardSettrings[$cardNumber - 1];
