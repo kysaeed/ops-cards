@@ -27,6 +27,11 @@ class Deck
         return count($this->cardNumberList);
     }
 
+    public function isEmpty(): bool
+    {
+        return empty($this->cardNumberList);
+    }
+
     public static function fromJson(array $json, array $cardSettings): self
     {
         return new self($json, $cardSettings);

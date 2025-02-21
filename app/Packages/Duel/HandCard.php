@@ -31,6 +31,11 @@ class HandCard
         return $this->card;
     }
 
+    public function isEmpty(): bool
+    {
+        return is_null($this->card);
+    }
+
     public static function fromJson(?int $json, array $cardSettrings): self
     {
         $card = null;

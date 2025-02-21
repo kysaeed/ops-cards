@@ -60,19 +60,13 @@ class DuelManager
             $def = self::Player;
         }
 
-        $initialCardStackTop = array_shift($nextState['players'][$def]['deckCardNumbers']);
-
-        $nextState['players'][$def]['cardStack'][] = [
-            'cardNumber' => $initialCardStackTop,
-            'addPower' => 0,
-        ];
-
-
         // 初期配置
         $initialCard = $this->players[$def]->getDeck()->draw();
         $this->players[$def]->getCardStack()->add($initialCard);
 
-
+        // state
+        $nextState['players'][self::Player] = $this->players[self::Player]->toJson();
+        $nextState['players'][self::Enemy] = $this->players[self::Enemy]->toJson();
         $this->state = $nextState;
 
         return [
@@ -146,7 +140,6 @@ class DuelManager
     {
         $nextState = $this->state;
 
-
         /////
         foreach ($this->players as $i => $player) {
             $this->players[$i] = Player::fromJson($nextState['players'][$i], $this->cardSettings);
@@ -202,58 +195,43 @@ class DuelManager
 
 
             if ($attackResult) {
-                if (!$attackResult['isTurnChange']) {
-                    $nextState['players'][$jsonIndex]['cardStackPower'] = $attackResult['attackPower'];
+                if ($attackResult['isTurnChange']) {
+                    // 攻撃側を防御側へ
+                    $this->players[$jsonIndex]->getCardStack()->clearBuf();
 
-                } else {
-                    // 交代時に積み直す
-                    $nextState['players'][$jsonIndex]['cardStackPower'] = 0;
-                    $nextState['players'][$jsonIndex]['cardStack'] = $this->clearCardsBuf($nextState['players'][$jsonIndex]['cardStack']);
+                    // 防御側のカードをBenchへ
+                    $stackCards = $this->players[$enemyJsonIndex]->getCardStack()->takeAll();
+                    $this->players[$enemyJsonIndex]->getBench()->addCardList($stackCards);
 
-
+                    // ターン交代
                     $nextState['turnPalyerIndex'] = (1 - $nextState['turnPalyerIndex']);
-                    $defenseBench = $nextState['players'][$enemyJsonIndex]['benchCardNumbers'];
-// logger('******');
-// logger($defenseBench);
-                    $defenseStackCards = ($nextState['players'][$enemyJsonIndex]['cardStack']);
-
-
-                    $nextState['players'][$enemyJsonIndex]['benchCardNumbers'] = $this->addCardsToBench(
-                        $defenseStackCards,
-                        $defenseBench,
-                    );
-
-
-                    $nextState['players'][$enemyJsonIndex]['cardStack'] = [];
-
-                    /**
-                     * @todo
-                     */
-                    //$st = $this->cardStackList[$enemyJsonIndex]->takeAll();
                 }
 
                 if ($attackResult['isTurnChange']) {
-                    if (empty($nextState['players'][$enemyJsonIndex]['deckCardNumbers'])) {
-                        if (empty($nextState['players'][$enemyJsonIndex]['handCardNumber'])) {
+                    if ($this->players[$enemyJsonIndex]->getDeck()->isEmpty()) {
+                        if ($this->players[$enemyJsonIndex]->getHandCard()->isEmpty()) {
                             $judge = 1;
                         }
                     }
 
-                    if (count($nextState['players'][$enemyJsonIndex]['benchCardNumbers']) >= 8) {
+                    if ($this->players[$enemyJsonIndex]->getBench()->getTypeCount() >= 8) {
                         $judge = 2;
                     }
                 } else {
-                    if (empty($nextState['players'][$jsonIndex]['deckCardNumbers'])) {
-                        if (empty($nextState['players'][$jsonIndex]['handCardNumber'])) {
+                    if ($this->players[$jsonIndex]->getDeck()->isEmpty()) {
+                        if ($this->players[$jsonIndex]->getHandCard()->isEmpty()) {
                             $judge = -1;
                         }
                     }
                 }
-
             }
         }
 
 
+        // $this->state = $nextState;
+        // state
+        $nextState['players'][self::Player] = $this->players[self::Player]->toJson();
+        $nextState['players'][self::Enemy] = $this->players[self::Enemy]->toJson();
         $this->state = $nextState;
 
         return [
@@ -274,6 +252,7 @@ class DuelManager
         $attackCardStatus = $attackCard->getStatus();
         $defenseCardStatus = $defenseCard->getStatus();
 
+        // prevAttackPowerをstackから計算する
         $prevAttackPower = $attackCardStack->getTotalPower();
 
         $ability = [
@@ -293,9 +272,6 @@ class DuelManager
             }
         }
 
-        /**
-         * @todo prevAttackPowerをstackから計算する
-         */
         $totalAttackPower = $attackCard->getTotalPower() + $prevAttackPower;
 
         $addDefensePower = 0;
@@ -330,23 +306,5 @@ class DuelManager
         ];
     }
 
-    protected function addCardsToBench(array $addCardList, array $bench): array
-    {
-        foreach ($addCardList as $addCard) {
-            $isAppended = false;
-            foreach ($bench as &$benchElement) {
-                if (empty($benchElement)) {
-                    $benchElement[] = $addCard;
-                    $isAppended = true;
-                } elseif ($benchElement[0] === $addCard) {
-                    $benchElement[] = $addCard;
-                    $isAppended = true;
-                }
-            }
-            if (!$isAppended) {
-                $bench[] = [$addCard];
-            }
-        }
-        return $bench;
-    }
+
 }

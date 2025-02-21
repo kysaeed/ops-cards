@@ -15,6 +15,13 @@ class CardStack
         array_unshift($this->cards, $card);
     }
 
+    public function clearBuf(): void
+    {
+        foreach ($this->cards as $card) {
+            $card->clearBuf();
+        }
+    }
+
     public function getTop(): ?Card
     {
         if (empty($this->cards)) {

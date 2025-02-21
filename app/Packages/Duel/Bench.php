@@ -11,6 +11,20 @@ class Bench
         $this->benchItems = $benchItems;
     }
 
+    public function getTypeCount()
+    {
+        return count($this->benchItems);
+    }
+
+    public function addCardList(array $cardList)
+    {
+        foreach ($cardList as $card) {
+            $this->addCard($card);
+        }
+
+        return true;
+    }
+
     public function addCard(Card $card): bool
     {
         foreach ($this->benchItems as $item) {

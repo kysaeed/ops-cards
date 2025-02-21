@@ -18,7 +18,6 @@ class AuthController extends Controller
 // $user = User::find(3);
 // Auth::login($user);
 
-
         if (!$user) {
             $user = DB::transaction(function () {
                 $maxNumber = User::max('id') ?? 0;
@@ -85,7 +84,7 @@ class AuthController extends Controller
                 ]);
 
 
-                Auth::login($user);
+                Auth::login($user, true);
 
                 return $user;
             });
