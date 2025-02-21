@@ -1,11 +1,11 @@
 import Const from './Const.js'
 
 const TitleScene = {
-    key: 'TitleScene',
+    key: 'ShopScene',
     active: false,
 
     preload() {
-        this.load.image('bg_title', 'assets/bg_title.png')
+        this.load.image('bg_shop', 'assets/bg_shop.png')
     },
 
     create() {
@@ -91,24 +91,21 @@ const TitleScene = {
         }
 
 
-        this.add.image(
-            (Const.Screen.Width * 0.5),
-            (Const.Screen.Height * 0.5),
-            'bg_title'
-        )
-
-        const txtTitle = this.add.text(200, 100, 'カードゲームのタイトル画面', { fontSize: '42px', fill: '#000' });
-        const txtSub = this.add.text(450, 400, '画面をクリック！', { fontSize: '20px', fill: '#000' });
+        const txtTitle = this.add.text(200, 100, 'カードゲームのタイトル画面', { fontSize: '42px', fill: '#fff' });
+        const txtSub = this.add.text(450, 400, '画面をクリック！', { fontSize: '20px', fill: '#fff' });
 
         this.input.on('pointerdown', () => {
             //
 
-            this.scene.start('ShopScene')
+            this.scene.start('DuelScene')
 
         })
 
-
-
+        this.add.image(
+            (Const.Screen.Width * 0.5),
+            (Const.Screen.Height * 0.5),
+            'bg_shop'
+        )
 
     },
 

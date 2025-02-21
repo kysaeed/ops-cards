@@ -10,6 +10,7 @@ import Const from './Const.js'
 
 import TitleScene from './TitleScene.js'
 import DuelScene from './DuelScene.js'
+import ShopScene from './ShopScene.js'
 
 const BaseUrl = import.meta.env.VITE_BASE_URL || 'http://localhost:8080'
 
@@ -36,6 +37,7 @@ const config = {
     scene: [
         TitleScene,
         DuelScene,
+        ShopScene,
     ],
 };
 
