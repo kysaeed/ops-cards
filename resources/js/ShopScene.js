@@ -130,9 +130,7 @@ const ShopScene = {
 
         this.input.on('pointerdown', () => {
             //
-
             this.scene.start('DuelScene')
-
         })
 
         this.add.image(
@@ -149,6 +147,11 @@ const ShopScene = {
             c.sprite.scale = 0.55
 
             c.onUpdate()
+
+            c.setClickEventListener((sender) => {
+                console.log('clicked!!!', sender)
+            })
+            c.setClickable(true)
         }
 
 

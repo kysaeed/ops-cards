@@ -120,6 +120,10 @@ export default class CardSprite {
         this.cardInfo = cardInfo
 
         this.cardBg.on('pointerdown', (pointer) => {
+            if (this.onClicked) {
+                this.onClicked(this)
+            }
+
             // const phase = this.duel.getCurrentPhase()
             // if (phase.onEvent) {
 
@@ -131,6 +135,18 @@ export default class CardSprite {
 
         // this.cardCutin = new DeckCutin(duel, cardInfo)
 
+    }
+
+    setClickable(isClickable) {
+        if (isClickable) {
+            this.cardBg.setInteractive()
+        } else {
+            this.cardBg.disableInteractive()
+        }
+
+    }
+    setClickEventListener(callback) {
+        this.onClicked = callback
     }
 
     onUpdate() {
