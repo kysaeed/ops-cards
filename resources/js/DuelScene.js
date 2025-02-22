@@ -26,7 +26,7 @@ const DuelScene = {
         this.load.image('card_tip', 'assets/card_tip.png')
         this.load.image('card_tip_shadow', 'assets/card_tip_shadow.png')
         this.load.image('deck_clickable', 'assets/deck_clickable.png')
-        this.load.image('board', 'assets/board.png?v=2')
+        this.load.image('board', 'assets/board.png?v=3')
         this.load.image('modal', 'assets/modal.png')
         this.load.image('damage', 'assets/damage.png')
 
