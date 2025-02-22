@@ -30,6 +30,14 @@ const CardList = [
       power: 1,
       name: '影',
       image: 'ch_kage',
+      ability: {
+        all: {
+          power: 1,
+          condition: {
+
+          },
+        },
+      },
       type: 1,
   },
   {
@@ -162,6 +170,12 @@ const CardList = [
     {
       power: 1,
       name: '伝令',
+      image: 'chara',
+      type: 0,
+    },
+    {
+      power: 2,
+      name: '騎士',
       image: 'chara',
       type: 0,
     },
