@@ -3,6 +3,94 @@ import CardSprite from './game/CardSprite.js'
 import CardList from './game/CardList'
 
 
+const SelectPhase = {
+    enter(scene) {
+        this.scene = scene
+        this.selectedCount = 0
+        this.selectCards = []
+
+        let x = 0
+        let y = 0
+        for (let i=1; i <= 20; i++) {
+            const c = new CardSprite(scene, CardList[i % 10])
+
+            c.sprite.x = x + 210
+            c.sprite.y = y + 410
+            c.sprite.scale = 0.34
+            const Bevel = 20
+            c.sprite.angle = (Math.random() * Bevel) - (Bevel * 0.5)
+
+            c.onUpdate()
+
+            x += 60
+            if (!(i % 10)) {
+                x = 0
+                y += 100
+            }
+        }
+
+
+
+        for (let i=0; i < 3; i++) {
+            const c = new CardSprite(scene, CardList[i])
+
+            c.sprite.x = 200 + (i * 120)
+            c.sprite.y = 200
+            c.sprite.scale = 0.55
+
+            c.onUpdate()
+
+            c.setClickEventListener((sender) => {
+                // console.log('clicked!!!', this)
+                this.selectCard(sender)
+            })
+
+            // c.setClickEventListener(this.selectCard)
+
+            c.setClickable(true)
+
+
+            this.selectCards.push(c)
+
+        }
+
+
+    },
+
+    selectCard(card) {
+        const scene = this.scene
+        this.selectedCount++
+        scene.tweens.chain({
+            targets: card.sprite,
+            tweens: [
+                {
+                    x: 400 + (this.selectedCount * 60),
+                    y: 320,
+                    scale: 0.34,
+                    duration: 200,
+                },
+
+            ],
+            onComplete: () => {
+                if (this.selectedCount >= 3) {
+                    this.onEnd()
+                }
+            },
+        })
+
+    },
+
+    onEnd() {
+        this.scene.scene.start('DuelScene')
+    },
+
+    onUpdate() {
+        this.selectCards.forEach((c) => {
+            c.onUpdate()
+        })
+    },
+}
+
 const ShopScene = {
     key: 'ShopScene',
     active: false,
@@ -128,10 +216,12 @@ const ShopScene = {
         // const txtTitle = this.add.text(200, 100, 'カードゲームのタイトル画面', { fontSize: '42px', fill: '#fff' });
         // const txtSub = this.add.text(450, 400, '画面をクリック！', { fontSize: '20px', fill: '#fff' });
 
-        this.input.on('pointerdown', () => {
-            //
-            this.scene.start('DuelScene')
-        })
+        // this.input.on('pointerdown', () => {
+        //     //
+        //     this.scene.start('DuelScene')
+        // })
+
+
 
         this.add.image(
             (Const.Screen.Width * 0.5),
@@ -139,46 +229,14 @@ const ShopScene = {
             'bg_shop'
         )
 
-        for (let i=0; i < 3; i++) {
-            const c = new CardSprite(this, CardList[i])
+        SelectPhase.enter(this)
 
-            c.sprite.x = 200 + (i * 120)
-            c.sprite.y = 200
-            c.sprite.scale = 0.55
-
-            c.onUpdate()
-
-            c.setClickEventListener((sender) => {
-                console.log('clicked!!!', sender)
-            })
-            c.setClickable(true)
-        }
-
-
-        let x = 0
-        let y = 0
-        for (let i=1; i <= 20; i++) {
-            const c = new CardSprite(this, CardList[i % 10])
-
-            c.sprite.x = x + 180
-            c.sprite.y = y + 380
-            c.sprite.scale = 0.34
-            const Bevel = 20
-            c.sprite.angle = (Math.random() * Bevel) - (Bevel * 0.5)
-
-            c.onUpdate()
-
-            x += 60
-            if (!(i % 10)) {
-                x = 0
-                y += 100
-            }
-        }
     },
 
     update() {
-        //
+        SelectPhase.onUpdate()
     },
+
 
 }
 

@@ -67,7 +67,7 @@ const DuelScene = {
 
     },
     create() {
-
+console.log(this)
         this.anchor = this.add.container(0, 0)
         this.anchor.add(
             this.add.image(
