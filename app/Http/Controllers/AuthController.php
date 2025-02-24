@@ -9,6 +9,9 @@ use App\Models\User;
 use App\Models\Duel;
 use App\Models\Deck;
 use App\Models\DeckCard;
+use App\Models\GameSession;
+use App\Models\Shop;
+use App\Models\ShopCard;
 
 class AuthController extends Controller
 {
@@ -26,7 +29,7 @@ class AuthController extends Controller
                 $user = new User([
                     'name' => "user{$maxNumber}",
                     'email' => "user{$maxNumber}@exampe.jp",
-                    'password' => '1234',
+                    'password' => '1234', //@todo
                 ]);
 
                 $user->save();
@@ -84,6 +87,8 @@ class AuthController extends Controller
                 ]);
 
 
+                $this->createShop($user);
+
                 Auth::login($user, true);
 
                 return $user;
@@ -94,5 +99,24 @@ class AuthController extends Controller
         return response()->json([
             'user' => $user,
         ]);
+    }
+
+    protected function createShop(User $user)
+    {
+        $gameSession = new GameSession();
+        $user->gameSesssions()->save($gameSession);
+
+
+        $shop = new Shop();
+        $gameSession->shops()->save($shop);
+
+        $shopCards = [];
+        for ($i = 1; $i <= 3; $i++) {
+            $shopCard = new ShopCard();
+            $shopCard->card_number = ($i + 5);
+            $shopCard->order = $i;
+            $shop->shopCards()->save($shopCard);
+            $shopCards[] = $shopCard;
+        }
     }
 }

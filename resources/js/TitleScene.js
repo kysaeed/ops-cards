@@ -92,13 +92,18 @@ const TitleScene = {
         const txtTitle = this.add.text(200, 150, 'カードゲームのタイトル画面', { fontSize: '42px', fill: '#000' });
         const txtSub = this.add.text(450, 400, '画面をクリック！', { fontSize: '20px', fill: '#000' });
 
-        this.input.on('pointerdown', () => {
-            //
 
-            this.scene.start('ShopScene')
 
+        // ログイン処理 @todo タイトルから
+        window.axios.get('sanctum/csrf-cookie').then(() => {
+            window.axios.post('api/login', {}).then(() => {
+
+                this.input.on('pointerdown', () => {
+                    this.scene.start('ShopScene')
+                })
+
+            })
         })
-
 
     },
 

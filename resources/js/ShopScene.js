@@ -29,31 +29,32 @@ const SelectPhase = {
             }
         }
 
+        window.axios.get('sanctum/csrf-cookie').then(() => {
+            window.axios.post('api/shop/enter', {}).then((res) => {
+                //currentPhase.enter(this.duel, {}, toNextPhase)
+                const data = res.data
 
+                data.shopCards.forEach((cardNumber, i) => {
+                    const c = new CardSprite(scene, CardList[cardNumber - 1])
 
-        for (let i=0; i < 3; i++) {
-            const c = new CardSprite(scene, CardList[i])
+                    c.sprite.x = 200 + (i * 120)
+                    c.sprite.y = 200
+                    c.sprite.scale = 0.55
 
-            c.sprite.x = 200 + (i * 120)
-            c.sprite.y = 200
-            c.sprite.scale = 0.55
+                    c.onUpdate()
 
-            c.onUpdate()
+                    c.setClickEventListener((sender) => {
+                        // console.log('clicked!!!', this)
+                        this.selectCard(sender)
+                    })
 
-            c.setClickEventListener((sender) => {
-                // console.log('clicked!!!', this)
-                this.selectCard(sender)
+                    // c.setClickEventListener(this.selectCard)
+                    c.setClickable(true)
+                    this.selectCards.push(c)
+
+                })
             })
-
-            // c.setClickEventListener(this.selectCard)
-
-            c.setClickable(true)
-
-
-            this.selectCards.push(c)
-
-        }
-
+        })
 
     },
 
