@@ -104,14 +104,13 @@ class AuthController extends Controller
     protected function createShop(User $user)
     {
         $gameSession = new GameSession();
-        $user->gameSesssions()->save($gameSession);
-
+        $user->gameSessions()->save($gameSession);
 
         $shop = new Shop();
         $gameSession->shops()->save($shop);
 
         $shopCards = [];
-        for ($i = 1; $i <= 3; $i++) {
+        for ($i = 1; $i <= 5; $i++) {
             $shopCard = new ShopCard();
             $shopCard->card_number = ($i + 5);
             $shopCard->order = $i;
