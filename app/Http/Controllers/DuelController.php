@@ -12,6 +12,7 @@ use App\Models\Deck;
 use App\Models\DeckCard;
 use App\Models\Duel;
 use App\Models\DuelTurn;
+use App\Models\GameSession;
 use App\Packages\Duel\DuelManager;
 
 class DuelController extends Controller
@@ -27,6 +28,83 @@ class DuelController extends Controller
         }
 
     }
+
+    protected function createInitialData(User $user)
+    {
+        $gameSession = $user->gameSessions()
+            ->first();
+
+        if (!$gameSession) {
+            $gameSession = new GameSession();
+            $user->gameSessions()->save($gameSession);
+        }
+
+        $duel = $gameSession->duels()
+            ->whereNull('compleated_at')
+            ->where('user_id', $user->id)
+            ->first();
+
+        if (!$duel) {
+            $deck = $this->createInitialDeck($user);
+            $duel = new Duel([
+                'turn' => 1,
+                'user_id' => $user->id,
+                'turn' => 1,
+                'deck_id' => $deck->id,
+                'enemy_deck_id' => 2,
+            ]);
+            $gameSession->duels()->save($duel);
+        }
+    }
+
+    protected function createInitialDeck(User $user)
+    {
+        return DB::transaction(function () use ($user) {
+            $deck = new Deck([
+                'level' => 1,
+            ]);
+
+            $user->decks()->save($deck);
+
+            $defaultDeck = [
+                1, 1, 1, 2, 3, 4,
+            ];
+
+            $order = 1;
+            foreach ($defaultDeck as $cardNumber) {
+
+                $deckCard = new DeckCard([
+                    'card_number' => $cardNumber,
+                    'order' => $order,
+                ]);
+
+                $deck->deckCards()->save($deckCard);
+
+                $order++;
+            }
+
+            /*
+            for ($j = 0; $j < 5; $j++) {
+                $count = count($this->cardSettings);
+                $cardNumber = mt_rand(5, $count);
+
+                $deckCard = new DeckCard([
+                    'card_number' => $cardNumber,
+                    'order' => $order,
+                ]);
+
+                $deck->deckCards()->save($deckCard);
+
+                $order++;
+            }
+            */
+
+            return $deck;
+
+        });
+
+    }
+
 
     protected function createDeck(User $user)
     {
@@ -76,26 +154,16 @@ class DuelController extends Controller
 
     public function index()
     {
+        /** @var User $user */
         $user = Auth::user();
 
-        $duel = Duel::query()
-            ->whereNull('compleated_at')
-            ->where('user_id', $user->id)
+        $this->createInitialData($user);
+
+        $gameSession = $user->gameSessions()
+            ->whereNull('disabled_at')
             ->first();
 
-
-        if (!$duel) {
-            $deck = $this->createDeck($user);
-
-            $duel = new Duel([
-                'turn' => 1,
-                'user_id' => $user->id,
-                'turn' => 1,
-                'deck_id' => $deck->id,
-                'enemy_deck_id' => 2,
-            ]);
-            $duel->save();
-        }
+        $duel = $gameSession->duels()->first();
 
         if ($duel->duelTurns()->exists()) {
             $resume = $duel->duelTurns()
@@ -106,11 +174,9 @@ class DuelController extends Controller
 
             $initialState = $duelManager->resume();
 
-
             /////
             $initialState['players'][0]['name'] = $user->name;
             $initialState['players'][1]['name'] = '敵キャラ';
-
 
             // dd($resume?->toArray());
             return response()->json($initialState);

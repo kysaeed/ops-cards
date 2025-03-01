@@ -38,5 +38,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('shop')->group(function() {
         Route::post('enter', [ShopController::class, 'enter']);
+        Route::post('select', [ShopController::class, 'select']);
     });
 });

@@ -82,7 +82,16 @@ const SelectPhase = {
     },
 
     onEnd() {
-        this.scene.scene.start('DuelScene')
+
+        const data = {
+            selectedCards: [],
+        }
+
+        window.axios.get('sanctum/csrf-cookie').then(() => {
+            window.axios.post('api/shop/select', {}).then((res) => {
+                this.scene.scene.start('DuelScene')
+            })
+        })
     },
 
     onUpdate() {

@@ -15,12 +15,102 @@ use App\Models\ShopCard;
 
 class AuthController extends Controller
 {
+    protected array $cardSettings;
+
+    public function __construct()
+    {
+        $this->cardSettings = [];
+        $string = file_get_contents(resource_path('settings/cards.json'));
+        if (!empty($string)) {
+            $this->cardSettings = json_decode($string, true);
+        }
+
+    }
+
+    protected function createInitialData(User $user)
+    {
+        $gameSession = $user->gameSessions()
+            ->first();
+
+        if (!$gameSession) {
+            $gameSession = new GameSession();
+            $user->gameSessions()->save($gameSession);
+        }
+
+        $duel = $gameSession->duels()
+            ->whereNull('compleated_at')
+            ->where('user_id', $user->id)
+            ->first();
+
+        if (!$duel) {
+            $deck = $this->createInitialDeck($user);
+            $duel = new Duel([
+                'turn' => 1,
+                'user_id' => $user->id,
+                'turn' => 1,
+                'deck_id' => $deck->id,
+                'enemy_deck_id' => 2,
+            ]);
+            $gameSession->duels()->save($duel);
+        }
+    }
+
+    protected function createInitialDeck(User $user)
+    {
+        return DB::transaction(function () use ($user) {
+            $deck = new Deck([
+                'level' => 1,
+            ]);
+
+
+            $user->decks()->save($deck);
+
+            $defaultDeck = [
+                1, 1, 1, 2, 3, 4,
+            ];
+
+            $order = 1;
+            foreach ($defaultDeck as $cardNumber) {
+
+                $deckCard = new DeckCard([
+                    'card_number' => $cardNumber,
+                    'order' => $order,
+                ]);
+
+                $deck->deckCards()->save($deckCard);
+
+                $order++;
+            }
+
+            /*
+            for ($j = 0; $j < 5; $j++) {
+                $count = count($this->cardSettings);
+                $cardNumber = mt_rand(5, $count);
+
+                $deckCard = new DeckCard([
+                    'card_number' => $cardNumber,
+                    'order' => $order,
+                ]);
+
+                $deck->deckCards()->save($deckCard);
+
+                $order++;
+            }
+            */
+
+            return $deck;
+
+        });
+
+    }
+
     public function login()
     {
         $user = Auth::user();
 // $user = User::find(3);
 // Auth::login($user);
 
+        $state = 0;
         if (!$user) {
             $user = DB::transaction(function () {
                 $maxNumber = User::max('id') ?? 0;
@@ -34,58 +124,7 @@ class AuthController extends Controller
 
                 $user->save();
 
-                $defaultDeck = [
-                    1, 1, 1, 2, 3, 4,
-                ];
-
-                $deck = new Deck([
-                    'level' => 1,
-                ]);
-
-                $user->decks()->save($deck);
-
-                $order = 1;
-                foreach ($defaultDeck as $cardNumber) {
-
-                    $deckCard = new DeckCard([
-                        'card_number' => $cardNumber,
-                        'order' => $order,
-                    ]);
-
-                    $deck->deckCards()->save($deckCard);
-
-                    $order++;
-                }
-
-
-                $cardSettings = [];
-                $string = file_get_contents(resource_path('settings/cards.json'));
-                if (!empty($string)) {
-                    $cardSettings = json_decode($string, true);
-                }
-
-                for ($j = 0; $j < 5; $j++) {
-                    $count = count($cardSettings);
-                    $cardNumber = mt_rand(5, $count - 1);
-
-                    $deckCard = new DeckCard([
-                        'card_number' => $cardNumber,
-                        'order' => $order,
-                    ]);
-
-                    $deck->deckCards()->save($deckCard);
-
-                    $order++;
-                }
-
-
-                Duel::create([
-                    'user_id' => $user->id,
-                    'turn' => 1,
-                    'deck_id' => $deck->id,
-                    'enemy_deck_id' => 1,
-                ]);
-
+                $this->createInitialData($user);
 
                 $this->createShop($user);
 
@@ -95,24 +134,44 @@ class AuthController extends Controller
             });
         }
 
+        $gameSession = $user->gameSessions()
+            ->whereNull('game_sessions.disabled_at')
+            ->first();
+
+        $state = 0;
+        if ($gameSession->shops()->exists()) {
+            $state = 1;
+        } elseif ($gameSession->duels()->exists()) {
+            $state = 2;
+        }
 
         return response()->json([
             'user' => $user,
+            'state' => $state,
         ]);
     }
 
     protected function createShop(User $user)
     {
-        $gameSession = new GameSession();
-        $user->gameSessions()->save($gameSession);
+
+        $gameSession = $user->gameSessions()
+            ->whereNull('disabled_at')
+            ->first();
+
+        if (!$gameSession) {
+            $gameSession = new GameSession();
+            $user->gameSessions()->save($gameSession);
+        }
 
         $shop = new Shop();
         $gameSession->shops()->save($shop);
 
         $shopCards = [];
         for ($i = 1; $i <= 5; $i++) {
+            $cardNumber = mt_rand(5, count($this->cardSettings));
+
             $shopCard = new ShopCard();
-            $shopCard->card_number = ($i + 5);
+            $shopCard->card_number = $cardNumber;
             $shopCard->order = $i;
             $shop->shopCards()->save($shopCard);
             $shopCards[] = $shopCard;

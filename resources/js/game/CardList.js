@@ -210,6 +210,12 @@ const CardList = [
     },
     {
       power: 1,
+      name: '魔導の書',
+      image: 'chara',
+      type: 0,
+    },
+    {
+      power: 1,
       name: '聖人',
       image: 'chara',
       type: 0,

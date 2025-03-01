@@ -21,4 +21,12 @@ class GameSession extends Model
         return $this->hasMany(Shop::class);
     }
 
+    /**
+     * @todo 進行の管理ができるようになおす
+     */
+    public function duels(): HasMany
+    {
+        return $this->hasMany(Duel::class);
+    }
+
 }

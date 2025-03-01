@@ -1,3 +1,4 @@
+import Phaser from 'phaser'
 import Const from '../Const.js'
 import Number from './Number.js'
 import DeckCutin from './CardCutin.js'
@@ -9,8 +10,10 @@ const WidthBase = -30
 const DefaultCardSize = 0.5
 
 
-export default class CardSprite {
+export default class CardSprite /* extends Phaser.GameObjects.Container */ {
     constructor(scene, cardInfo, parent) {
+        // super(scene, 0, 0, children);
+
         // this.duel = duel
         // let cardDirection = player.getPlayerId()
 

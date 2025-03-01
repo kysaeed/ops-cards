@@ -87,12 +87,14 @@ class DatabaseSeeder extends Seeder
         }
 
         ///////
+        /*
         $duel = new Duel([
             'user_id' => $users[0]->id,
             'turn' => 1,
             'deck_id' => $deckModels[0]->id,
             'enemy_deck_id' => $deckModels[1]->id,
         ]);
+        */
 
         // \App\Models\User::factory(10)->create();
 
