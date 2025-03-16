@@ -11,7 +11,7 @@ const DefaultCardSize = 0.5
 
 
 export default class CardSprite /* extends Phaser.GameObjects.Container */ {
-    constructor(scene, cardInfo, parent) {
+    constructor(scene, cardNumber, cardInfo, parent) {
         // super(scene, 0, 0, children);
 
         // this.duel = duel
@@ -19,6 +19,13 @@ export default class CardSprite /* extends Phaser.GameObjects.Container */ {
 
         // const scene = duel.getScene()
         // this.player = player
+
+        /**
+         * @tood テスト用なのでなおす
+         */
+        this.isSelected = false
+
+
 
         this.cardShadow = scene.add.sprite(0 + 2, 0 + 2, 'card_shadow')
 

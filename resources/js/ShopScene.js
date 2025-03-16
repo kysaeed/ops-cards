@@ -4,38 +4,22 @@ import CardList from './game/CardList'
 
 
 const SelectPhase = {
+
+
     enter(scene) {
         this.scene = scene
         this.selectedCount = 0
         this.selectCards = []
-
-        let x = 0
-        let y = 0
-        for (let i=1; i <= 20; i++) {
-            const c = new CardSprite(scene, CardList[i % 10])
-
-            c.sprite.x = x + 210
-            c.sprite.y = y + 410
-            c.sprite.scale = 0.34
-            const Bevel = 20
-            c.sprite.angle = (Math.random() * Bevel) - (Bevel * 0.5)
-
-            c.onUpdate()
-
-            x += 60
-            if (!(i % 10)) {
-                x = 0
-                y += 100
-            }
-        }
 
         window.axios.get('sanctum/csrf-cookie').then(() => {
             window.axios.post('api/shop/enter', {}).then((res) => {
                 //currentPhase.enter(this.duel, {}, toNextPhase)
                 const data = res.data
 
+                this.createDeckCards(scene, data.deckCards)
+
                 data.shopCards.forEach((cardNumber, i) => {
-                    const c = new CardSprite(scene, CardList[cardNumber - 1])
+                    const c = new CardSprite(scene, cardNumber, CardList[cardNumber - 1])
 
                     c.sprite.x = 200 + (i * 120)
                     c.sprite.y = 200
@@ -57,8 +41,38 @@ const SelectPhase = {
         })
 
     },
+    createDeckCards(scene, deckCardNumbers) {
+        let x = 0
+        let y = 0
+        deckCardNumbers.forEach((n, i) => {
+            const index = (i + 1)
+
+            const c = new CardSprite(scene, (index % 10), CardList[n])
+
+            c.sprite.x = x + 210
+            c.sprite.y = y + 410
+            c.sprite.scale = 0.34
+            const Bevel = 20
+            c.sprite.angle = (Math.random() * Bevel) - (Bevel * 0.5)
+
+            c.onUpdate()
+
+            x += 60
+            if (!(index % 10)) {
+                x = 0
+                y += 100
+            }
+        })
+    },
 
     selectCard(card) {
+        if (card.isSelectd) {
+            return
+        }
+
+
+        card.isSelectd = true
+
         const scene = this.scene
         this.selectedCount++
         scene.tweens.chain({
@@ -82,6 +96,12 @@ const SelectPhase = {
     },
 
     onEnd() {
+        const selectedCardNumbers = []
+        this.selectCards.forEach((c) => {
+            if (c.isSelectd) {
+                selectedCardNumbers.push(c.cardNumber)
+            }
+        })
 
         const data = {
             selectedCards: [],

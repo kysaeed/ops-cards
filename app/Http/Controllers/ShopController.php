@@ -41,12 +41,18 @@ class ShopController extends Controller
         $shop = $gameSession->shops()->first();
         $shopCards = $shop->shopCards()->orderBy('order')->get();
 
+        $deckCards = [];
+        for ($i = 0; $i < 20; $i++) {
+            $deckCards[] = ($i + 1) % 10;
+        }
+
         $cardNumberList = [];
         foreach ($shopCards as $c) {
             $cardNumberList[] = $c->card_number;
         }
 
         return response()->json([
+            'deckCards' => $deckCards,
             'shopCards' => $cardNumberList,
         ]);
     }
@@ -54,6 +60,18 @@ class ShopController extends Controller
     public function select(Request $request)
     {
         $selectedCards = $request->input('selectedCards');
+
+        /** @var User $user */
+        $user = Auth::user();
+
+        $gameSession = $user->gameSessions()
+            ->whereNull('game_sessions.disabled_at')
+            ->first();
+
+        $duel = $gameSession->duels()->first();
+
+        $deck = $duel->deck()->first();
+
 
 
     }
