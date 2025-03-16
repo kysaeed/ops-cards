@@ -41,18 +41,27 @@ class ShopController extends Controller
         $shop = $gameSession->shops()->first();
         $shopCards = $shop->shopCards()->orderBy('order')->get();
 
-        $deckCards = [];
-        for ($i = 0; $i < 20; $i++) {
-            $deckCards[] = ($i + 1) % 10;
-        }
 
         $cardNumberList = [];
         foreach ($shopCards as $c) {
             $cardNumberList[] = $c->card_number;
         }
 
+
+        $duel = $gameSession->duels()->first();
+        $deck = $duel->deck;
+
+        $deckCards = $deck->deckCards()
+            ->orderBy('order')
+            ->get();
+
+        $deckCardNumberList = [];
+        foreach ($deckCards as $card) {
+            $deckCardNumberList[] = $card->card_number;
+        }
+
         return response()->json([
-            'deckCards' => $deckCards,
+            'deckCards' => $deckCardNumberList,
             'shopCards' => $cardNumberList,
         ]);
     }
