@@ -39,6 +39,7 @@ class ShopController extends Controller
             ->first();
 
         $shop = $gameSession->shops()->first();
+
         $shopCards = $shop->shopCards()->orderBy('order')->get();
 
 
@@ -80,7 +81,6 @@ class ShopController extends Controller
         $duel = $gameSession->duels()->first();
 
         $deck = $duel->deck()->first();
-
 
 
     }

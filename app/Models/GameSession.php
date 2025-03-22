@@ -11,22 +11,26 @@ class GameSession extends Model
     use HasFactory;
 
     protected $gurded = ['id'];
-
-
-    /**
-     * @todo 進行の管理ができるようになおす
-     */
-    public function shops(): HasMany
+    public function gameSessionSections(): HasMany
     {
-        return $this->hasMany(Shop::class);
+        return $this->hasMany(GameSessionSection::class);
     }
 
-    /**
-     * @todo 進行の管理ができるようになおす
-     */
-    public function duels(): HasMany
-    {
-        return $this->hasMany(Duel::class);
-    }
+
+    // /**
+    //  * @todo 進行の管理ができるようになおす
+    //  */
+    // public function shops(): HasMany
+    // {
+    //     return $this->hasMany(Shop::class);
+    // }
+
+    // /**
+    //  * @todo 進行の管理ができるようになおす
+    //  */
+    // public function duels(): HasMany
+    // {
+    //     return $this->hasMany(Duel::class);
+    // }
 
 }

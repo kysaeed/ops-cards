@@ -10,6 +10,8 @@ use App\Models\Duel;
 use App\Models\Deck;
 use App\Models\DeckCard;
 use App\Models\GameSession;
+use App\Models\GameSessionSection;
+use App\Models\GameSessionSectionStep;
 use App\Models\Shop;
 use App\Models\ShopCard;
 
@@ -37,22 +39,81 @@ class AuthController extends Controller
             $user->gameSessions()->save($gameSession);
         }
 
-        $duel = $gameSession->duels()
+        $gameSessionSection = $gameSession->gameSessionSections()
+            ->orderBy('order')
+            ->first();
+        if (!$gameSessionSection) {
+            $gameSessionSection = new GameSessionSection();
+            $gameSessionSection->order = 1;
+            $gameSession->gameSessionSections()
+                ->save($gameSessionSection);
+        }
+
+        $shopStep =  $gameSessionSection->gemeSessionSectionSteps()
             ->whereNull('compleated_at')
-            ->where('user_id', $user->id)
+            ->whereNotNull('shop_id')
+            ->orderBy('order')
             ->first();
 
-        if (!$duel) {
+        if (!$shopStep) {
+            $shop = $this->createShop($user);
+
+            $gameSessionSectionsStep = new GameSessionSectionStep([
+                'order' => 1,
+            ]);
+            $gameSessionSectionsStep->fill([
+            ]);
+            $gameSessionSectionsStep->shop_id = $shop->id;
+            $gameSessionSection->gemeSessionSectionSteps()
+                ->save($gameSessionSectionsStep);
+        }
+
+
+
+        $duelStep = $gameSessionSection->gemeSessionSectionSteps()
+            ->whereNull('compleated_at')
+            ->whereNotNull('duel_id')
+            ->orderBy('order')
+            ->first();
+
+        // $duel = $gameSession->duels()
+        //     ->whereNull('compleated_at')
+        //     ->where('user_id', $user->id)
+        //     ->first();
+        if (!$duelStep) {
+
             $deck = $this->createInitialDeck($user);
             $duel = new Duel([
-                'turn' => 1,
+                //'turn' => 1,
                 'user_id' => $user->id,
                 'turn' => 1,
                 'deck_id' => $deck->id,
                 'enemy_deck_id' => 2,
             ]);
-            $gameSession->duels()->save($duel);
+            $duel->save();
+
+            $gameSessionSectionsStep = new GameSessionSectionStep();
+            $gameSessionSectionsStep->fill([
+                'duel_id' => $duel->id,
+                'order' => 2,
+            ]);
+            $gameSessionSection->gemeSessionSectionSteps()
+                ->save($gameSessionSectionsStep);
+
+            //$gameSession->duels()->save($duel);
         }
+
+        // if (!$duel) {
+        //     $deck = $this->createInitialDeck($user);
+        //     $duel = new Duel([
+        //         'turn' => 1,
+        //         'user_id' => $user->id,
+        //         'turn' => 1,
+        //         'deck_id' => $deck->id,
+        //         'enemy_deck_id' => 2,
+        //     ]);
+        //     $gameSession->duels()->save($duel);
+        // }
     }
 
     protected function createInitialDeck(User $user)
@@ -126,7 +187,6 @@ class AuthController extends Controller
 
                 $this->createInitialData($user);
 
-                $this->createShop($user);
 
                 Auth::login($user, true);
 
@@ -138,12 +198,28 @@ class AuthController extends Controller
             ->whereNull('game_sessions.disabled_at')
             ->first();
 
+        $gameSessionSection = $gameSession->gameSessionSections()
+            ->whereNull('compleated_at')
+            ->first();
+
+        $gameSessionSectionStep = $gameSessionSection->gemeSessionSectionSteps()
+            ->whereNull('compleated_at')
+            ->first();
+
         $state = 0;
-        if ($gameSession->shops()->exists()) {
+        if ($gameSessionSectionStep->shop_id) {
             $state = 1;
-        } elseif ($gameSession->duels()->exists()) {
+        } elseif ($gameSessionSectionStep->duel_id) {
             $state = 2;
         }
+
+        /*
+        if ($gameSession->shops()->whereNull('compleated_at')->exists()) {
+            $state = 1;
+        } elseif ($gameSession->duels()->whereNull('compleated_at')->exists()) {
+            $state = 2;
+        }
+        */
 
         return response()->json([
             'user' => $user,
@@ -154,17 +230,17 @@ class AuthController extends Controller
     protected function createShop(User $user)
     {
 
-        $gameSession = $user->gameSessions()
-            ->whereNull('disabled_at')
-            ->first();
+        // $gameSession = $user->gameSessions()
+        //     ->whereNull('disabled_at')
+        //     ->first();
 
-        if (!$gameSession) {
-            $gameSession = new GameSession();
-            $user->gameSessions()->save($gameSession);
-        }
+        // if (!$gameSession) {
+        //     $gameSession = new GameSession();
+        //     $user->gameSessions()->save($gameSession);
+        // }
 
         $shop = new Shop();
-        $gameSession->shops()->save($shop);
+        $shop->save();
 
         $shopCards = [];
         for ($i = 1; $i <= 5; $i++) {
@@ -176,5 +252,7 @@ class AuthController extends Controller
             $shop->shopCards()->save($shopCard);
             $shopCards[] = $shopCard;
         }
+
+        return $shop;
     }
 }

@@ -312,7 +312,6 @@ class DuelController extends Controller
                 }
             }
 
-
             $order = $prevTurn->order + 1;
             $turn = new DuelTurn([
                 'user_id' => $turnPlayerIndex, // @todo 正しい値をいれる
@@ -325,7 +324,7 @@ class DuelController extends Controller
             ]);
 
 
-            $nextHandCardNumber = null;
+            //$nextHandCardNumber = null;
 
             $duelManager = new DuelManager($turnState, $this->cardSettings);
 

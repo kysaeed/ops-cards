@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\GameSessionSectionStep;
+use App\Models\GameSession;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,8 +12,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('shops', function (Blueprint $table) {
+        Schema::create('game_session_sections', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(GameSession::class);
+            $table->unsignedInteger('order')->index();
+            // $table -> deck();
+            $table->timestamp('compleated_at')->nullable();
             $table->timestamps();
         });
     }
@@ -23,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('shops');
+        Schema::dropIfExists('game_session_sections');
     }
 };
