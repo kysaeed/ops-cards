@@ -9,6 +9,7 @@ import Axios from 'axios'
 import Const from './Const.js'
 
 import TitleScene from './TitleScene.js'
+import MapScene from './MapScene.js'
 import DuelScene from './DuelScene.js'
 import ShopScene from './ShopScene.js'
 
@@ -38,6 +39,7 @@ const config = {
         TitleScene,
         DuelScene,
         ShopScene,
+        MapScene,
     ],
 };
 

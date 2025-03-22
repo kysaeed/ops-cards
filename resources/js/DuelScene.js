@@ -67,7 +67,6 @@ const DuelScene = {
 
     },
     create() {
-console.log(this)
         this.anchor = this.add.container(0, 0)
         this.anchor.add(
             this.add.image(
@@ -174,12 +173,13 @@ console.log('to Next State : ', fetchData)
             fit()
         }
 
-        // ログイン処理 @todo タイトルから
-        window.axios.get('sanctum/csrf-cookie').then(() => {
-            window.axios.post('api/login', {}).then(() => {
-                currentPhase.enter(this.duel, {}, toNextPhase)
-            })
-        })
+        // ログイン処理 @todo タイトルで実行するように治す
+        // window.axios.get('sanctum/csrf-cookie').then(() => {
+        //     window.axios.post('api/login', {}).then(() => {
+        //         currentPhase.enter(this.duel, {}, toNextPhase)
+        //     })
+        // })
+        currentPhase.enter(this.duel, {}, toNextPhase)
 
     },
     update() {

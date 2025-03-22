@@ -1,7 +1,7 @@
 import Const from './Const.js'
 
-const TitleScene = {
-    key: 'TitleScene',
+const MapScene = {
+    key: 'MapScene',
     active: false,
 
     preload() {
@@ -116,4 +116,4 @@ console.log(res)
 
 }
 
-export default TitleScene
+export default MapScene

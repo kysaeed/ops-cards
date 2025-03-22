@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Carbon\CarbonImmutable;
 use App\Models\Shop;
 use App\Models\ShopCard;
 use App\Models\User;
@@ -92,6 +93,14 @@ class ShopController extends Controller
         $gameSessionSection = $gameSession->gameSessionSections()
             ->active()
             ->first();
+
+        $gameSessionSectionStep = $gameSessionSection->gameSessionSectionSteps()
+            ->whereNotNull('shop_id')
+            ->active()
+            ->first();
+
+        $gameSessionSectionStep->compleated_at = CarbonImmutable::now();
+        $gameSessionSectionStep->save();
 
         $deck = $gameSessionSection->deck;
 

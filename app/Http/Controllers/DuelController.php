@@ -60,28 +60,24 @@ class DuelController extends Controller
     protected function createInitialDeck(User $user)
     {
         return DB::transaction(function () use ($user) {
-            $deck = new Deck([
-                'level' => 1,
-            ]);
 
-            $user->decks()->save($deck);
 
-            $defaultDeck = [
-                1, 1, 1, 2, 3, 4,
-            ];
-
-            $order = 1;
-            foreach ($defaultDeck as $cardNumber) {
-
-                $deckCard = new DeckCard([
-                    'card_number' => $cardNumber,
-                    'order' => $order,
-                ]);
-
-                $deck->deckCards()->save($deckCard);
-
-                $order++;
-            }
+            // $deck = new Deck([
+            //     'level' => 1,
+            // ]);
+            // $user->deccks()->save($deck);
+            // $defaultDeck = [
+            //     1, 1, 1, 2, 3, 4,
+            // ];
+            // $order = 1;
+            // foreach ($defaultDeck as $cardNumber) {
+            //     $deckCard = new DeckCard([
+            //         'card_number' => $cardNumber,
+            //         'order' => $order,
+            //     ]);
+            //     $deck->deckCards()->save($deckCard);
+            //     $order++;
+            // }
 
             /*
             for ($j = 0; $j < 5; $j++) {
@@ -98,6 +94,16 @@ class DuelController extends Controller
                 $order++;
             }
             */
+
+            $gameSession = $user->gameSessions()
+                ->active()
+                ->first();
+
+            $gameSessionSection = $gameSession->gameSessionSections()
+                ->active()
+                ->first();
+
+            $deck = $gameSessionSection->deck;
 
             return $deck;
 
@@ -157,13 +163,22 @@ class DuelController extends Controller
         /** @var User $user */
         $user = Auth::user();
 
-        $this->createInitialData($user);
+        // $this->createInitialData($user);
 
         $gameSession = $user->gameSessions()
             ->whereNull('compleated_at')
             ->first();
 
-        $duel = $gameSession->duels()->first();
+        $gameSessionSection = $gameSession->gameSessionSections()
+            ->active()
+            ->first();
+
+        $gameSessionSectionStep = $gameSessionSection->gameSessionSectionSteps()
+            ->active()
+            ->whereNotNull('duel_id') //// @todo 取得してからチェック
+            ->first();
+
+        $duel = $gameSessionSectionStep->duel;
 
         if ($duel->duelTurns()->exists()) {
             $resume = $duel->duelTurns()
@@ -286,10 +301,29 @@ class DuelController extends Controller
         return DB::transaction(function () use ($isHandCrad) {
             $user = Auth::user();
 
+
+
+            $gameSession = $user->gameSessions()
+                ->whereNull('compleated_at')
+                ->first();
+
+            $gameSessionSection = $gameSession->gameSessionSections()
+                ->active()
+                ->first();
+
+            $gameSessionSectionStep = $gameSessionSection->gameSessionSectionSteps()
+                ->active()
+                ->whereNotNull('duel_id') //// @todo 取得してからチェック
+                ->first();
+
+            $duel = $gameSessionSectionStep->duel;
+
+            /*
             $duel = Duel::query()
                 ->whereNull('compleated_at')
                 ->where('user_id', $user->id)
                 ->first();
+            */
 
             $prevTurn = $duel->duelTurns()
                 ->latest('order')
@@ -342,8 +376,11 @@ class DuelController extends Controller
             $duel->duelTurns()->save($turn);
 
             if ($step['judge']) {
-                $duel->compleated_at = CarbonImmutable::now();
-                $duel->save();
+                $gameSessionSectionStep = $duel->gameSessionSectionStep;
+                if ($gameSessionSectionStep) {
+                    $gameSessionSectionStep->compleated_at = CarbonImmutable::now();
+                    $gameSessionSectionStep->save();
+                }
             }
 
             return response()->json($step);
