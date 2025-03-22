@@ -43,13 +43,16 @@ class AuthController extends Controller
             ->orderBy('order')
             ->first();
         if (!$gameSessionSection) {
+            $deck = $this->createInitialDeck($user);
+
             $gameSessionSection = new GameSessionSection();
             $gameSessionSection->order = 1;
+            $gameSessionSection->deck_id = $deck->id;
             $gameSession->gameSessionSections()
                 ->save($gameSessionSection);
         }
 
-        $shopStep =  $gameSessionSection->gemeSessionSectionSteps()
+        $shopStep =  $gameSessionSection->gameSessionSectionSteps()
             ->whereNull('compleated_at')
             ->whereNotNull('shop_id')
             ->orderBy('order')
@@ -64,13 +67,11 @@ class AuthController extends Controller
             $gameSessionSectionsStep->fill([
             ]);
             $gameSessionSectionsStep->shop_id = $shop->id;
-            $gameSessionSection->gemeSessionSectionSteps()
+            $gameSessionSection->gameSessionSectionSteps()
                 ->save($gameSessionSectionsStep);
         }
 
-
-
-        $duelStep = $gameSessionSection->gemeSessionSectionSteps()
+        $duelStep = $gameSessionSection->gameSessionSectionSteps()
             ->whereNull('compleated_at')
             ->whereNotNull('duel_id')
             ->orderBy('order')
@@ -81,13 +82,12 @@ class AuthController extends Controller
         //     ->where('user_id', $user->id)
         //     ->first();
         if (!$duelStep) {
-
-            $deck = $this->createInitialDeck($user);
+            //$deck = $this->createInitialDeck($user);
             $duel = new Duel([
                 //'turn' => 1,
                 'user_id' => $user->id,
                 'turn' => 1,
-                'deck_id' => $deck->id,
+                'deck_id' => $gameSessionSection->deck->id,
                 'enemy_deck_id' => 2,
             ]);
             $duel->save();
@@ -97,7 +97,7 @@ class AuthController extends Controller
                 'duel_id' => $duel->id,
                 'order' => 2,
             ]);
-            $gameSessionSection->gemeSessionSectionSteps()
+            $gameSessionSection->gameSessionSectionSteps()
                 ->save($gameSessionSectionsStep);
 
             //$gameSession->duels()->save($duel);
@@ -195,14 +195,14 @@ class AuthController extends Controller
         }
 
         $gameSession = $user->gameSessions()
-            ->whereNull('game_sessions.disabled_at')
+            ->whereNull('game_sessions.compleated_at')
             ->first();
 
         $gameSessionSection = $gameSession->gameSessionSections()
             ->whereNull('compleated_at')
             ->first();
 
-        $gameSessionSectionStep = $gameSessionSection->gemeSessionSectionSteps()
+        $gameSessionSectionStep = $gameSessionSection->gameSessionSectionSteps()
             ->whereNull('compleated_at')
             ->first();
 
@@ -231,7 +231,7 @@ class AuthController extends Controller
     {
 
         // $gameSession = $user->gameSessions()
-        //     ->whereNull('disabled_at')
+        //     ->whereNull('compleated_at')
         //     ->first();
 
         // if (!$gameSession) {

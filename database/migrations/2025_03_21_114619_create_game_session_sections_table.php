@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\GameSession;
+use App\Models\Deck;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(GameSession::class);
             $table->unsignedInteger('order')->index();
-            // $table -> deck();
+            $table->foreignIdFor(Deck::class);
             $table->timestamp('compleated_at')->nullable();
             $table->timestamps();
         });

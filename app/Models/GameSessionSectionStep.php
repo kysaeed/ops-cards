@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use app\Models\Duel;
-use app\Models\Shop;
+use App\Models\Duel;
+use App\Models\Shop;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,7 +13,6 @@ class GameSessionSectionStep extends Model
 {
     use HasFactory;
 
-    //protected $gurded = ['id'];
     protected $fillable = [
         'order',
         'shop_id',
@@ -28,4 +28,12 @@ class GameSessionSectionStep extends Model
     {
         return $this->belongsTo(Shop::class);
     }
+
+    public function scopeActive(Builder $query): void
+    {
+        $query
+            ->orderBy('game_session_section_steps.order')
+            ->whereNull('game_session_section_steps.compleated_at');
+    }
+
 }

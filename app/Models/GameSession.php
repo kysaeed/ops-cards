@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -11,9 +12,15 @@ class GameSession extends Model
     use HasFactory;
 
     protected $gurded = ['id'];
+
     public function gameSessionSections(): HasMany
     {
         return $this->hasMany(GameSessionSection::class);
+    }
+
+    public function scopeActive(Builder $query): void
+    {
+        $query->whereNull('game_sessions.compleated_at');
     }
 
 
@@ -24,7 +31,6 @@ class GameSession extends Model
     // {
     //     return $this->hasMany(Shop::class);
     // }
-
     // /**
     //  * @todo 進行の管理ができるようになおす
     //  */

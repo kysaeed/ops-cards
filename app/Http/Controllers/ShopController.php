@@ -35,10 +35,18 @@ class ShopController extends Controller
         $user = Auth::user();
 
         $gameSession = $user->gameSessions()
-            ->whereNull('game_sessions.disabled_at')
+            ->active()
             ->first();
 
-        $shop = $gameSession->shops()->first();
+        $gameSessionSection = $gameSession->gameSessionSections()
+            ->active()
+            ->first();
+
+        $gemeSessionSectionStep = $gameSessionSection->gameSessionSectionSteps()
+            ->active()
+            ->first();
+
+        $shop = $gemeSessionSectionStep->shop;
 
         $shopCards = $shop->shopCards()->orderBy('order')->get();
 
@@ -49,8 +57,11 @@ class ShopController extends Controller
         }
 
 
-        $duel = $gameSession->duels()->first();
-        $deck = $duel->deck;
+        /*
+            @todo deck取得
+        */
+        // $duel = $gameSessionSection->duels()->first();
+        $deck = $gameSessionSection->deck;
 
         $deckCards = $deck->deckCards()
             ->orderBy('order')
@@ -75,12 +86,14 @@ class ShopController extends Controller
         $user = Auth::user();
 
         $gameSession = $user->gameSessions()
-            ->whereNull('game_sessions.disabled_at')
+            ->whereNull('game_sessions.compleated_at')
             ->first();
 
-        $duel = $gameSession->duels()->first();
+        $gameSessionSection = $gameSession->gameSessionSections()
+            ->active()
+            ->first();
 
-        $deck = $duel->deck()->first();
+        $deck = $gameSessionSection->deck;
 
 
     }

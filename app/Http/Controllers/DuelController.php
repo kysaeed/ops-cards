@@ -160,7 +160,7 @@ class DuelController extends Controller
         $this->createInitialData($user);
 
         $gameSession = $user->gameSessions()
-            ->whereNull('disabled_at')
+            ->whereNull('compleated_at')
             ->first();
 
         $duel = $gameSession->duels()->first();
