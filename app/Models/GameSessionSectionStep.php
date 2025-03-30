@@ -29,6 +29,11 @@ class GameSessionSectionStep extends Model
         return $this->belongsTo(Shop::class);
     }
 
+    public function gameSessionSection(): BelongsTo
+    {
+        return $this->belongsTo(GameSessionSection::class);
+    }
+
     public function scopeActive(Builder $query): void
     {
         $query

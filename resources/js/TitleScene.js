@@ -97,10 +97,9 @@ const TitleScene = {
         // ログイン処理 @todo タイトルから
         window.axios.get('sanctum/csrf-cookie').then(() => {
             window.axios.post('api/login', {}).then((res) => {
-console.log(res)
                 const data = res.data
                 this.input.on('pointerdown', () => {
-                    if (data.status == 1) {
+                    if (data.state == 1) {
                         this.scene.start('ShopScene')
                     } else {
                         this.scene.start('DuelScene')

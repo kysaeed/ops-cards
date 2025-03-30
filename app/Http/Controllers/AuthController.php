@@ -32,6 +32,7 @@ class AuthController extends Controller
     protected function createInitialData(User $user)
     {
         $gameSession = $user->gameSessions()
+            ->active()
             ->first();
 
         if (!$gameSession) {
@@ -40,6 +41,7 @@ class AuthController extends Controller
         }
 
         $gameSessionSection = $gameSession->gameSessionSections()
+            ->active()
             ->orderBy('order')
             ->first();
         if (!$gameSessionSection) {
@@ -195,15 +197,23 @@ class AuthController extends Controller
         }
 
         $gameSession = $user->gameSessions()
-            ->whereNull('game_sessions.compleated_at')
+            ->active()
             ->first();
 
+        if (!$gameSession) {
+            $this->createInitialData($user);
+
+            $gameSession = $user->gameSessions()
+                ->active()
+                ->first();
+        }
+
         $gameSessionSection = $gameSession->gameSessionSections()
-            ->whereNull('compleated_at')
+            ->active()
             ->first();
 
         $gameSessionSectionStep = $gameSessionSection->gameSessionSectionSteps()
-            ->whereNull('compleated_at')
+            ->active()
             ->first();
 
         $state = 0;

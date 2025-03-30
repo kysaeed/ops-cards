@@ -99,6 +99,30 @@ class ShopController extends Controller
             ->active()
             ->first();
 
+        $shop = $gameSessionSectionStep->shop;
+        $shopCards = $shop->shopCards()->orderBy('order')->get();
+
+
+        $selectedCardIndexList = $request->input('selectedIndexList');
+
+        $selectedCardNumbers = [];
+        foreach ($selectedCardIndexList as $selectedCardIndex) {
+            $selectedCardNumbers[] = $shopCards[$selectedCardIndex]->card_number;
+        }
+
+        $deck = $gameSessionSection->deck;
+        // todo transaction
+        $order = $deck->deckCards()->max('order') ?? 0;
+        foreach ($selectedCardNumbers as $cardNumber) {
+            $order++;
+            $deckCard = new DeckCard([
+                'card_number' => $cardNumber,
+                'order' => $order,
+            ]);
+            $deck->deckCards()->save($deckCard);
+        }
+
+
         $gameSessionSectionStep->compleated_at = CarbonImmutable::now();
         $gameSessionSectionStep->save();
 

@@ -47,7 +47,7 @@ const SelectPhase = {
         deckCardNumbers.forEach((n, i) => {
             const index = (i + 1)
 
-            const c = new CardSprite(scene, (index % 10), CardList[n])
+            const c = new CardSprite(scene, (index % 10), CardList[n - 1])
 
             c.sprite.x = x + 210
             c.sprite.y = y + 410
@@ -96,19 +96,19 @@ const SelectPhase = {
     },
 
     onEnd() {
-        const selectedCardNumbers = []
-        this.selectCards.forEach((c) => {
+        const selectedCarIndexList = []
+        this.selectCards.forEach((c, i) => {
             if (c.isSelectd) {
-                selectedCardNumbers.push(c.cardNumber)
+                selectedCarIndexList.push(i)
             }
         })
 
-        const data = {
-            selectedCards: [],
+        const selectedCard = {
+            selectedIndexList: selectedCarIndexList,
         }
 
         window.axios.get('sanctum/csrf-cookie').then(() => {
-            window.axios.post('api/shop/select', {}).then((res) => {
+            window.axios.post('api/shop/select', selectedCard).then((res) => {
                 this.scene.scene.start('DuelScene')
             })
         })

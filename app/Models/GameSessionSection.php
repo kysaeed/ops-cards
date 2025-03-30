@@ -20,6 +20,11 @@ class GameSessionSection extends Model
         return $this->belongsTo(Deck::class);
     }
 
+    public function gameSession(): BelongsTo
+    {
+        return $this->belongsTo(GameSession::class);
+    }
+
     public function gameSessionSectionSteps(): HasMany
     {
         return $this->hasMany(GameSessionSectionStep::class);
