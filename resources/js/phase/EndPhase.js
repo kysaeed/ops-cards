@@ -44,7 +44,8 @@ const EndPhase = {
 
         duel.getScene().input.on('pointerdown', () => {
             //
-            duel.getScene().scene.start('TitleScene')
+            // duel.getScene().scene.start('TitleScene')
+            duel.getScene().scene.start('DuelScene')
         })
 
 

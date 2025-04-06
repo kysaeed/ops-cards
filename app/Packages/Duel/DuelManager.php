@@ -35,7 +35,6 @@ class DuelManager
 
     public function initial()
     {
-
         $nextState = $this->state;
 
         foreach ($this->players as $i => $deck) {
@@ -43,11 +42,10 @@ class DuelManager
         }
 
         foreach ($this->players as $i => $player) {
-
             $c = $this->players[$i]->getDeck()->draw();
 
             if ($c) {
-                $nextState['players'][$i]['handCardNumber'] = $c->getCardNumber();
+                // $nextState['players'][$i]['handCardNumber'] = $c->getCardNumber();
                 $player->getHandCard()->setCard($c);
             }
         }
@@ -194,37 +192,38 @@ class DuelManager
             $this->players[$jsonIndex]->getCardStack()->add($card);
 
 
-            if ($attackResult) {
-                if ($attackResult['isTurnChange']) {
-                    // 攻撃側を防御側へ
-                    $this->players[$jsonIndex]->getCardStack()->clearBuf();
+            $judge = 1;
+            // if ($attackResult) {
+            //     if ($attackResult['isTurnChange']) {
+            //         // 攻撃側を防御側へ
+            //         $this->players[$jsonIndex]->getCardStack()->clearBuf();
 
-                    // 防御側のカードをBenchへ
-                    $stackCards = $this->players[$enemyJsonIndex]->getCardStack()->takeAll();
-                    $this->players[$enemyJsonIndex]->getBench()->addCardList($stackCards);
+            //         // 防御側のカードをBenchへ
+            //         $stackCards = $this->players[$enemyJsonIndex]->getCardStack()->takeAll();
+            //         $this->players[$enemyJsonIndex]->getBench()->addCardList($stackCards);
 
-                    // ターン交代
-                    $nextState['turnPalyerIndex'] = (1 - $nextState['turnPalyerIndex']);
-                }
+            //         // ターン交代
+            //         $nextState['turnPalyerIndex'] = (1 - $nextState['turnPalyerIndex']);
+            //     }
 
-                if ($attackResult['isTurnChange']) {
-                    if ($this->players[$enemyJsonIndex]->getDeck()->isEmpty()) {
-                        if ($this->players[$enemyJsonIndex]->getHandCard()->isEmpty()) {
-                            $judge = 1;
-                        }
-                    }
+            //     if ($attackResult['isTurnChange']) {
+            //         if ($this->players[$enemyJsonIndex]->getDeck()->isEmpty()) {
+            //             if ($this->players[$enemyJsonIndex]->getHandCard()->isEmpty()) {
+            //                 $judge = 1;
+            //             }
+            //         }
 
-                    if ($this->players[$enemyJsonIndex]->getBench()->getTypeCount() >= 8) {
-                        $judge = 2;
-                    }
-                } else {
-                    if ($this->players[$jsonIndex]->getDeck()->isEmpty()) {
-                        if ($this->players[$jsonIndex]->getHandCard()->isEmpty()) {
-                            $judge = -1;
-                        }
-                    }
-                }
-            }
+            //         if ($this->players[$enemyJsonIndex]->getBench()->getTypeCount() >= 8) {
+            //             $judge = 2;
+            //         }
+            //     } else {
+            //         if ($this->players[$jsonIndex]->getDeck()->isEmpty()) {
+            //             if ($this->players[$jsonIndex]->getHandCard()->isEmpty()) {
+            //                 $judge = -1;
+            //             }
+            //         }
+            //     }
+            // }
         }
 
 

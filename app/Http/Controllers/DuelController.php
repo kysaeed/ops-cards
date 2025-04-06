@@ -376,19 +376,21 @@ class DuelController extends Controller
             $duel->duelTurns()->save($turn);
 
             if ($step['judge']) {
-                $gameSessionSectionStep = $duel->gameSessionSectionStep;
+                // $gameSessionSectionStep = $duel->gameSessionSectionStep;
                 if ($gameSessionSectionStep) {
                     // 勝敗
                     $gameSessionSectionStep->compleated_at = CarbonImmutable::now();
                     $gameSessionSectionStep->save();
 
-                    // ゲーム終了 //
-                    $gameSessionSection = $gameSessionSectionStep->gameSessionSection;
-                    $gameSessionSection->compleated_at = CarbonImmutable::now();
-                    $gameSessionSection->save();
-                    $gameSession = $gameSessionSection->gameSession;
-                    $gameSession->compleated_at = CarbonImmutable::now();
-                    $gameSession->save();
+                    if ($gameSessionSection->gameSessionSectionSteps()->exists()) {
+                        //
+                        // todo
+                    } else {
+                        // ゲーム終了 //
+                        $gameSession = $gameSessionSection->gameSession;
+                        $gameSession->compleated_at = CarbonImmutable::now();
+                        $gameSession->save();
+                    }
                     /////
                 }
             }

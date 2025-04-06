@@ -45,6 +45,7 @@ class AuthController extends Controller
             ->orderBy('order')
             ->first();
         if (!$gameSessionSection) {
+
             $deck = $this->createInitialDeck($user);
 
             $gameSessionSection = new GameSessionSection();
@@ -53,6 +54,8 @@ class AuthController extends Controller
             $gameSession->gameSessionSections()
                 ->save($gameSessionSection);
         }
+
+        $order = 1;
 
         $shopStep =  $gameSessionSection->gameSessionSectionSteps()
             ->whereNull('compleated_at')
@@ -64,7 +67,7 @@ class AuthController extends Controller
             $shop = $this->createShop($user);
 
             $gameSessionSectionsStep = new GameSessionSectionStep([
-                'order' => 1,
+                'order' => $order++,
             ]);
             $gameSessionSectionsStep->fill([
             ]);
@@ -72,6 +75,7 @@ class AuthController extends Controller
             $gameSessionSection->gameSessionSectionSteps()
                 ->save($gameSessionSectionsStep);
         }
+
 
         $duelStep = $gameSessionSection->gameSessionSectionSteps()
             ->whereNull('compleated_at')
@@ -84,25 +88,27 @@ class AuthController extends Controller
         //     ->where('user_id', $user->id)
         //     ->first();
         if (!$duelStep) {
-            //$deck = $this->createInitialDeck($user);
-            $duel = new Duel([
-                //'turn' => 1,
-                'user_id' => $user->id,
-                'turn' => 1,
-                'deck_id' => $gameSessionSection->deck->id,
-                'enemy_deck_id' => 2,
-            ]);
-            $duel->save();
 
-            $gameSessionSectionsStep = new GameSessionSectionStep();
-            $gameSessionSectionsStep->fill([
-                'duel_id' => $duel->id,
-                'order' => 2,
-            ]);
-            $gameSessionSection->gameSessionSectionSteps()
-                ->save($gameSessionSectionsStep);
+            for ($i = 0; $i < 3; $i++) {
 
-            //$gameSession->duels()->save($duel);
+                $duel = new Duel([
+                    //'turn' => 1,
+                    'user_id' => $user->id,
+                    'turn' => 1,
+                    'deck_id' => $gameSessionSection->deck->id,
+                    'enemy_deck_id' => 2,
+                ]);
+                $duel->save();
+
+                $gameSessionSectionsStep = new GameSessionSectionStep();
+                $gameSessionSectionsStep->fill([
+                    'duel_id' => $duel->id,
+                    'order' => $order++,
+                ]);
+                $gameSessionSection->gameSessionSectionSteps()
+                    ->save($gameSessionSectionsStep);
+            }
+
         }
 
         // if (!$duel) {
