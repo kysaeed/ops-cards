@@ -2,24 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\DB;
-use Carbon\CarbonImmutable;
-use App\Models\User;
 use App\Models\Deck;
 use App\Models\DeckCard;
 use App\Models\Duel;
 use App\Models\DuelTurn;
 use App\Models\GameSession;
+use App\Models\User;
 use App\Packages\Duel\DuelManager;
+use App\Packages\GameMaster\GameMaster;
+use Carbon\CarbonImmutable;
+use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class DuelController extends Controller
 {
     protected array $cardSettings;
 
-    public function __construct()
+    public function __construct(
+        protected GameMaster $gameMaster
+    )
     {
         $this->cardSettings = [];
         $string = file_get_contents(resource_path('settings/cards.json'));
@@ -299,8 +302,8 @@ class DuelController extends Controller
         // $isPlayerTurn = $request->input('isPlayer');
 
         return DB::transaction(function () use ($isHandCrad) {
+            /** @var User $user */
             $user = Auth::user();
-
 
 
             $gameSession = $user->gameSessions()
@@ -376,22 +379,37 @@ class DuelController extends Controller
             $duel->duelTurns()->save($turn);
 
             if ($step['judge']) {
-                // $gameSessionSectionStep = $duel->gameSessionSectionStep;
+
+logger('JUDGE !!! ***************************************');
+                $gameSessionSectionStep = $duel->gameSessionSectionStep;
+
                 if ($gameSessionSectionStep) {
-                    // 勝敗
+logger('has step OK....');
                     $gameSessionSectionStep->compleated_at = CarbonImmutable::now();
                     $gameSessionSectionStep->save();
 
-                    if ($gameSessionSection->gameSessionSectionSteps()->exists()) {
-                        //
-                        // todo
-                    } else {
-                        // ゲーム終了 //
-                        $gameSession = $gameSessionSection->gameSession;
-                        $gameSession->compleated_at = CarbonImmutable::now();
-                        $gameSession->save();
+                    if (!$this->gameMaster->hasGameSessionSectionSteps($user)) {
+logger('none : active step');
+                        // 勝敗
+                        $this->gameMaster->closeGameSessionSection($user);
+                        if (!$this->gameMaster->hasGameSessionSection($user)) {
+logger('none : active session');
+                            $this->gameMaster->closeGameSession($user);
+                        }
+
+                        // if ($gameSessionSection->gameSessionSectionSteps()->exists()) {
+                        //     //
+                        //     // todo
+                        // } else {
+                        //     // ゲーム終了 //
+                        //     // $gameSessionSection->compleated_at = CarbonImmutable::now();
+                        //     // $gameSession = $gameSessionSection->gameSession;
+                        //     // $gameSession->compleated_at = CarbonImmutable::now();
+                        //     // $gameSessionSection->save();
+                        //     // $gameSession->save();
+                        //     $this->gameMaster->closeGameSession($user);
+                        // }
                     }
-                    /////
                 }
             }
 

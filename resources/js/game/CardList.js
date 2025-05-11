@@ -114,6 +114,17 @@ const CardList = [
       power: 1,
       name: 'フラスコ',
       image: 'ch_frasco',
+      ability: {
+        enter: {
+          discard: {
+            target: {
+              type: 1,
+              location: 'bench'
+            },
+            //power: 2
+          },
+        },
+      },
       type: 0,
     },
     {

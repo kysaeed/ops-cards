@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ShopCard extends Model
 {
     use HasFactory;
-    protected $gurded = ['id'];
+    protected $guarded = ['id'];
 
 
 }

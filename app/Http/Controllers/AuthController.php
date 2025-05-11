@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use App\Models\User;
-use App\Models\Duel;
 use App\Models\Deck;
 use App\Models\DeckCard;
+use App\Models\Duel;
 use App\Models\GameSession;
 use App\Models\GameSessionSection;
 use App\Models\GameSessionSectionStep;
 use App\Models\Shop;
 use App\Models\ShopCard;
+use App\Models\User;
+use App\Packages\GameMaster\GameMaster;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
@@ -175,6 +176,7 @@ class AuthController extends Controller
 
     public function login()
     {
+logger('179: AuthController::login() -----');
         $user = Auth::user();
 // $user = User::find(3);
 // Auth::login($user);
@@ -206,12 +208,19 @@ class AuthController extends Controller
             ->active()
             ->first();
 
-        if (!$gameSession) {
-            $this->createInitialData($user);
+logger('210: gameSession ----- id:' . $user?->id);
+logger($gameSession);
 
-            $gameSession = $user->gameSessions()
-                ->active()
-                ->first();
+
+        $gameMaster = new GameMaster($user);
+        if (!$gameMaster->hasGameSessionSection($user)) {
+logger('217: NO gameSession....');
+            $gameSession = $gameMaster->initializeGameSession($user);
+
+            // $this->createInitialData($user);
+            // $gameSession = $user->gameSessions()
+            //     ->active()
+            //     ->first();
         }
 
         $gameSessionSection = $gameSession->gameSessionSections()
