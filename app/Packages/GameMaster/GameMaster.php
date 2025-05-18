@@ -164,8 +164,6 @@ class GameMaster
             ->first();
 
         if (!$gameSessionSection) {
-logger('167: gameSessionSection -----');
-logger($gameSession->user);
             $deck = $this->createInitialDeck($gameSession->user);
 
             $gameSessionSection = new GameSessionSection([

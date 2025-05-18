@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreignIdFor(User::class);
             $table->foreignIdFor(Deck::class);
             $table->foreignIdFor(Deck::class, 'enemy_deck_id');
+            $table->boolean('is_player_win')->nullable();
             $table->timestamps();
         });
     }
