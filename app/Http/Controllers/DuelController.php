@@ -378,6 +378,7 @@ class DuelController extends Controller
 
             $duel->duelTurns()->save($turn);
 
+            $isSectionComplated = false;
             if ($step['judge'] > 0) {
 
                 if ($step['judge'] ) {
@@ -394,6 +395,8 @@ class DuelController extends Controller
                     $gameSessionSectionStep->save();
 
                     if (!$this->gameMaster->hasGameSessionSectionSteps($user)) {
+                        $isSectionComplated = true;
+
                         // 勝敗
                         $this->gameMaster->closeGameSessionSection($user);
                         if (!$this->gameMaster->hasGameSessionSection($user)) {
@@ -402,6 +405,8 @@ class DuelController extends Controller
                     }
                 }
             }
+
+            $step['isSectionCompleated'] = $isSectionComplated;
 
             return response()->json($step);
         });
