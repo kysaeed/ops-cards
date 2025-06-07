@@ -41,4 +41,13 @@ class Deck
     {
         return $this->cardNumberList;
     }
+
+    /**
+     * デッキの一番下にカードを追加する
+     * @param Card $card 追加するカード
+     */
+    public function addToBottom(Card $card): void
+    {
+        $this->cardNumberList[] = $card->getCardNumber();
+    }
 }

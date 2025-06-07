@@ -20,6 +20,7 @@ class DuelManager
     {
         $this->state = $state;
         $this->cardSettings = $cardSettings;
+logger($this->cardSettings);
 
         $this->players = [
             0 => null,
@@ -191,6 +192,8 @@ class DuelManager
 
             $this->players[$jsonIndex]->getCardStack()->add($card);
 
+            // カードの登場時の処理を実行
+            $this->onEnter($card, $this->players[$jsonIndex]->getCardStack(), $isPlyaerTurn);
 
             if ($attackResult) {
                 if ($attackResult['isTurnChange']) {
@@ -261,11 +264,9 @@ class DuelManager
         $addAttackPower = 0;
         $attackAbility = $attackCardStatus['ability']['attack'] ?? null;
         if ($attackAbility) {
-
             $addAttackPower = $attackAbility['power'] ?? 0;
             if ($addAttackPower) {
                 $ability['attack']['power'] = $addAttackPower;
-
                 $attackCard->setAddPower($addAttackPower);
             }
         }
@@ -275,9 +276,8 @@ class DuelManager
         $addDefensePower = 0;
         $defenseAbility = $defenseCardStatus['ability']['defense'] ?? null;
         if ($defenseAbility) {
-            $addDefensePower = $defenseAbility['power'];
+            $addDefensePower = $defenseAbility['power'] ?? 0;
             $defenseCard->setAddPower($addDefensePower);
-
             $ability['defense']['power'] = $addDefensePower;
         }
 
@@ -304,5 +304,37 @@ class DuelManager
         ];
     }
 
+    protected function onEnter(Card $card, CardStack $cardStack, bool $isPlayer)
+    {
+        $cardStatus = $card->getStatus();
+        $ability = $cardStatus['ability'] ?? null;
+
+        if (!$ability || !($ability['enter'] ?? null)) {
+            return;
+        }
+
+        $enterAbility = $ability['enter'];
+        if (!($enterAbility['discard'] ?? null)) {
+            return;
+        }
+
+        $discard = $enterAbility['discard'];
+        $target = $discard['target'];
+
+        // フラスコとオドラデクの処理
+        if ($target['type'] === 1 || $target['type'] === 0) { // 魔術タイプまたは通常タイプ
+            $targetPlayer = $target['isPlayer'] ? $isPlayer : !$isPlayer;
+            $targetPlayerIndex = $targetPlayer ? self::Player : self::Enemy;
+
+            // ベンチから対象タイプのカードを取り出す
+            $bench = $this->players[$targetPlayerIndex]->getBench();
+            $takenCard = $bench->takeCardByType($target['type']);
+
+            // カードを取り出せた場合、toDeckBottomがtrueならデッキの一番下に戻す
+            if ($takenCard && ($discard['toDeckBottom'] ?? false)) {
+                $this->players[$targetPlayerIndex]->getDeck()->addToBottom($takenCard);
+            }
+        }
+    }
 
 }

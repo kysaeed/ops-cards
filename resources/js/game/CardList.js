@@ -109,6 +109,18 @@ const CardList = [
       name: 'オドラデク',
       image: 'ch_oddc',
       type: 0,
+      ability: {
+        enter: {
+          discard: {
+            target: {
+              isPlayer: true,
+              type: 0,
+              location: 'bench',
+            },
+            toDeckBottom: true,
+          },
+        },
+      },
     },
     {
       power: 1,
@@ -118,8 +130,9 @@ const CardList = [
         enter: {
           discard: {
             target: {
-              type: 1,
-              location: 'bench'
+              isPlayer: true,
+              type: 0,
+              location: 'bench',
             },
             //power: 2
           },

@@ -52,4 +52,31 @@ class BenchItem
 
         return $json;
     }
+
+    /**
+     * 指定したインデックスのカードを削除する
+     * @param int $index 削除するカードのインデックス
+     */
+    public function removeCard(int $index): void
+    {
+        array_splice($this->cardList, $index, 1);
+    }
+
+    /**
+     * カードリストが空かどうかを判定
+     * @return bool 空の場合はtrue
+     */
+    public function isEmpty(): bool
+    {
+        return empty($this->cardList);
+    }
+
+    /**
+     * カードリストを取得
+     * @return array カードの配列
+     */
+    public function getCards(): array
+    {
+        return $this->cardList;
+    }
 }

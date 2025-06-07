@@ -58,4 +58,36 @@ class Bench
 
         return $json;
     }
+
+    public function removeCard(int $index)
+    {
+        unset($this->benchItems[$index]);
+        $this->benchItems = array_values($this->benchItems);
+    }
+
+    /**
+     * ベンチから特定タイプのカードを取り出す
+     * @param int $type 取り出すカードのタイプ
+     * @return Card|null 取り出したカード。見つからなかった場合はnull
+     */
+    public function takeCardByType(int $type): ?Card
+    {
+        foreach ($this->benchItems as $benchIndex => $benchItem) {
+            $cards = $benchItem->getCards();
+            foreach ($cards as $cardIndex => $card) {
+                if ($card->getStatus()['type'] === $type) {
+                    $takenCard = $card;
+                    $benchItem->removeCard($cardIndex);
+
+                    // BenchItemが空になった場合、BenchItem自体を削除
+                    if ($benchItem->isEmpty()) {
+                        array_splice($this->benchItems, $benchIndex, 1);
+                    }
+
+                    return $takenCard;
+                }
+            }
+        }
+        return null;
+    }
 }

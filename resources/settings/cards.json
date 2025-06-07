@@ -87,6 +87,17 @@
         "power": 1,
         "name": "フラスコ",
         "image": "ch_frasco",
+        "ability": {
+            "enter": {
+                "discard": {
+                    "target": {
+                        "isPlayer": true,
+                        "type": 0,
+                        "location": "bench"
+                    }
+                }
+            }
+        },
         "type": 0
     },
     {
