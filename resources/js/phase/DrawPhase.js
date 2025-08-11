@@ -89,12 +89,38 @@ console.log('onEvent hand-card click!!!', data)
         //
         const duel = this.duel
         card.moveToAttackPosition(() => {
-            const add = data.addAttackPower
             card.onEnterToAttackPosition(data, () => {
+console.log('** *data *** ', data)
+                if (data.ability?.enter?.discard?.cardNumber) {
+
+
+                    const targetCard = duel.getTurnPlayer().getBench().takeCardByCardNumber(data.ability.enter.discard.cardNumber)
+// console.log('**** TAKE !! ****', targetCard)
+                    if (targetCard) {
+                        duel.getTurnPlayer().getCardStack().addCard(card)
+
+                        // @todo カットインの表示をする
+                        card.showAbilityEffect(() => {
+
+                            const direction = duel.getTurnPlayer().getDirection()
+
+                            console.log('**** direction *** ', direction)
+
+                            targetCard.moveToAbyss((400 * direction), (-300 * direction), () => {
+                                if (onEnd) {
+                                    onEnd()
+                                }
+                            })
+                        })
+                        return
+                    }
+                }
+
                 duel.getTurnPlayer().getCardStack().addCard(card)
                 if (onEnd) {
                     onEnd()
                 }
+                return
             })
         })
     },

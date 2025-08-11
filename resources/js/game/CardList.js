@@ -25,6 +25,26 @@ const CardTypeList = [
 ];
 
 const CardList = [
+  //// TEST ////
+  {
+    power: 1,
+    name: 'フラスコ',
+    image: 'ch_frasco',
+    ability: {
+      enter: {
+        discard: {
+          target: {
+            isPlayer: true,
+            type: 0,
+            location: 'bench',
+          },
+          //power: 2
+        },
+      },
+    },
+    type: 0,
+  },
+  /////////////////
 
   {
       power: 1,

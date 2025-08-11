@@ -1,6 +1,23 @@
 [
     {
         "power": 1,
+        "name": "フラスコ",
+        "image": "ch_frasco",
+        "ability": {
+            "enter": {
+                "discard": {
+                    "target": {
+                        "isPlayer": true,
+                        "type": 0,
+                        "location": "bench"
+                    }
+                }
+            }
+        },
+        "type": 0
+    },
+    {
+        "power": 1,
         "name": "影",
         "image": "ch_kage",
         "type": 1
@@ -81,7 +98,19 @@
         "power": 1,
         "name": "オドラデク",
         "image": "ch_oddc",
-        "type": 0
+        "type": 0,
+        "ability": {
+            "enter": {
+                "discard": {
+                    "target": {
+                        "isPlayer": true,
+                        "type": 0,
+                        "location": "bench"
+                    },
+                    "toDeckBottom": true
+                }
+            }
+        }
     },
     {
         "power": 1,

@@ -20,7 +20,6 @@ class DuelManager
     {
         $this->state = $state;
         $this->cardSettings = $cardSettings;
-logger($this->cardSettings);
 
         $this->players = [
             0 => null,
@@ -178,22 +177,27 @@ logger($this->cardSettings);
 
         $judge = 0;
         if ($card) {
+
+            // カードの登場時の処理を実行
+            $enterResult = $this->onEnter($card, $this->players[$jsonIndex]->getCardStack(), $isPlyaerTurn);
+
             // $defenseCardNumber = $defenseCard['cardNumber'];
             $attackResult = $this->onAttack(
                 $card,
+                $enterResult,
                 $this->players[$jsonIndex]->getCardStack(),
                 $defCard,
             );
 
-            array_unshift($nextState['players'][$jsonIndex]['cardStack'], [
-                'cardNumber' => $cardNumber,
-                'addPower' => $attackResult['addAttackPower'],
-            ]);
+            // $addAttackPower = $attackResult['ability']['attack']['power'] ?? 0;
+            // $addDefensePower = $attackResult['ability']['defense']['power'] ?? 0;
+            // array_unshift($nextState['players'][$jsonIndex]['cardStack'], [
+            //     'cardNumber' => $cardNumber,
+            //     'addPower' => $addAttackPower,
+            // ]);
 
             $this->players[$jsonIndex]->getCardStack()->add($card);
 
-            // カードの登場時の処理を実行
-            $this->onEnter($card, $this->players[$jsonIndex]->getCardStack(), $isPlyaerTurn);
 
             if ($attackResult) {
                 if ($attackResult['isTurnChange']) {
@@ -228,6 +232,9 @@ logger($this->cardSettings);
             }
         }
 
+        ////// TEST //////
+        // $judge = 1;
+        //////////////////
 
         // $this->state = $nextState;
         // state
@@ -240,7 +247,6 @@ logger($this->cardSettings);
             'isHandCard' => $isHandCard,
             'isTurnChange' => $attackResult['isTurnChange'],
             'cardNumber' => $cardNumber,
-            'addAttackPower' => $attackResult['addAttackPower'],
             'ability' => $attackResult['ability'],
             'nextHnadCardNumber' => $nextHandCardNumber,
             'cardCount' => $cardCount,
@@ -248,7 +254,7 @@ logger($this->cardSettings);
         ];
     }
 
-    protected function onAttack(Card $attackCard, CardStack $attackCardStack, ?Card $defenseCard)
+    protected function onAttack(Card $attackCard, array $ability, CardStack $attackCardStack, ?Card $defenseCard)
     {
         $attackCardStatus = $attackCard->getStatus();
         $defenseCardStatus = $defenseCard->getStatus();
@@ -256,19 +262,16 @@ logger($this->cardSettings);
         // prevAttackPowerをstackから計算する
         $prevAttackPower = $attackCardStack->getTotalPower();
 
-        $ability = [
-            'attack' => [],
-            'defense' => [],
-        ];
+        // 攻撃力の加算を初期化
+        $ability['attack']['power'] = $ability['attack']['power'] ?? 0;
+        $ability['defense']['power'] = $ability['defense']['power'] ?? 0;
 
         $addAttackPower = 0;
         $attackAbility = $attackCardStatus['ability']['attack'] ?? null;
         if ($attackAbility) {
             $addAttackPower = $attackAbility['power'] ?? 0;
-            if ($addAttackPower) {
-                $ability['attack']['power'] = $addAttackPower;
-                $attackCard->setAddPower($addAttackPower);
-            }
+            $ability['attack']['power'] = $addAttackPower;
+            $attackCard->setAddPower($addAttackPower);
         }
 
         $totalAttackPower = $attackCard->getTotalPower() + $prevAttackPower;
@@ -296,30 +299,39 @@ logger($this->cardSettings);
             'judge' => $judge,
             'isTurnChange' => $isTurnChange,
             'attackPower' => $totalAttackPower,
-            'addAttackPower' => $addAttackPower,
-            'addDefensePower' => $addDefensePower,
             'defensePower' => $totalDefensePower,
-            'addDefensePower' => $addDefensePower,
             'ability' => $ability,
         ];
     }
 
-    protected function onEnter(Card $card, CardStack $cardStack, bool $isPlayer)
+    protected function onEnter(Card $card, CardStack $cardStack, bool $isPlayer): array
     {
         $cardStatus = $card->getStatus();
         $ability = $cardStatus['ability'] ?? null;
 
         if (!$ability || !($ability['enter'] ?? null)) {
-            return;
+            return [
+                'attack' => ['power' => 0],
+                'defense' => ['power' => 0],
+            ];
         }
 
         $enterAbility = $ability['enter'];
         if (!($enterAbility['discard'] ?? null)) {
-            return;
+            return [
+                'attack' => ['power' => 0],
+                'defense' => ['power' => 0],
+            ];
         }
 
         $discard = $enterAbility['discard'];
         $target = $discard['target'];
+
+        $discardResult = [
+            'isPlayer' => $target['isPlayer'] ?? true,
+            'benchCardType' => $target['type'] ?? null,
+            'cardNumber' => null,
+        ];
 
         // フラスコとオドラデクの処理
         if ($target['type'] === 1 || $target['type'] === 0) { // 魔術タイプまたは通常タイプ
@@ -330,11 +342,24 @@ logger($this->cardSettings);
             $bench = $this->players[$targetPlayerIndex]->getBench();
             $takenCard = $bench->takeCardByType($target['type']);
 
-            // カードを取り出せた場合、toDeckBottomがtrueならデッキの一番下に戻す
-            if ($takenCard && ($discard['toDeckBottom'] ?? false)) {
-                $this->players[$targetPlayerIndex]->getDeck()->addToBottom($takenCard);
+            // カードを取り出せた場合、cardNumberを設定
+            if ($takenCard) {
+                $discardResult['cardNumber'] = $takenCard->getCardNumber();
+
+                // toDeckBottomがtrueならデッキの一番下に戻す
+                if ($discard['toDeckBottom'] ?? false) {
+                    $this->players[$targetPlayerIndex]->getDeck()->addToBottom($takenCard);
+                }
             }
         }
+
+        return [
+            'attack' => ['power' => 0],
+            'defense' => ['power' => 0],
+            'enter' => [
+                'discard' => $discardResult,
+            ],
+        ];
     }
 
 }

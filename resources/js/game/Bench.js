@@ -63,6 +63,23 @@ export default class Bench {
         })
     }
 
+    takeCardByCardNumber(cardNumber) {
+console.log('**** TAKE BY CARD NUMBER ****', cardNumber)
+console.log(this.cards)
+        const element = this.cards.find((elem) => {
+            if (elem.length) {
+                return elem[0].cardInfo.id === cardNumber
+            }
+            return false
+        })
+
+        if (!element) {
+            return null
+        }
+
+        return element.pop()
+    }
+
     takeLatestCard() {
         if (!this.cards.length) {
             return
