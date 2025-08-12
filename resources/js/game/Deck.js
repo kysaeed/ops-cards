@@ -231,13 +231,23 @@ export default class Deck {
         this.initialCardCount = 0
         this.deckIndex = 0
 
-        const x = 380 * player.getDirection() //+ 30
-        const y = (180 * player.getDirection()) //+ 30
+        this.x = 380 * player.getDirection() //+ 30
+        this.y = (180 * player.getDirection()) //+ 30
 
         // const isPlyaer = (player.getPlayerId() === 0)
 
-        this.sprite = new DeckSprite(duel, x, y, 20) // @todo 初期枚数
+        this.sprite = new DeckSprite(duel, this.x, this.y, 20) // @todo 初期枚数
+    }
 
+    getSprite() {
+        return this.sprite
+    }
+
+    getX() {
+        return this.x
+    }
+    getY() {
+        return this.y
     }
 
     setClickableState(isClickable) {

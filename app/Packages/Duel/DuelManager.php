@@ -317,38 +317,83 @@ class DuelManager
         }
 
         $enterAbility = $ability['enter'];
-        if (!($enterAbility['discard'] ?? null)) {
-            return [
-                'attack' => ['power' => 0],
-                'defense' => ['power' => 0],
-            ];
+
+        // if (!($enterAbility['discard'] ?? null)) {
+        //     return [
+        //         'attack' => ['power' => 0],
+        //         'defense' => ['power' => 0],
+        //     ];
+        // }
+
+
+        // $discardResult = [
+        //     'isPlayer' => $target['isPlayer'] ?? true,
+        //     'benchCardType' => $target['type'] ?? null,
+        //     'cardNumber' => null,
+        // ];
+
+
+        $enterAbilityResult = [];
+
+
+        $discard = $enterAbility['discard'] ?? [];
+        if (!empty($discard)) {
+            $target = $discard['target'];
+
+            // フラスコとオドラデクの処理
+            if ($target['type'] === 1 || $target['type'] === 0) { // 魔術タイプまたは通常タイプ
+                $targetPlayer = $target['isPlayer'] ? $isPlayer : !$isPlayer;
+                $targetPlayerIndex = $targetPlayer ? self::Player : self::Enemy;
+
+                // ベンチから対象タイプのカードを取り出す
+                $bench = $this->players[$targetPlayerIndex]->getBench();
+                $takenCard = $bench->takeCardByType($target['type']);
+
+                // カードを取り出せた場合、cardNumberを設定
+                if ($takenCard) {
+                    $enterAbilityResult['discard'] = [
+                        'cardNumber' => $takenCard->getCardNumber(),
+                        'isPlayer' => $target['isPlayer'] ?? true,
+                        'benchCardType' => $target['type'] ?? null,
+                    ];
+
+                    // $discardResult['cardNumber'] = $takenCard->getCardNumber();
+                    // toDeckBottomがtrueならデッキの一番下に戻す
+                    // if ($discard['toDeckBottom'] ?? false) {
+                    //     $this->players[$targetPlayerIndex]->getDeck()->addToBottom($takenCard);
+                    // }
+
+                }
+            }
         }
 
-        $discard = $enterAbility['discard'];
-        $target = $discard['target'];
+        $recycle = $enterAbility['recycle'] ?? [];
 
-        $discardResult = [
-            'isPlayer' => $target['isPlayer'] ?? true,
-            'benchCardType' => $target['type'] ?? null,
-            'cardNumber' => null,
-        ];
+        if (!empty($recycle)) {
 
-        // フラスコとオドラデクの処理
-        if ($target['type'] === 1 || $target['type'] === 0) { // 魔術タイプまたは通常タイプ
-            $targetPlayer = $target['isPlayer'] ? $isPlayer : !$isPlayer;
-            $targetPlayerIndex = $targetPlayer ? self::Player : self::Enemy;
+            $target = $recycle['target'];
 
-            // ベンチから対象タイプのカードを取り出す
-            $bench = $this->players[$targetPlayerIndex]->getBench();
-            $takenCard = $bench->takeCardByType($target['type']);
+            // フラスコとオドラデクの処理
+            if ($target['type'] === 1 || $target['type'] === 0) { // 魔術タイプまたは通常タイプ
+                $targetPlayer = $target['isPlayer'] ? $isPlayer : !$isPlayer;
+                $targetPlayerIndex = $targetPlayer ? self::Player : self::Enemy;
 
-            // カードを取り出せた場合、cardNumberを設定
-            if ($takenCard) {
-                $discardResult['cardNumber'] = $takenCard->getCardNumber();
+                // ベンチから対象タイプのカードを取り出す
+                $bench = $this->players[$targetPlayerIndex]->getBench();
+                $takenCard = $bench->takeCardByType($target['type']);
 
-                // toDeckBottomがtrueならデッキの一番下に戻す
-                if ($discard['toDeckBottom'] ?? false) {
+                // カードを取り出せた場合、cardNumberを設定
+                if ($takenCard) {
+
+                    // toDeckBottomがtrueならデッキの一番下に戻す
                     $this->players[$targetPlayerIndex]->getDeck()->addToBottom($takenCard);
+
+                    $enterAbilityResult['recycle'] = [
+                        'cardNumber' => $takenCard->getCardNumber(),
+                        'isPlayer' => $target['isPlayer'] ?? true,
+                        'benchCardType' => $target['type'] ?? null,
+                        'deckCount' => $this->players[$targetPlayerIndex]->getDeck()->getCount(),
+                    ];
                 }
             }
         }
@@ -356,9 +401,7 @@ class DuelManager
         return [
             'attack' => ['power' => 0],
             'defense' => ['power' => 0],
-            'enter' => [
-                'discard' => $discardResult,
-            ],
+            'enter' => $enterAbilityResult,
         ];
     }
 

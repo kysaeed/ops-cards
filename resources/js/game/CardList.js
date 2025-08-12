@@ -32,7 +32,7 @@ const CardList = [
     image: 'ch_frasco',
     ability: {
       enter: {
-        discard: {
+        recycle: {
           target: {
             isPlayer: true,
             type: 0,
@@ -148,7 +148,7 @@ const CardList = [
       image: 'ch_frasco',
       ability: {
         enter: {
-          discard: {
+          recycle: {
             target: {
               isPlayer: true,
               type: 0,
