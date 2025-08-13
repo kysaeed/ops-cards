@@ -229,7 +229,6 @@ export default class Deck {
     constructor(duel, player) {
         this.player = player
         this.initialCardCount = 0
-        this.deckIndex = 0
 
         this.x = 380 * player.getDirection() //+ 30
         this.y = (180 * player.getDirection()) //+ 30
@@ -252,10 +251,10 @@ export default class Deck {
 
     setClickableState(isClickable) {
 
-        if (this.isEmpty()) {
-            this.sprite.setClickableState(false)
-            return
-        }
+        // if (this.isEmpty()) {
+        //     this.sprite.setClickableState(false)
+        //     return
+        // }
 
         this.sprite.setClickableState(isClickable)
     }
@@ -284,26 +283,12 @@ export default class Deck {
     enterDraw(duel, idDrawCard, deckRemainCount, stackCount, onEnter, onEnd) {
         const turnPlayerId = this.player.getPlayerId()
 
-        /*
-        if (this.isEmpty()) {
-            if (onEnter) {
-                onEnter(null)
-            }
-            if (onEnd) {
-                onEnd(null)
-            }
-            return
-        }
-        */
-
         const x = 400
         const y = -(HeightBase) + (HeightBase * 2 * (turnPlayerId))
 
         // console.log(idDrawCard)
         //let cardId = this.cards.shift()
         let cardId = idDrawCard
-
-        this.deckIndex++
 
         const cardInfo = duel.getCardInfo(cardId)
 
@@ -313,7 +298,6 @@ export default class Deck {
         }
 
         this.sprite.setDrawCardPosition(card, () => {
-            //let deckRemainCount = this.initialCardCount - this.deckIndex
             if (deckRemainCount < 0) {
                 deckRemainCount = 0
             }
@@ -326,9 +310,9 @@ export default class Deck {
     }
 
     isEmpty() {
-        if (this.initialCardCount <= this.deckIndex) {
-            return true
-        }
+        // if (this.initialCardCount <= this.deckIndex) {
+        //     return true
+        // }
         return false
     }
 
