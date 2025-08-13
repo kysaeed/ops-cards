@@ -240,7 +240,6 @@ class DuelManager
         // $judge = 1;
         //////////////////
 
-        // $this->state = $nextState;
         // state
         $nextState['players'][self::Player] = $this->players[self::Player]->toJson();
         $nextState['players'][self::Enemy] = $this->players[self::Enemy]->toJson();
@@ -345,14 +344,14 @@ class DuelManager
         if (!empty($discard)) {
             $target = $discard['target'];
 
-            // フラスコとオドラデクの処理
+            // discared処理
             if ($target['type'] === 1 || $target['type'] === 0) { // 魔術タイプまたは通常タイプ
                 $currentPlayerIndex = $isPlayer ? self::Player : self::Enemy;
                 $enemyPlayerIndex = (1 - $currentPlayerIndex);
                 $targetPlayerIndex = $currentPlayerIndex;
-
-                // $targetPlayer = $target['isPlayer'] ? $isPlayer : !$isPlayer;
-                // $targetPlayerIndex = $targetPlayer ? self::Player : self::Enemy;
+                // if (!($target['isPlayer'] ?? true)) {
+                //     $targetPlayerIndex = $enemyPlayerIndex;
+                // }
 
                 // ベンチから対象タイプのカードを取り出す
                 $bench = $this->players[$targetPlayerIndex]->getBench();
@@ -365,13 +364,6 @@ class DuelManager
                         'isPlayer' => $target['isPlayer'] ?? true,
                         'benchCardType' => $target['type'] ?? null,
                     ];
-
-                    // $discardResult['cardNumber'] = $takenCard->getCardNumber();
-                    // toDeckBottomがtrueならデッキの一番下に戻す
-                    // if ($discard['toDeckBottom'] ?? false) {
-                    //     $this->players[$targetPlayerIndex]->getDeck()->addToBottom($takenCard);
-                    // }
-
                 }
             }
         }
@@ -382,11 +374,14 @@ class DuelManager
 
             $target = $recycle['target'];
 
-            // フラスコとオドラデクの処理
+            // recycleの処理
             if ($target['type'] === 1 || $target['type'] === 0) { // 魔術タイプまたは通常タイプ
                 $currentPlayerIndex = $isPlayer ? self::Player : self::Enemy;
                 $enemyPlayerIndex = (1 - $currentPlayerIndex);
                 $targetPlayerIndex = $currentPlayerIndex;
+                // if (!($target['isPlayer'] ?? true)) {
+                //     $targetPlayerIndex = $enemyPlayerIndex;
+                // }
 
                 // ベンチから対象タイプのカードを取り出す
                 $bench = $this->players[$currentPlayerIndex]->getBench();
