@@ -342,8 +342,12 @@ class DuelManager
 
             // フラスコとオドラデクの処理
             if ($target['type'] === 1 || $target['type'] === 0) { // 魔術タイプまたは通常タイプ
-                $targetPlayer = $target['isPlayer'] ? $isPlayer : !$isPlayer;
-                $targetPlayerIndex = $targetPlayer ? self::Player : self::Enemy;
+                $currentPlayerIndex = $isPlayer ? self::Player : self::Enemy;
+                $enemyPlayerIndex = (1 - $currentPlayerIndex);
+                $targetPlayerIndex = $currentPlayerIndex;
+
+                // $targetPlayer = $target['isPlayer'] ? $isPlayer : !$isPlayer;
+                // $targetPlayerIndex = $targetPlayer ? self::Player : self::Enemy;
 
                 // ベンチから対象タイプのカードを取り出す
                 $bench = $this->players[$targetPlayerIndex]->getBench();
@@ -375,11 +379,12 @@ class DuelManager
 
             // フラスコとオドラデクの処理
             if ($target['type'] === 1 || $target['type'] === 0) { // 魔術タイプまたは通常タイプ
-                $targetPlayer = $target['isPlayer'] ? $isPlayer : !$isPlayer;
-                $targetPlayerIndex = $targetPlayer ? self::Player : self::Enemy;
+                $currentPlayerIndex = $isPlayer ? self::Player : self::Enemy;
+                $enemyPlayerIndex = (1 - $currentPlayerIndex);
+                $targetPlayerIndex = $currentPlayerIndex;
 
                 // ベンチから対象タイプのカードを取り出す
-                $bench = $this->players[$targetPlayerIndex]->getBench();
+                $bench = $this->players[$currentPlayerIndex]->getBench();
                 $takenCard = $bench->takeCardByType($target['type']);
 
                 // カードを取り出せた場合、cardNumberを設定
