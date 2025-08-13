@@ -150,6 +150,7 @@ class DuelManager
             $enemyJsonIndex = self::Player;
         }
 
+        $drawCount = 0;
         $nextHandCardNumber = null;
         $nextHandCard = null;
         $card = null;
@@ -162,15 +163,18 @@ class DuelManager
             $card = $this->players[$jsonIndex]->getHandCard()->takeCard();
             $nextHandCard = $this->players[$jsonIndex]->getDeck()->draw();
             $this->players[$jsonIndex]->getHandCard()->setCard($nextHandCard);
-
+            if ($nextHandCard) {
+                $drawCount = 1;
+            }
 
         } else {
             $cardNumber = array_shift($nextState['players'][$jsonIndex]['deckCardNumbers']);
             $card = $this->players[$jsonIndex]->getDeck()->draw();
+            if ($card) {
+                $drawCount = 1;
+            }
         }
 
-        // $cardCount = count($nextState['players'][$jsonIndex]['deckCardNumbers']);
-        $cardCount = $this->players[$jsonIndex]->getDeck()->getCount();
 
         /////////
         $defCard = $this->players[$enemyJsonIndex]->getCardStack()->getTop();
@@ -249,7 +253,8 @@ class DuelManager
             'cardNumber' => $cardNumber,
             'ability' => $attackResult['ability'],
             'nextHnadCardNumber' => $nextHandCardNumber,
-            'cardCount' => $cardCount,
+            'cardCount' => $this->players[$jsonIndex]->getDeck()->getCount(),
+            'drawCount' => $drawCount,
             'order' => null,
         ];
     }

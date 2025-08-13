@@ -10,6 +10,7 @@ const DrawPhase = {
 
         const player = duel.getTurnPlayer()
 
+
         /**
          * プレイヤー側のUIでのドローと敵側の処理を分岐
          */
@@ -18,6 +19,9 @@ const DrawPhase = {
         } else {
 
             this.fetchDraw(duel, null, (data) => {
+
+                /////////// @todo 引いたら表示を１枚減らす？
+                player.getDeck().getSprite().setCount(data.cardCount + data.drawCount)
 
                 this.doDrawHandCard(duel, data, () => {
 
