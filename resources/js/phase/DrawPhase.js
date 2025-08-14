@@ -19,9 +19,7 @@ const DrawPhase = {
         } else {
 
             this.fetchDraw(duel, null, (data) => {
-
-                /////////// @todo 引いたら表示を１枚減らす？
-                player.getDeck().getSprite().setCount(data.cardCount + data.drawCount)
+                // player.getDeck().getSprite().setCount(data.cardCount + data.drawCount)
 
                 this.doDrawHandCard(duel, data, () => {
 
@@ -104,14 +102,19 @@ console.log('** *data *** ', data)
                         const discard = enter.discard
 
                         if (discard?.cardNumber) {
+                            let player = duel.getTurnPlayer()
+                            if (!discard.isPlayer) {
+                                player = duel.getOtherPlayer()
+                            }
 
-                            const targetCard = duel.getTurnPlayer().getBench().takeCardByCardNumber(discard.cardNumber)
+                            const targetCard = player.getBench().takeCardByCardNumber(discard.cardNumber)
                             if (targetCard) {
+                                // アビリティを使うカードを攻撃位置に登場させる
                                 duel.getTurnPlayer().getCardStack().addCard(card)
 
                                 // カットインの表示をする
                                 card.showAbilityEffect(() => {
-                                    const direction = duel.getTurnPlayer().getDirection()
+                                    const direction = player.getDirection()
 
                                     targetCard.moveToAbyss((420 * direction), (-240 * direction) - 50, () => {
                                         if (onEnd) {
@@ -126,17 +129,23 @@ console.log('** *data *** ', data)
                         const recycle = enter.recycle
                         if (recycle?.cardNumber) {
                             const recycle = ability.enter.recycle
-                            const targetCard = duel.getTurnPlayer().getBench().takeCardByCardNumber(recycle.cardNumber)
+                            let player = duel.getTurnPlayer()
+                            if (!recycle.isPlayer) {
+                                player = duel.getOtherPlayer()
+                            }
+
+                            const targetCard = player.getBench().takeCardByCardNumber(recycle.cardNumber)
                             if (targetCard) {
+                                // アビリティを使うカードを攻撃位置に登場させる
                                 duel.getTurnPlayer().getCardStack().addCard(card)
 
                                 // カットインの表示をする
                                 card.showAbilityEffect(() => {
-    console.log(data.ability.enter.recycle)
+// console.log(data.ability.enter.recycle)
                                     //const direction = duel.getTurnPlayer().getDirection()
                                     // targetCard.moveToAbyss((420 * direction), (-240 * direction) - 50, () => {
 
-                                    const deck = duel.getTurnPlayer().getDeck()
+                                    const deck = player.getDeck()
                                     targetCard.moveToDeck(deck, () => {
                                         // @todo deckの表示枚数を１つ増やす
                                         deck.getSprite().setCount(recycle.deckCount)

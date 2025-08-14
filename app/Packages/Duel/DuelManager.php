@@ -330,13 +330,6 @@ class DuelManager
         // }
 
 
-        // $discardResult = [
-        //     'isPlayer' => $target['isPlayer'] ?? true,
-        //     'benchCardType' => $target['type'] ?? null,
-        //     'cardNumber' => null,
-        // ];
-
-
         $enterAbilityResult = [];
 
 
@@ -348,10 +341,15 @@ class DuelManager
             if ($target['type'] === 1 || $target['type'] === 0) { // 魔術タイプまたは通常タイプ
                 $currentPlayerIndex = $isPlayer ? self::Player : self::Enemy;
                 $enemyPlayerIndex = (1 - $currentPlayerIndex);
+                $isPlayerTarget = $target['isPlayer'] ?? true;
+
                 $targetPlayerIndex = $currentPlayerIndex;
-                if (!($target['isPlayer'] ?? true)) {
+                if (!$isPlayerTarget) {
                     $targetPlayerIndex = $enemyPlayerIndex;
                 }
+
+logger('*** discared処理 *** ');
+logger($target);
 
                 // ベンチから対象タイプのカードを取り出す
                 $bench = $this->players[$targetPlayerIndex]->getBench();
@@ -361,7 +359,7 @@ class DuelManager
                 if ($takenCard) {
                     $enterAbilityResult['discard'] = [
                         'cardNumber' => $takenCard->getCardNumber(),
-                        'isPlayer' => $target['isPlayer'] ?? true,
+                        'isPlayer' => $isPlayerTarget,
                         'benchCardType' => $target['type'] ?? null,
                     ];
                 }
@@ -378,13 +376,18 @@ class DuelManager
             if ($target['type'] === 1 || $target['type'] === 0) { // 魔術タイプまたは通常タイプ
                 $currentPlayerIndex = $isPlayer ? self::Player : self::Enemy;
                 $enemyPlayerIndex = (1 - $currentPlayerIndex);
+                $isPlyaerTarget = $target['isPlayer'] ?? true;
+
                 $targetPlayerIndex = $currentPlayerIndex;
-                if (!($target['isPlayer'] ?? true)) {
+                if (!$isPlyaerTarget) {
                     $targetPlayerIndex = $enemyPlayerIndex;
                 }
 
+                logger('** *discared処理 *** ');
+                logger($target);
+
                 // ベンチから対象タイプのカードを取り出す
-                $bench = $this->players[$currentPlayerIndex]->getBench();
+                $bench = $this->players[$targetPlayerIndex]->getBench();
                 $takenCard = $bench->takeCardByType($target['type']);
 
                 // カードを取り出せた場合、cardNumberを設定
@@ -395,7 +398,7 @@ class DuelManager
 
                     $enterAbilityResult['recycle'] = [
                         'cardNumber' => $takenCard->getCardNumber(),
-                        'isPlayer' => $target['isPlayer'] ?? true,
+                        'isPlayer' => $isPlyaerTarget,
                         'benchCardType' => $target['type'] ?? null,
                         'deckCount' => $this->players[$targetPlayerIndex]->getDeck()->getCount(),
                     ];
