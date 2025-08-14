@@ -349,9 +349,9 @@ class DuelManager
                 $currentPlayerIndex = $isPlayer ? self::Player : self::Enemy;
                 $enemyPlayerIndex = (1 - $currentPlayerIndex);
                 $targetPlayerIndex = $currentPlayerIndex;
-                // if (!($target['isPlayer'] ?? true)) {
-                //     $targetPlayerIndex = $enemyPlayerIndex;
-                // }
+                if (!($target['isPlayer'] ?? true)) {
+                    $targetPlayerIndex = $enemyPlayerIndex;
+                }
 
                 // ベンチから対象タイプのカードを取り出す
                 $bench = $this->players[$targetPlayerIndex]->getBench();
@@ -379,9 +379,9 @@ class DuelManager
                 $currentPlayerIndex = $isPlayer ? self::Player : self::Enemy;
                 $enemyPlayerIndex = (1 - $currentPlayerIndex);
                 $targetPlayerIndex = $currentPlayerIndex;
-                // if (!($target['isPlayer'] ?? true)) {
-                //     $targetPlayerIndex = $enemyPlayerIndex;
-                // }
+                if (!($target['isPlayer'] ?? true)) {
+                    $targetPlayerIndex = $enemyPlayerIndex;
+                }
 
                 // ベンチから対象タイプのカードを取り出す
                 $bench = $this->players[$currentPlayerIndex]->getBench();

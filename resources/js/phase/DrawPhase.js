@@ -95,49 +95,63 @@ console.log('onEvent hand-card click!!!', data)
         card.moveToAttackPosition(() => {
             card.onEnterToAttackPosition(data, () => {
 console.log('** *data *** ', data)
-                if (data.ability?.enter?.discard?.cardNumber) {
 
-                    const targetCard = duel.getTurnPlayer().getBench().takeCardByCardNumber(data.ability.enter.discard.cardNumber)
-                    if (targetCard) {
-                        duel.getTurnPlayer().getCardStack().addCard(card)
+                const ability = data.ability
+                if (ability) {
+                    const enter = ability.enter
 
-                        // カットインの表示をする
-                        card.showAbilityEffect(() => {
-                            const direction = duel.getTurnPlayer().getDirection()
+                    if (enter) {
 
-                            targetCard.moveToAbyss((420 * direction), (-240 * direction) - 50, () => {
-                                if (onEnd) {
-                                    onEnd()
-                                }
-                            })
-                        })
-                        return
+                        if (enter?.discard?.cardNumber) {
+
+                            const targetCard = duel.getTurnPlayer().getBench().takeCardByCardNumber(ability.enter.discard.cardNumber)
+                            if (targetCard) {
+                                duel.getTurnPlayer().getCardStack().addCard(card)
+
+                                // カットインの表示をする
+                                card.showAbilityEffect(() => {
+                                    const direction = duel.getTurnPlayer().getDirection()
+
+                                    targetCard.moveToAbyss((420 * direction), (-240 * direction) - 50, () => {
+                                        if (onEnd) {
+                                            onEnd()
+                                        }
+                                    })
+                                })
+                                return
+                            }
+                        }
+
+                        if (enter?.recycle?.cardNumber) {
+                            const recycle = ability.enter.recycle
+                            const targetCard = duel.getTurnPlayer().getBench().takeCardByCardNumber(ability.enter.recycle.cardNumber)
+                            if (targetCard) {
+                                duel.getTurnPlayer().getCardStack().addCard(card)
+
+                                // カットインの表示をする
+                                card.showAbilityEffect(() => {
+    console.log(data.ability.enter.recycle)
+                                    //const direction = duel.getTurnPlayer().getDirection()
+                                    // targetCard.moveToAbyss((420 * direction), (-240 * direction) - 50, () => {
+
+                                    const deck = duel.getTurnPlayer().getDeck()
+                                    targetCard.moveToDeck(deck, () => {
+                                        // @todo deckの表示枚数を１つ増やす
+                                        deck.getSprite().setCount(recycle.deckCount)
+                                        if (onEnd) {
+                                            onEnd()
+                                        }
+                                    })
+                                })
+                                return
+                            }
+                        }
+
+
+
                     }
-                }
 
-                if (data.ability?.enter?.recycle?.cardNumber) {
-                    const recycle = data.ability.enter.recycle
-                    const targetCard = duel.getTurnPlayer().getBench().takeCardByCardNumber(data.ability.enter.recycle.cardNumber)
-                    if (targetCard) {
-                        duel.getTurnPlayer().getCardStack().addCard(card)
 
-                        // カットインの表示をする
-                        card.showAbilityEffect(() => {
-console.log(data.ability.enter.recycle)
-                            //const direction = duel.getTurnPlayer().getDirection()
-                            // targetCard.moveToAbyss((420 * direction), (-240 * direction) - 50, () => {
-
-                            const deck = duel.getTurnPlayer().getDeck()
-                            targetCard.moveToDeck(deck, () => {
-                                // @todo deckの表示枚数を１つ増やす
-                                deck.getSprite().setCount(recycle.deckCount)
-                                if (onEnd) {
-                                    onEnd()
-                                }
-                            })
-                        })
-                        return
-                    }
                 }
 
                 duel.getTurnPlayer().getCardStack().addCard(card)
