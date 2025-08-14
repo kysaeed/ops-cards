@@ -101,10 +101,11 @@ console.log('** *data *** ', data)
                     const enter = ability.enter
 
                     if (enter) {
+                        const discard = enter.discard
 
-                        if (enter?.discard?.cardNumber) {
+                        if (discard?.cardNumber) {
 
-                            const targetCard = duel.getTurnPlayer().getBench().takeCardByCardNumber(ability.enter.discard.cardNumber)
+                            const targetCard = duel.getTurnPlayer().getBench().takeCardByCardNumber(discard.cardNumber)
                             if (targetCard) {
                                 duel.getTurnPlayer().getCardStack().addCard(card)
 
@@ -122,9 +123,10 @@ console.log('** *data *** ', data)
                             }
                         }
 
-                        if (enter?.recycle?.cardNumber) {
+                        const recycle = enter.recycle
+                        if (recycle?.cardNumber) {
                             const recycle = ability.enter.recycle
-                            const targetCard = duel.getTurnPlayer().getBench().takeCardByCardNumber(ability.enter.recycle.cardNumber)
+                            const targetCard = duel.getTurnPlayer().getBench().takeCardByCardNumber(recycle.cardNumber)
                             if (targetCard) {
                                 duel.getTurnPlayer().getCardStack().addCard(card)
 
@@ -147,10 +149,7 @@ console.log('** *data *** ', data)
                             }
                         }
 
-
-
                     }
-
 
                 }
 
