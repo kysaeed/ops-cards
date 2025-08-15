@@ -8,7 +8,7 @@
                 "recycle": {
                     "target": {
                         "isPlayer": true,
-                        "type": 0,
+                        "cardNumber": 2,
                         "location": "bench"
                     }
                 }

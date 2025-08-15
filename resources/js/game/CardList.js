@@ -25,27 +25,6 @@ const CardTypeList = [
 ];
 
 const CardList = [
-  //// TEST ////
-  {
-    power: 1,
-    name: 'フラスコ',
-    image: 'ch_frasco',
-    ability: {
-      enter: {
-        recycle: {
-          target: {
-            isPlayer: true,
-            type: 0,
-            location: 'bench',
-          },
-          //power: 2
-        },
-      },
-    },
-    type: 0,
-  },
-  /////////////////
-
   {
       power: 1,
       name: '影',
@@ -151,14 +130,14 @@ const CardList = [
           recycle: {
             target: {
               isPlayer: true,
-              type: 0,
+              cardNumber: 1,
               location: 'bench',
             },
-            //power: 2
           },
         },
       },
       type: 0,
+      text: "登場時：平地の影をデッキの一番下に戻す",
     },
     {
       power: 4,

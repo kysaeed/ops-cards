@@ -90,4 +90,32 @@ class Bench
         }
         return null;
     }
+
+    /**
+     * ベンチから特定のカード番号のカードを取り出す
+     * @param int $cardNumber 取り出すカードの番号
+     * @return Card|null 取り出したカード。見つからなかった場合はnull
+     */
+    public function takeCardByNumber(int $cardNumber): ?Card
+    {
+        foreach ($this->benchItems as $benchIndex => $benchItem) {
+            $cards = $benchItem->getCards();
+            foreach ($cards as $cardIndex => $card) {
+                if ($card->getCardNumber() === $cardNumber) {
+                    $takenCard = $card;
+                    $benchItem->removeCard($cardIndex);
+
+                    // BenchItemが空になった場合、BenchItem自体を削除
+                    if ($benchItem->isEmpty()) {
+                        array_splice($this->benchItems, $benchIndex, 1);
+                    }
+
+                    return $takenCard;
+                }
+            }
+        }
+        return null;
+    }
+
+
 }

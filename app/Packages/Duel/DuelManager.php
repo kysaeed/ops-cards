@@ -346,6 +346,8 @@ class DuelManager
             $takenCard = null;
             if (!is_null($target['type'] ?? null)) {
                 $takenCard = $bench->takeCardByType($target['type']);
+            } else if (!is_null($target['cardNumber'] ?? null)) {
+                $takenCard = $bench->takeCardByNumber($target['cardNumber']);
             }
 
             // カードを取り出せた場合、cardNumberを設定
@@ -385,6 +387,8 @@ class DuelManager
 
             if (!is_null($target['type'] ?? null)) {
                 $takenCard = $bench->takeCardByType($target['type']);
+            } else if (!is_null($target['cardNumber'] ?? null)) {
+                $takenCard = $bench->takeCardByNumber($target['cardNumber']);
             }
 
             // カードを取り出せた場合、cardNumberを設定
