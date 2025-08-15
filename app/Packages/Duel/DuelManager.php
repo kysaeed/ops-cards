@@ -322,16 +322,7 @@ class DuelManager
 
         $enterAbility = $ability['enter'];
 
-        // if (!($enterAbility['discard'] ?? null)) {
-        //     return [
-        //         'attack' => ['power' => 0],
-        //         'defense' => ['power' => 0],
-        //     ];
-        // }
-
-
         $enterAbilityResult = [];
-
 
         $discard = $enterAbility['discard'] ?? [];
         if (!empty($discard)) {
@@ -350,23 +341,20 @@ class DuelManager
 
             $targetPlayer = $this->players[$targetPlayerIndex];
 
-            if ($target['type'] === 1 || $target['type'] === 0) { // @todo 相手カードの情報を取得
+            // ベンチから対象タイプのカードを取り出す
+            $bench = $targetPlayer->getBench();
+            $takenCard = null;
+            if (!is_null($target['type'] ?? null)) {
+                $takenCard = $bench->takeCardByType($target['type']);
+            }
 
-                // ベンチから対象タイプのカードを取り出す
-                $bench = $targetPlayer->getBench();
-                $takenCard = null;
-                if (!is_null($target['type'] ?? null)) {
-                    $takenCard = $bench->takeCardByType($target['type']);
-                }
-
-                // カードを取り出せた場合、cardNumberを設定
-                if ($takenCard) {
-                    $enterAbilityResult['discard'] = [
-                        'cardNumber' => $takenCard->getCardNumber(),
-                        'isPlayer' => $isPlayerTarget,
-                        'benchCardType' => $target['type'] ?? null,
-                    ];
-                }
+            // カードを取り出せた場合、cardNumberを設定
+            if ($takenCard) {
+                $enterAbilityResult['discard'] = [
+                    'cardNumber' => $takenCard->getCardNumber(),
+                    'isPlayer' => $isPlayerTarget,
+                    'benchCardType' => $target['type'] ?? null,
+                ];
             }
         }
 
@@ -388,33 +376,29 @@ class DuelManager
 
             $targetPlayer = $this->players[$targetPlayerIndex];
 
+            logger('** *discared処理 *** ');
+            logger($target);
 
-            if ($target['type'] === 1 || $target['type'] === 0) { // @todo 相手カードの情報を取得
+            // ベンチから対象タイプのカードを取り出す
+            $bench = $targetPlayer->getBench();
+            $takenCard = null;
 
-                logger('** *discared処理 *** ');
-                logger($target);
+            if (!is_null($target['type'] ?? null)) {
+                $takenCard = $bench->takeCardByType($target['type']);
+            }
 
-                // ベンチから対象タイプのカードを取り出す
-                $bench = $targetPlayer->getBench();
-                $takenCard = null;
+            // カードを取り出せた場合、cardNumberを設定
+            if ($takenCard) {
 
-                if (!is_null($target['type'] ?? null)) {
-                    $takenCard = $bench->takeCardByType($target['type']);
-                }
+                // toDeckBottomがtrueならデッキの一番下に戻す
+                $targetPlayer->getDeck()->addToBottom($takenCard);
 
-                // カードを取り出せた場合、cardNumberを設定
-                if ($takenCard) {
-
-                    // toDeckBottomがtrueならデッキの一番下に戻す
-                    $targetPlayer->getDeck()->addToBottom($takenCard);
-
-                    $enterAbilityResult['recycle'] = [
-                        'cardNumber' => $takenCard->getCardNumber(),
-                        'isPlayer' => $isPlyaerTarget,
-                        'benchCardType' => $target['type'] ?? null,
-                        'deckCount' => $targetPlayer->getDeck()->getCount(),
-                    ];
-                }
+                $enterAbilityResult['recycle'] = [
+                    'cardNumber' => $takenCard->getCardNumber(),
+                    'isPlayer' => $isPlyaerTarget,
+                    'benchCardType' => $target['type'] ?? null,
+                    'deckCount' => $targetPlayer->getDeck()->getCount(),
+                ];
             }
         }
 
