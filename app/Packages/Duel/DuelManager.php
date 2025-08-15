@@ -338,22 +338,26 @@ class DuelManager
             $target = $discard['target'];
 
             // discared処理
-            if ($target['type'] === 1 || $target['type'] === 0) { // 魔術タイプまたは通常タイプ
-                $currentPlayerIndex = $isPlayer ? self::Player : self::Enemy;
-                $enemyPlayerIndex = (1 - $currentPlayerIndex);
-                $isPlayerTarget = $target['isPlayer'] ?? true;
+            $currentPlayerIndex = $isPlayer ? self::Player : self::Enemy;
+            $enemyPlayerIndex = (1 - $currentPlayerIndex);
+            $isPlayerTarget = $target['isPlayer'] ?? true;
 
-                $targetPlayerIndex = $currentPlayerIndex;
-                if (!$isPlayerTarget) {
-                    $targetPlayerIndex = $enemyPlayerIndex;
-                }
+            // 相手カードの情報を取得
+            $targetPlayerIndex = $currentPlayerIndex;
+            if (!$isPlayerTarget) {
+                $targetPlayerIndex = $enemyPlayerIndex;
+            }
 
-logger('*** discared処理 *** ');
-logger($target);
+            $targetPlayer = $this->players[$targetPlayerIndex];
+
+            if ($target['type'] === 1 || $target['type'] === 0) { // @todo 相手カードの情報を取得
 
                 // ベンチから対象タイプのカードを取り出す
-                $bench = $this->players[$targetPlayerIndex]->getBench();
-                $takenCard = $bench->takeCardByType($target['type']);
+                $bench = $targetPlayer->getBench();
+                $takenCard = null;
+                if (!is_null($target['type'] ?? null)) {
+                    $takenCard = $bench->takeCardByType($target['type']);
+                }
 
                 // カードを取り出せた場合、cardNumberを設定
                 if ($takenCard) {
@@ -369,38 +373,46 @@ logger($target);
         $recycle = $enterAbility['recycle'] ?? [];
 
         if (!empty($recycle)) {
+            // recycleの処理
 
             $target = $recycle['target'];
 
-            // recycleの処理
-            if ($target['type'] === 1 || $target['type'] === 0) { // 魔術タイプまたは通常タイプ
-                $currentPlayerIndex = $isPlayer ? self::Player : self::Enemy;
-                $enemyPlayerIndex = (1 - $currentPlayerIndex);
-                $isPlyaerTarget = $target['isPlayer'] ?? true;
+            $currentPlayerIndex = $isPlayer ? self::Player : self::Enemy;
+            $enemyPlayerIndex = (1 - $currentPlayerIndex);
+            $isPlyaerTarget = $target['isPlayer'] ?? true;
 
-                $targetPlayerIndex = $currentPlayerIndex;
-                if (!$isPlyaerTarget) {
-                    $targetPlayerIndex = $enemyPlayerIndex;
-                }
+            $targetPlayerIndex = $currentPlayerIndex;
+            if (!$isPlyaerTarget) {
+                $targetPlayerIndex = $enemyPlayerIndex;
+            }
+
+            $targetPlayer = $this->players[$targetPlayerIndex];
+
+
+            if ($target['type'] === 1 || $target['type'] === 0) { // @todo 相手カードの情報を取得
 
                 logger('** *discared処理 *** ');
                 logger($target);
 
                 // ベンチから対象タイプのカードを取り出す
-                $bench = $this->players[$targetPlayerIndex]->getBench();
-                $takenCard = $bench->takeCardByType($target['type']);
+                $bench = $targetPlayer->getBench();
+                $takenCard = null;
+
+                if (!is_null($target['type'] ?? null)) {
+                    $takenCard = $bench->takeCardByType($target['type']);
+                }
 
                 // カードを取り出せた場合、cardNumberを設定
                 if ($takenCard) {
 
                     // toDeckBottomがtrueならデッキの一番下に戻す
-                    $this->players[$targetPlayerIndex]->getDeck()->addToBottom($takenCard);
+                    $targetPlayer->getDeck()->addToBottom($takenCard);
 
                     $enterAbilityResult['recycle'] = [
                         'cardNumber' => $takenCard->getCardNumber(),
                         'isPlayer' => $isPlyaerTarget,
                         'benchCardType' => $target['type'] ?? null,
-                        'deckCount' => $this->players[$targetPlayerIndex]->getDeck()->getCount(),
+                        'deckCount' => $targetPlayer->getDeck()->getCount(),
                     ];
                 }
             }
