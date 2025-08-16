@@ -13,6 +13,7 @@ import MapScene from './MapScene.js'
 import DuelScene from './DuelScene.js'
 import ShopScene from './ShopScene.js'
 
+
 const BaseUrl = import.meta.env.VITE_BASE_URL || 'http://localhost:8080'
 
 

@@ -5,6 +5,8 @@ import Duel from './game/Duel.js'
 import DamageMark from './game/DamageMark.js'
 import phase from './phase'
 
+import SoftKeyboard from './game/SoftKeyboard/SoftKeyboard.js'
+
 
 const DuelScene = {
     key: 'DuelScene',
@@ -32,6 +34,11 @@ const DuelScene = {
 
         this.load.image('desc_effect', 'assets/desc_effect.png')
 
+        // KEY
+        this.load.image('key', 'assets/key.png');
+        this.load.image('key_cursor', 'assets/key_cursor.png');
+
+        // HERO
         this.load.image('hero', 'assets/hero/hero.png')
         this.load.image('hero_word', 'assets/hero/hero_word.png')
 
@@ -90,6 +97,8 @@ const DuelScene = {
         this.objectManager = this.duel.getObjectManager()
 
         this.damageMark = new DamageMark(scene, 480, 280)
+
+        const keybo = new SoftKeyboard(this)
 
         const toNextPhase = (next, fetchData) => {
 console.log('to Next State : ', fetchData)
