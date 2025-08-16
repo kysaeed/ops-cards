@@ -379,9 +379,9 @@ class DuelController extends Controller
             $duel->duelTurns()->save($turn);
 
             $isSectionComplated = false;
-            if ($step['judge'] > 0) {
+            if ($step['judge']) {
 
-                if ($step['judge'] ) {
+                if ($step['judge'] > 0) {
                     $duel->is_player_win = $isPlayerTurn;
                 } else {
                     $duel->is_player_win = (!$isPlayerTurn);

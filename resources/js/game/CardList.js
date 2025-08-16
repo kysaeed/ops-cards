@@ -25,7 +25,6 @@ const CardTypeList = [
 ];
 
 const CardList = [
-
   {
       power: 1,
       name: '影',
@@ -116,16 +115,17 @@ const CardList = [
       image: 'ch_frasco',
       ability: {
         enter: {
-          discard: {
+          recycle: {
             target: {
-              type: 1,
-              location: 'bench'
+              isPlayer: true,
+              cardNumber: 1,
+              location: 'bench',
             },
-            //power: 2
           },
         },
       },
       type: 0,
+      text: "平地の影を\nデッキの一番下に戻す",
     },
     {
       power: 4,
@@ -138,6 +138,19 @@ const CardList = [
       name: '質量兵器',
       image: 'ch_mass',
       type: 0,
+      ability: {
+        enter: {
+          discard: {
+            target: {
+              isPlayer: true,
+              type: 0,
+              location: 'bench',
+            },
+            toDeckBottom: true,
+          },
+        },
+      },
+      text: "平地の影を\n奈落に落とす",
     },
     {
       power: 1,
