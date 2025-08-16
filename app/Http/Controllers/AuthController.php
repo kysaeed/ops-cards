@@ -198,7 +198,7 @@ logger('179: AuthController::login() -----');
                 $this->createInitialData($user);
 
 
-                Auth::login($user, true);
+                Auth::login($user, /*true*/);
 
                 return $user;
             });

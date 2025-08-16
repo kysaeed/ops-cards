@@ -279,16 +279,6 @@ class GameMaster
             $deck->deckCards()->save($deckCard);
         }
 
-        // ランダムカードの追加
-        for ($j = 0; $j < 5; $j++) {
-            $cardNumber = mt_rand(5, count($this->cardSettings));
-            $deckCard = new DeckCard([
-                'card_number' => $cardNumber,
-                'order' => $order++
-            ]);
-            $deck->deckCards()->save($deckCard);
-        }
-
         return $deck;
     }
 

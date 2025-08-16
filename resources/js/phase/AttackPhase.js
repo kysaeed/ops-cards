@@ -3,7 +3,6 @@ import Const from "../Const"
 
 const AttackPhase = {
     enter(duel, fetchData, onEnd) {
-
         this.onEnd = onEnd
 
         const turnPlayerId = duel.getTurnPlayerId()
@@ -119,8 +118,6 @@ const AttackPhase = {
                 })
             })
         })
-
-
     },
 
     onEvent(event, sender, params) {

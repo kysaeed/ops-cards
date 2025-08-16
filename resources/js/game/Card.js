@@ -927,7 +927,11 @@ console.log('******** onEnterToAttackPosition()', data)
         //
     }
 
-    moveToDeck(x, y, onEnd) {
+    moveToDeck(deck, onEnd) {
+
+        const x = deck.getX()
+        const y = deck.getY()
+
         // const max = 6
         // const angle = Math.floor((90 + 12) + (Math.random() * max) - (max / 2))
 
@@ -944,8 +948,8 @@ console.log('******** onEnterToAttackPosition()', data)
             targets: this.sprite,
             tweens: [
                 {
-                    // angle: angle,
-                    scale: DefaultCardSize * 0.8,
+                    angle: 0,
+                    scale: DefaultCardSize * 1.0,
                     duration: 200,
                     ease: 'power1',
                 },
@@ -956,6 +960,7 @@ console.log('******** onEnterToAttackPosition()', data)
                     scale: DefaultCardSize * 0.8,
                     duration: 400,
                     ease: 'power1',
+                    delay: 100,
                 },
                 /*
                 {

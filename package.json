@@ -2,10 +2,10 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "predev": "node ./resources/js/builds/params.js",
-        "dev": "vite",
-        "prebuild": "node ./resources/js/builds/params.js",
-        "build": "vite build"
+        "pre:dev": "node ./resources/js/builds/params.js",
+        "dev": "yarn pre:dev && vite",
+        "pre:build": "node ./resources/js/builds/params.js",
+        "build": "yarn pre:build && vite build"
     },
     "devDependencies": {
         "axios": "^1.6.7",

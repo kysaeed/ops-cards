@@ -150,6 +150,7 @@ class DuelManager
             $enemyJsonIndex = self::Player;
         }
 
+        $drawCount = 0;
         $nextHandCardNumber = null;
         $nextHandCard = null;
         $card = null;
@@ -162,32 +163,42 @@ class DuelManager
             $card = $this->players[$jsonIndex]->getHandCard()->takeCard();
             $nextHandCard = $this->players[$jsonIndex]->getDeck()->draw();
             $this->players[$jsonIndex]->getHandCard()->setCard($nextHandCard);
-
+            if ($nextHandCard) {
+                $drawCount = 1;
+            }
 
         } else {
             $cardNumber = array_shift($nextState['players'][$jsonIndex]['deckCardNumbers']);
             $card = $this->players[$jsonIndex]->getDeck()->draw();
+            if ($card) {
+                $drawCount = 1;
+            }
         }
 
-        // $cardCount = count($nextState['players'][$jsonIndex]['deckCardNumbers']);
-        $cardCount = $this->players[$jsonIndex]->getDeck()->getCount();
 
         /////////
         $defCard = $this->players[$enemyJsonIndex]->getCardStack()->getTop();
 
         $judge = 0;
         if ($card) {
+
+            // カードの登場時の処理を実行
+            $enterResult = $this->onEnter($card, $this->players[$jsonIndex]->getCardStack(), $isPlyaerTurn);
+
             // $defenseCardNumber = $defenseCard['cardNumber'];
             $attackResult = $this->onAttack(
                 $card,
+                $enterResult,
                 $this->players[$jsonIndex]->getCardStack(),
                 $defCard,
             );
 
-            array_unshift($nextState['players'][$jsonIndex]['cardStack'], [
-                'cardNumber' => $cardNumber,
-                'addPower' => $attackResult['addAttackPower'],
-            ]);
+            // $addAttackPower = $attackResult['ability']['attack']['power'] ?? 0;
+            // $addDefensePower = $attackResult['ability']['defense']['power'] ?? 0;
+            // array_unshift($nextState['players'][$jsonIndex]['cardStack'], [
+            //     'cardNumber' => $cardNumber,
+            //     'addPower' => $addAttackPower,
+            // ]);
 
             $this->players[$jsonIndex]->getCardStack()->add($card);
 
@@ -225,8 +236,10 @@ class DuelManager
             }
         }
 
+        ////// TEST //////
+        // $judge = 1;
+        //////////////////
 
-        // $this->state = $nextState;
         // state
         $nextState['players'][self::Player] = $this->players[self::Player]->toJson();
         $nextState['players'][self::Enemy] = $this->players[self::Enemy]->toJson();
@@ -237,15 +250,15 @@ class DuelManager
             'isHandCard' => $isHandCard,
             'isTurnChange' => $attackResult['isTurnChange'],
             'cardNumber' => $cardNumber,
-            'addAttackPower' => $attackResult['addAttackPower'],
             'ability' => $attackResult['ability'],
             'nextHnadCardNumber' => $nextHandCardNumber,
-            'cardCount' => $cardCount,
+            'cardCount' => $this->players[$jsonIndex]->getDeck()->getCount(),
+            'drawCount' => $drawCount,
             'order' => null,
         ];
     }
 
-    protected function onAttack(Card $attackCard, CardStack $attackCardStack, ?Card $defenseCard)
+    protected function onAttack(Card $attackCard, array $ability, CardStack $attackCardStack, ?Card $defenseCard)
     {
         $attackCardStatus = $attackCard->getStatus();
         $defenseCardStatus = $defenseCard->getStatus();
@@ -253,21 +266,16 @@ class DuelManager
         // prevAttackPowerをstackから計算する
         $prevAttackPower = $attackCardStack->getTotalPower();
 
-        $ability = [
-            'attack' => [],
-            'defense' => [],
-        ];
+        // 攻撃力の加算を初期化
+        $ability['attack']['power'] = $ability['attack']['power'] ?? 0;
+        $ability['defense']['power'] = $ability['defense']['power'] ?? 0;
 
         $addAttackPower = 0;
         $attackAbility = $attackCardStatus['ability']['attack'] ?? null;
         if ($attackAbility) {
-
             $addAttackPower = $attackAbility['power'] ?? 0;
-            if ($addAttackPower) {
-                $ability['attack']['power'] = $addAttackPower;
-
-                $attackCard->setAddPower($addAttackPower);
-            }
+            $ability['attack']['power'] = $addAttackPower;
+            $attackCard->setAddPower($addAttackPower);
         }
 
         $totalAttackPower = $attackCard->getTotalPower() + $prevAttackPower;
@@ -275,9 +283,8 @@ class DuelManager
         $addDefensePower = 0;
         $defenseAbility = $defenseCardStatus['ability']['defense'] ?? null;
         if ($defenseAbility) {
-            $addDefensePower = $defenseAbility['power'];
+            $addDefensePower = $defenseAbility['power'] ?? 0;
             $defenseCard->setAddPower($addDefensePower);
-
             $ability['defense']['power'] = $addDefensePower;
         }
 
@@ -296,13 +303,114 @@ class DuelManager
             'judge' => $judge,
             'isTurnChange' => $isTurnChange,
             'attackPower' => $totalAttackPower,
-            'addAttackPower' => $addAttackPower,
-            'addDefensePower' => $addDefensePower,
             'defensePower' => $totalDefensePower,
-            'addDefensePower' => $addDefensePower,
             'ability' => $ability,
         ];
     }
 
+    protected function onEnter(Card $card, CardStack $cardStack, bool $isPlayer): array
+    {
+        $cardStatus = $card->getStatus();
+        $ability = $cardStatus['ability'] ?? null;
+
+        if (!$ability || !($ability['enter'] ?? null)) {
+            return [
+                'attack' => ['power' => 0],
+                'defense' => ['power' => 0],
+            ];
+        }
+
+        $enterAbility = $ability['enter'];
+
+        $enterAbilityResult = [];
+
+        $discard = $enterAbility['discard'] ?? [];
+        if (!empty($discard)) {
+            $target = $discard['target'];
+
+            // discared処理
+            $currentPlayerIndex = $isPlayer ? self::Player : self::Enemy;
+            $enemyPlayerIndex = (1 - $currentPlayerIndex);
+            $isPlayerTarget = $target['isPlayer'] ?? true;
+
+            // 相手カードの情報を取得
+            $targetPlayerIndex = $currentPlayerIndex;
+            if (!$isPlayerTarget) {
+                $targetPlayerIndex = $enemyPlayerIndex;
+            }
+
+            $targetPlayer = $this->players[$targetPlayerIndex];
+
+            // ベンチから対象タイプのカードを取り出す
+            $bench = $targetPlayer->getBench();
+            $takenCard = null;
+            if (!is_null($target['type'] ?? null)) {
+                $takenCard = $bench->takeCardByType($target['type']);
+            } else if (!is_null($target['cardNumber'] ?? null)) {
+                $takenCard = $bench->takeCardByNumber($target['cardNumber']);
+            }
+
+            // カードを取り出せた場合、cardNumberを設定
+            if ($takenCard) {
+                $enterAbilityResult['discard'] = [
+                    'cardNumber' => $takenCard->getCardNumber(),
+                    'isPlayer' => $isPlayerTarget,
+                    'benchCardType' => $target['type'] ?? null,
+                ];
+            }
+        }
+
+        $recycle = $enterAbility['recycle'] ?? [];
+
+        if (!empty($recycle)) {
+            // recycleの処理
+
+            $target = $recycle['target'];
+
+            $currentPlayerIndex = $isPlayer ? self::Player : self::Enemy;
+            $enemyPlayerIndex = (1 - $currentPlayerIndex);
+            $isPlyaerTarget = $target['isPlayer'] ?? true;
+
+            $targetPlayerIndex = $currentPlayerIndex;
+            if (!$isPlyaerTarget) {
+                $targetPlayerIndex = $enemyPlayerIndex;
+            }
+
+            $targetPlayer = $this->players[$targetPlayerIndex];
+
+            logger('** *discared処理 *** ');
+            logger($target);
+
+            // ベンチから対象タイプのカードを取り出す
+            $bench = $targetPlayer->getBench();
+            $takenCard = null;
+
+            if (!is_null($target['type'] ?? null)) {
+                $takenCard = $bench->takeCardByType($target['type']);
+            } else if (!is_null($target['cardNumber'] ?? null)) {
+                $takenCard = $bench->takeCardByNumber($target['cardNumber']);
+            }
+
+            // カードを取り出せた場合、cardNumberを設定
+            if ($takenCard) {
+
+                // toDeckBottomがtrueならデッキの一番下に戻す
+                $targetPlayer->getDeck()->addToBottom($takenCard);
+
+                $enterAbilityResult['recycle'] = [
+                    'cardNumber' => $takenCard->getCardNumber(),
+                    'isPlayer' => $isPlyaerTarget,
+                    'benchCardType' => $target['type'] ?? null,
+                    'deckCount' => $targetPlayer->getDeck()->getCount(),
+                ];
+            }
+        }
+
+        return [
+            'attack' => ['power' => 0],
+            'defense' => ['power' => 0],
+            'enter' => $enterAbilityResult,
+        ];
+    }
 
 }

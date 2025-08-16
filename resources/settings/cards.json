@@ -1,0 +1,147 @@
+[
+    {
+        "power": 1,
+        "name": "影",
+        "image": "ch_kage",
+        "type": 1
+    },
+    {
+        "power": 2,
+        "name": "二匹の蛇",
+        "image": "ch_snake",
+        "type": 0
+    },
+    {
+        "power": 3,
+        "name": "魔術師",
+        "image": "ch_magi",
+        "type": 1
+    },
+    {
+        "power": 4,
+        "name": "月",
+        "image": "ch_moon",
+        "type": 1
+    },
+    {
+        "power": 5,
+        "name": "カカシ",
+        "image": "ch_scarecrow",
+        "type": 0,
+        "ability": {
+            "defense": {
+                "power": 1
+            }
+        },
+        "text": "守備時：パワー +1"
+    },
+    {
+        "power": 2,
+        "name": "車輪",
+        "image": "ch_whell",
+        "type": 0,
+        "ability": {
+            "attack": {
+                "power": 1
+            }
+        },
+        "text": "攻撃時：パワー +1"
+    },
+    {
+        "power": 1,
+        "name": "犬",
+        "image": "ch_dog",
+        "type": 0
+    },
+    {
+        "power": 4,
+        "name": "ねこ",
+        "image": "cat",
+        "type": 0
+    },
+    {
+        "power": 6,
+        "name": "目玉",
+        "image": "ch_eye",
+        "type": 0
+    },
+    {
+        "power": 4,
+        "name": "モノリス",
+        "image": "ch_mono",
+        "type": 0
+    },
+    {
+        "power": 1,
+        "name": "道化",
+        "image": "ch_clown",
+        "type": 0
+    },
+    {
+        "power": 1,
+        "name": "オドラデク",
+        "image": "ch_oddc",
+        "type": 0
+    },
+    {
+        "power": 1,
+        "name": "フラスコ",
+        "image": "ch_frasco",
+        "ability": {
+            "enter": {
+                "recycle": {
+                    "target": {
+                        "isPlayer": true,
+                        "cardNumber": 1,
+                        "location": "bench"
+                    }
+                }
+            }
+        },
+        "type": 0,
+        "text": "平地の影を\nデッキの一番下に戻す"
+    },
+    {
+        "power": 4,
+        "name": "彗星",
+        "image": "ch_star",
+        "type": 0
+    },
+    {
+        "power": 4,
+        "name": "質量兵器",
+        "image": "ch_mass",
+        "type": 0,
+        "ability": {
+            "enter": {
+                "discard": {
+                    "target": {
+                        "isPlayer": true,
+                        "type": 0,
+                        "location": "bench"
+                    },
+                    "toDeckBottom": true
+                }
+            }
+        },
+        "text": "平地の影を\n奈落に落とす"
+    },
+    {
+        "power": 1,
+        "name": "凹凸",
+        "image": "ch_db",
+        "type": 0
+    },
+    {
+        "power": 2,
+        "name": "機械仕掛け",
+        "image": "ch_machine",
+        "type": 0
+    },
+    {
+        "power": 2,
+        "name": "パレード",
+        "image": "ch_parade",
+        "type": 0
+    }
+]
