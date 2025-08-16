@@ -1,23 +1,6 @@
 [
     {
         "power": 1,
-        "name": "フラスコ",
-        "image": "ch_frasco",
-        "ability": {
-            "enter": {
-                "recycle": {
-                    "target": {
-                        "isPlayer": true,
-                        "cardNumber": 2,
-                        "location": "bench"
-                    }
-                }
-            }
-        },
-        "type": 0
-    },
-    {
-        "power": 1,
         "name": "影",
         "image": "ch_kage",
         "type": 1
@@ -98,6 +81,36 @@
         "power": 1,
         "name": "オドラデク",
         "image": "ch_oddc",
+        "type": 0
+    },
+    {
+        "power": 1,
+        "name": "フラスコ",
+        "image": "ch_frasco",
+        "ability": {
+            "enter": {
+                "recycle": {
+                    "target": {
+                        "isPlayer": true,
+                        "cardNumber": 1,
+                        "location": "bench"
+                    }
+                }
+            }
+        },
+        "type": 0,
+        "text": "平地の影を\nデッキの一番下に戻す"
+    },
+    {
+        "power": 4,
+        "name": "彗星",
+        "image": "ch_star",
+        "type": 0
+    },
+    {
+        "power": 4,
+        "name": "質量兵器",
+        "image": "ch_mass",
         "type": 0,
         "ability": {
             "enter": {
@@ -110,36 +123,8 @@
                     "toDeckBottom": true
                 }
             }
-        }
-    },
-    {
-        "power": 1,
-        "name": "フラスコ",
-        "image": "ch_frasco",
-        "ability": {
-            "enter": {
-                "recycle": {
-                    "target": {
-                        "isPlayer": true,
-                        "type": 0,
-                        "location": "bench"
-                    }
-                }
-            }
         },
-        "type": 0
-    },
-    {
-        "power": 4,
-        "name": "彗星",
-        "image": "ch_star",
-        "type": 0
-    },
-    {
-        "power": 4,
-        "name": "質量兵器",
-        "image": "ch_mass",
-        "type": 0
+        "text": "平地の影を\n奈落に落とす"
     },
     {
         "power": 1,

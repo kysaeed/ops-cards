@@ -108,18 +108,6 @@ const CardList = [
       name: 'オドラデク',
       image: 'ch_oddc',
       type: 0,
-      ability: {
-        enter: {
-          discard: {
-            target: {
-              isPlayer: true,
-              type: 0,
-              location: 'bench',
-            },
-            toDeckBottom: true,
-          },
-        },
-      },
     },
     {
       power: 1,
@@ -137,7 +125,7 @@ const CardList = [
         },
       },
       type: 0,
-      text: "登場時：平地の影をデッキの一番下に戻す",
+      text: "平地の影を\nデッキの一番下に戻す",
     },
     {
       power: 4,
@@ -150,6 +138,19 @@ const CardList = [
       name: '質量兵器',
       image: 'ch_mass',
       type: 0,
+      ability: {
+        enter: {
+          discard: {
+            target: {
+              isPlayer: true,
+              type: 0,
+              location: 'bench',
+            },
+            toDeckBottom: true,
+          },
+        },
+      },
+      text: "平地の影を\n奈落に落とす",
     },
     {
       power: 1,
