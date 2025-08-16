@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DuelController;
+use App\Http\Controllers\ShopController;
+use App\Http\Controllers\MapController;
+use App\Http\Controllers\GameMasterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,7 +20,7 @@ use App\Http\Controllers\DuelController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::middleware('auth:sanctum')->get('user', function (Request $request) {
     return $request->user();
 });
 
@@ -29,10 +32,23 @@ Route::middleware('api')->group(function () {
 
 Route::middleware('auth:sanctum')->group(function () {
 
+    Route::prefix('game')->group(function() {
+        Route::post('initialize', [GameMasterController::class, 'initializeGameSession']);
+    });
+
     Route::prefix('data')->group(function() {
         Route::post('deck', [DuelController::class, 'index']);
 
         Route::post('deck/draw', [DuelController::class, 'draw']);
+    });
+
+    Route::prefix('shop')->group(function() {
+        Route::post('enter', [ShopController::class, 'enter']);
+        Route::post('select', [ShopController::class, 'select']);
+    });
+
+    Route::prefix('map')->group(function() {
+        Route::get('enter', [MapController::class, 'enter']);
     });
 
 });

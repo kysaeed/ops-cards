@@ -1,4 +1,4 @@
-
+import Phaser from 'phaser'
 
 const DrawPhase = {
 
@@ -9,15 +9,6 @@ const DrawPhase = {
         this.onEnd = onEnd
 
         const player = duel.getTurnPlayer()
-console.log('******* ' + player.getPlayerId())
-        /*
-        if (player.getDeck().isEmpty()) {
-            if (!player.getHandCard()) {
-                /// todo!!!
-                onEnd('EndPhase', fetchData) // todo 勝敗表示へ
-            }
-        }
-        */
 
         /**
          * プレイヤー側のUIでのドローと敵側の処理を分岐
@@ -77,6 +68,24 @@ console.log('onEvent hand-card click!!!', data)
     },
 
     attack(card, data, onEnd) {
+
+        /*
+        const camera = this.duel.getScene().cameras.main
+        this.duel.getScene().tweens.chain({
+            targets: camera,
+            tweens: [
+                {
+                    duration: 2000,
+                    zoom: 1.2,
+                    ease: Phaser.Math.Easing.Cubic.InOut,
+                },
+            ],
+            onComplete: () => {
+                //
+            },
+        })
+        */
+
         //
         const duel = this.duel
         card.moveToAttackPosition(() => {

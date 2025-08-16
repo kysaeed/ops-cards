@@ -3,7 +3,7 @@ import _ from 'lodash'
 
 import Const from '../Const.js'
 import Card from './Card.js'
-import CardList from './CardList'
+//import CardList from './CardList'
 
 
 const Bevel = Const.Bevel
@@ -237,6 +237,7 @@ export default class Deck {
         // const isPlyaer = (player.getPlayerId() === 0)
 
         this.sprite = new DeckSprite(duel, x, y, 20) // @todo 初期枚数
+
     }
 
     setClickableState(isClickable) {

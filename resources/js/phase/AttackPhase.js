@@ -1,7 +1,9 @@
+import Phaser from 'phaser'
 import Const from "../Const"
 
 const AttackPhase = {
     enter(duel, fetchData, onEnd) {
+
         this.onEnd = onEnd
 
         const turnPlayerId = duel.getTurnPlayerId()
@@ -11,16 +13,61 @@ const AttackPhase = {
         //player.getCardStack().addCard(newAttackCard)
         //const total = duel.getTurnPlayer().cardStack.getTotalPower()
 
+        const camera = duel.getScene().cameras.main
+        /*
+        duel.getScene().tweens.chain({
+            targets: camera,
+            tweens: [
+                {
+                    duration: 180,
+                    zoom: 1.2,
+                },
+            ],
+            onComplete: () => {
+                //
+            },
+        })
+        */
+
+
+        /*
+        for (let e in Phaser.Math.Easing) {
+            console.log(e)
+        }
+        */
 
         const defenseCard = ohterPlayer.getCardStack().getTopCard()
         defenseCard.onEnterToDefense(() => { // defense側のablity判定
 
+            //camera.zoom = 1.4
+
             duel.getTurnPlayer().cardStack.cards.forEach((c, stackCount) => {
+
+
                 c.attack(stackCount, () => {
+
+
                     if (stackCount < 1) {
                         duel.getScene().damageMark.setDamage(null) // dummy param
 
                         if (fetchData.isTurnChange) {
+
+                            duel.getScene().tweens.chain({
+                                targets: camera,
+                                tweens: [
+                                    {
+                                        duration: 200,
+                                        zoom: 1.02,
+                                        ease: Phaser.Math.Easing.Cubic.InOut,
+                                    },
+                                    {
+                                        duration: 400,
+                                        zoom: 1.0,
+                                        ease: Phaser.Math.Easing.Cubic.InOut,
+                                    },
+                                ],
+                            })
+
                             ohterPlayer.getCardStack().criticalDamaged(() => {
 
                                 duel.getFlag().moveTo(620, 170 + (200 * (1 - turnPlayerId)))
@@ -50,7 +97,6 @@ const AttackPhase = {
                                         onEnd('TurnChangePhase', fetchData)
                                     })
                                 } else {
-console.log('enemyPlayer.getBench().breakCards()')
                                     enemyPlayer.getBench().breakCards(deffenceCards, () => {
                                         onEnd('EndPhase', fetchData)
                                     })
@@ -73,8 +119,6 @@ console.log('enemyPlayer.getBench().breakCards()')
                 })
             })
         })
-
-
 
 
     },

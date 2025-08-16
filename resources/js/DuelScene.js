@@ -28,7 +28,7 @@ const DuelScene = {
         this.load.image('card_tip', 'assets/card_tip.png')
         this.load.image('card_tip_shadow', 'assets/card_tip_shadow.png')
         this.load.image('deck_clickable', 'assets/deck_clickable.png')
-        this.load.image('board', 'assets/board.png?v=2')
+        this.load.image('board', 'assets/board.png?v=3')
         this.load.image('modal', 'assets/modal.png')
         this.load.image('damage', 'assets/damage.png')
 
@@ -74,7 +74,6 @@ const DuelScene = {
 
     },
     create() {
-
         this.anchor = this.add.container(0, 0)
         this.anchor.add(
             this.add.image(
@@ -111,90 +110,85 @@ console.log('to Next State : ', fetchData)
         }
 
 
-        // 90度回転の中心点を設定
-        this.cameras.main.originX = 0.5
-        this.cameras.main.originY = (Const.Screen.Height * 0.5) / Const.Screen.Width
+        if (!game.device.os.desktop) { // PCの場合は、ディレプレイの持ち方を変えないので回転しない
+            // 90度回転の中心点を設定
+            this.cameras.main.originX = 0.5
+            this.cameras.main.originY = (Const.Screen.Height * 0.5) / Const.Screen.Width
 
-        //this.cameras.main.zoom = 2
 
-        const isVertical = () => {
+            const isVertical = () => {
 
-            const game = window.game
+                const game = window.game
 
-            const w = game.scale.parentSize.width
-            const h = game.scale.parentSize.height
+                const w = game.scale.parentSize.width
+                const h = game.scale.parentSize.height
 
-            let isVertical = false
-            if (w && h) {
-              if (w < h) {
-                isVertical = true
-              }
+                let isVertical = false
+                if (w && h) {
+                  if (w < h) {
+                    isVertical = true
+                  }
+                }
+
+                return isVertical
             }
 
-            return isVertical
-        }
-
-        const setRotateState = (isRotate) => {
-            if (isRotate) {
-                // [|] 縦長スクリーンに表示
-                game.scale.displaySize.setAspectRatio( Const.Screen.Height/Const.Screen.Width );
-                game.scale.resize(Const.Screen.Height, Const.Screen.Width)
-                this.cameras.main.setRotation(Math.PI * 0.5)
-                game.scale.refresh()
-            } else {
-                // [--] 横長スクリーンに表示
-                game.scale.displaySize.setAspectRatio( Const.Screen.Width/Const.Screen.Height );
-                game.scale.resize(Const.Screen.Width, Const.Screen.Height)
-                this.cameras.main.setRotation(0)
-                game.scale.refresh()
+            const setRotateState = (isRotate) => {
+                if (isRotate) {
+                    // [|] 縦長スクリーンに表示
+                    game.scale.displaySize.setAspectRatio( Const.Screen.Height/Const.Screen.Width );
+                    game.scale.resize(Const.Screen.Height, Const.Screen.Width)
+                    this.cameras.main.setRotation(Math.PI * 0.5)
+                    game.scale.refresh()
+                } else {
+                    // [--] 横長スクリーンに表示
+                    game.scale.displaySize.setAspectRatio( Const.Screen.Width/Const.Screen.Height );
+                    game.scale.resize(Const.Screen.Width, Const.Screen.Height)
+                    this.cameras.main.setRotation(0)
+                    game.scale.refresh()
+                }
             }
-        }
 
-        const fit = () => {
-            /*
-            // PCの場合は、ディレプレイの持ち方を変えないので回転しない
-            if (game.device.os.desktop) {
-                return
+            const fit = () => {
+                /*
+                // PCの場合は、ディレプレイの持ち方を変えないので回転しない
+                if (game.device.os.desktop) {
+                    return
+                }
+                */
+                setRotateState(isVertical())
             }
-            */
-            setRotateState(isVertical())
-        }
 
-        let h
-        const onResize = () => {
+            let h
+            const onResize = () => {
 
-            if (h) {
-                clearTimeout(h)
+                if (h) {
+                    clearTimeout(h)
+                }
+                h = setTimeout(() => {
+                    fit()
+                }, 100)
             }
-            h = setTimeout(() => {
-                fit()
-            }, 100)
+
+            window.onresize = () => {
+                onResize()
+            }
+
+            screen.orientation.onchange = () => {
+                onResize()
+            }
+
+            // 回転の初期化
+            fit()
         }
 
-        window.onresize = () => {
-            onResize()
-        }
-
-        /*
-        // 旧仕様互換
-        window.onorientationchange = () => {
-        onResize()
-        }
-        */
-
-        screen.orientation.onchange = () => {
-            onResize()
-        }
-
-        // 回転の初期化
-        fit()
-
-        // ログイン処理 @todo タイトルから
-        window.axios.get('sanctum/csrf-cookie').then(() => {
-            window.axios.post('api/login', {}).then(() => {
-                currentPhase.enter(this.duel, {}, toNextPhase)
-            })
-        })
+        // ログイン処理 @todo タイトルで実行するように治す
+        // window.axios.get('sanctum/csrf-cookie').then(() => {
+        //     window.axios.post('api/login', {}).then(() => {
+        //         currentPhase.enter(this.duel, {}, toNextPhase)
+        //     })
+        // })
+        currentPhase.enter(this.duel, {}, toNextPhase)
 
     },
     update() {

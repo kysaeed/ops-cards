@@ -67,12 +67,6 @@
     },
     {
         "power": 4,
-        "name": "月",
-        "image": "ch_moon",
-        "type": 0
-    },
-    {
-        "power": 4,
         "name": "モノリス",
         "image": "ch_mono",
         "type": 0

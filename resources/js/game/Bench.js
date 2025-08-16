@@ -126,7 +126,6 @@ export default class Bench {
                                 breakCardCount--
                                 if (breakCardCount < 1) {
                                     const hero = player.getHero()
-console.log(hero)
                                     hero.moveToBench(80 * player.getDirection(), 180 * player.getDirection(), () => {
                                         if (onEnd) {
                                             onEnd()

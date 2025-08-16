@@ -94,12 +94,6 @@ const CardList = [
     },
     {
       power: 4,
-      name: '月',
-      image: 'ch_moon',
-      type: 0,
-    },
-    {
-      power: 4,
       name: 'モノリス',
       image: 'ch_mono',
       type: 0,
@@ -120,6 +114,17 @@ const CardList = [
       power: 1,
       name: 'フラスコ',
       image: 'ch_frasco',
+      ability: {
+        enter: {
+          discard: {
+            target: {
+              type: 1,
+              location: 'bench'
+            },
+            //power: 2
+          },
+        },
+      },
       type: 0,
     },
     {
@@ -211,6 +216,12 @@ const CardList = [
     {
       power: 1,
       name: '予言の書',
+      image: 'chara',
+      type: 0,
+    },
+    {
+      power: 1,
+      name: '魔導の書',
       image: 'chara',
       type: 0,
     },

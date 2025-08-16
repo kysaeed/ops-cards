@@ -1,5 +1,6 @@
 import Const from '../Const.js'
 import Number from './Number.js'
+import DeckCutin from './CardCutin.js'
 
 const Bevel = Const.Bevel
 const HeightBase = 100
@@ -189,43 +190,65 @@ export default class Card {
 
             }
         })
+
+        this.cardCutin = new DeckCutin(duel, cardInfo)
+
     }
 
     showAbilityEffect(onEnd) {
-
         const scene = this.duel.getScene()
-        // todo 背景色の暗転
 
-        this.abilityEffect.alpha = 0.0
-        this.abilityEffect.scale = 3.0
-        this.abilityEffect.visible = true
-        this.abilityEffectTewwns = scene.tweens.chain({
-            targets: this.abilityEffect,
-            // repeat: -1,
-            //yoyo: true,
-            //paused: true,
-            tweens: [
-                {
-                    scale: 1.2,
-                    alpha: 0.8,
-                    duration: 250,
-                    ease: 'power1',
-                },
-                {
-                    delay: 100,
-                    scale: 5.0,
-                    duration: 300,
-                    alpha: 0.0,
-                    ease: 'power1',
-                },
-            ],
-            onComplete: () => {
-                this.abilityEffect.visible = false
-                if (onEnd) {
-                    onEnd()
-                }
-            },
+        this.duel.toDark(() => { // 背景色の暗転
+
+            this.cardCutin.show(() => {
+
+
+                this.abilityEffect.alpha = 0.0
+                this.abilityEffect.scale = 3.0
+                this.abilityEffect.visible = true
+                this.abilityEffectTewwns = scene.tweens.chain({
+                    targets: this.abilityEffect,
+                    // repeat: -1,
+                    //yoyo: true,
+                    //paused: true,
+                    tweens: [
+                        {
+                            scale: 1.2,
+                            alpha: 0.8,
+                            duration: 250,
+                            ease: 'power1',
+                        },
+                        {
+                            delay: 100,
+                            scale: 5.0,
+                            duration: 300,
+                            alpha: 0.0,
+                            ease: 'power1',
+                        },
+                    ],
+                    onComplete: () => {
+                        this.abilityEffect.visible = false
+
+                        this.cardCutin.hide(() => {
+
+                            this.duel.show(() => {
+                                if (onEnd) {
+                                    onEnd()
+                                }
+                            })
+
+                        })
+
+                    },
+                })
+
+
+            })
+
+
+
         })
+
     }
 
     bringToTop() {
@@ -313,6 +336,7 @@ console.log('******** onEnterToAttackPosition()', data)
 
         if (add) {
             this.showAbilityEffect(() => {
+
                 this.showStatusTip(() => { // todo: 引数に表示内容を設定?
 
                     // const player = this.duel.getTurnPlayer()
@@ -823,8 +847,8 @@ console.log('******** onEnterToAttackPosition()', data)
     }
 
     moveToBenchBounce(x, y, onEnd) {
-        const max = 6
-        const angle = Math.floor((90 + 22) + (Math.random() * max) - (max / 2))
+        const max = 360
+        const angle =(Math.random() * max)
 
         this.duel.getScene().tweens.chain({
             targets: this.sprite,
@@ -843,7 +867,10 @@ console.log('******** onEnterToAttackPosition()', data)
                     onEnd();
                 }
 
-                const angle = Math.floor((90 + 22) + (Math.random() * max) - (max / 2))
+
+                const max = 360
+                const angle =(Math.random() * max)
+
                 this.duel.getScene().tweens.chain({
                     targets: this.sprite,
                     tweens: [
