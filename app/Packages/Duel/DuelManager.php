@@ -155,11 +155,7 @@ class DuelManager
         $nextHandCard = null;
         $card = null;
         if ($isHandCard) {
-
-            $cardNumber = $nextState['players'][$jsonIndex]['handCardNumber'];
-            $nextHandCardNumber = array_shift($nextState['players'][$jsonIndex]['deckCardNumbers']);
-            $nextState['players'][$jsonIndex]['handCardNumber'] = $nextHandCardNumber;
-
+logger('*** isHandCard *** ');
             $card = $this->players[$jsonIndex]->getHandCard()->takeCard();
             $nextHandCard = $this->players[$jsonIndex]->getDeck()->draw();
             $this->players[$jsonIndex]->getHandCard()->setCard($nextHandCard);
@@ -168,8 +164,11 @@ class DuelManager
             }
 
         } else {
-            $cardNumber = array_shift($nextState['players'][$jsonIndex]['deckCardNumbers']);
+logger('*** not hand card ...... *** ');
             $card = $this->players[$jsonIndex]->getDeck()->draw();
+logger('====================');
+logger($card?->getCardNumber());
+logger('====================');
             if ($card) {
                 $drawCount = 1;
             }
@@ -193,15 +192,7 @@ class DuelManager
                 $defCard,
             );
 
-            // $addAttackPower = $attackResult['ability']['attack']['power'] ?? 0;
-            // $addDefensePower = $attackResult['ability']['defense']['power'] ?? 0;
-            // array_unshift($nextState['players'][$jsonIndex]['cardStack'], [
-            //     'cardNumber' => $cardNumber,
-            //     'addPower' => $addAttackPower,
-            // ]);
-
             $this->players[$jsonIndex]->getCardStack()->add($card);
-
 
             if ($attackResult) {
                 if ($attackResult['isTurnChange']) {
@@ -249,9 +240,9 @@ class DuelManager
             'judge' => $judge,
             'isHandCard' => $isHandCard,
             'isTurnChange' => $attackResult['isTurnChange'],
-            'cardNumber' => $cardNumber,
+            'cardNumber' => $card->getCardNumber(), //$cardNumber,
             'ability' => $attackResult['ability'],
-            'nextHnadCardNumber' => $nextHandCardNumber,
+            'nextHnadCardNumber' => $nextHandCard?->getCardNumber(), //$nextHandCardNumber,
             'cardCount' => $this->players[$jsonIndex]->getDeck()->getCount(),
             'drawCount' => $drawCount,
             'order' => null,
