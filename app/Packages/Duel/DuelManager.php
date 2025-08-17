@@ -151,7 +151,6 @@ class DuelManager
         }
 
         $drawCount = 0;
-        $nextHandCardNumber = null;
         $nextHandCard = null;
         $card = null;
         if ($isHandCard) {
@@ -240,9 +239,9 @@ logger('====================');
             'judge' => $judge,
             'isHandCard' => $isHandCard,
             'isTurnChange' => $attackResult['isTurnChange'],
-            'cardNumber' => $card->getCardNumber(), //$cardNumber,
+            'cardNumber' => $card->getCardNumber(),
             'ability' => $attackResult['ability'],
-            'nextHnadCardNumber' => $nextHandCard?->getCardNumber(), //$nextHandCardNumber,
+            'nextHnadCardNumber' => $nextHandCard?->getCardNumber(),
             'cardCount' => $this->players[$jsonIndex]->getDeck()->getCount(),
             'drawCount' => $drawCount,
             'order' => null,
