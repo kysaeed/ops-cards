@@ -150,26 +150,31 @@ class DuelManager
             $enemyJsonIndex = self::Player;
         }
 
+        $turnPlayer = $this->players[$jsonIndex];
+
+        // 手札がなければデッキからカードを引く
+        // if ($turnPlayer->getHandCard()->isEmpty()) {
+        //     // デッキからカードを引く
+        //     $nextHandCard = $turnPlayer->getDeck()->draw();
+        //     $turnPlayer->getHandCard()->setCard($nextHandCard);
+        //     if ($nextHandCard) {
+        //         $drawCount = 1;
+        //     }
+        // }
+
+
         $drawCount = 0;
-        $nextHandCardNumber = null;
         $nextHandCard = null;
         $card = null;
-        if ($isHandCard) {
-
-            $cardNumber = $nextState['players'][$jsonIndex]['handCardNumber'];
-            $nextHandCardNumber = array_shift($nextState['players'][$jsonIndex]['deckCardNumbers']);
-            $nextState['players'][$jsonIndex]['handCardNumber'] = $nextHandCardNumber;
-
-            $card = $this->players[$jsonIndex]->getHandCard()->takeCard();
-            $nextHandCard = $this->players[$jsonIndex]->getDeck()->draw();
-            $this->players[$jsonIndex]->getHandCard()->setCard($nextHandCard);
-            if ($nextHandCard) {
-                $drawCount = 1;
-            }
-
+        if ($isHandCard && !$turnPlayer->getHandCard()->isEmpty()) {
+logger('*** isHandCard *** ');
+            $card = $turnPlayer->getHandCard()->takeCard();
         } else {
-            $cardNumber = array_shift($nextState['players'][$jsonIndex]['deckCardNumbers']);
-            $card = $this->players[$jsonIndex]->getDeck()->draw();
+logger('*** not hand card ...... *** ');
+            $card = $turnPlayer->getDeck()->draw();
+logger('====================');
+logger($card?->getCardNumber());
+logger('====================');
             if ($card) {
                 $drawCount = 1;
             }
@@ -193,15 +198,7 @@ class DuelManager
                 $defCard,
             );
 
-            // $addAttackPower = $attackResult['ability']['attack']['power'] ?? 0;
-            // $addDefensePower = $attackResult['ability']['defense']['power'] ?? 0;
-            // array_unshift($nextState['players'][$jsonIndex]['cardStack'], [
-            //     'cardNumber' => $cardNumber,
-            //     'addPower' => $addAttackPower,
-            // ]);
-
             $this->players[$jsonIndex]->getCardStack()->add($card);
-
 
             if ($attackResult) {
                 if ($attackResult['isTurnChange']) {
@@ -236,6 +233,32 @@ class DuelManager
             }
         }
 
+        $isTurnChange = $attackResult['isTurnChange'] ?? false;
+
+        $nextTrunPlayer = $turnPlayer;
+        if ($isTurnChange) {
+            $nextTrunPlayer = $this->players[$enemyJsonIndex];
+        }
+
+        // 手札がなければデッキからカードを引く
+        $drawCount = 0;
+        $nextPlayerState = []; //次の手番のプレイヤーの状態
+        if ($nextTrunPlayer->getHandCard()->isEmpty()) {
+            // デッキからカードを引く
+            $nextHandCard = $nextTrunPlayer->getDeck()->draw();
+            $nextTrunPlayer->getHandCard()->setCard($nextHandCard);
+            if ($nextHandCard) {
+                $drawCount = 1;
+            }
+        }
+
+        $nextPlayerState = [
+            'drawCount' => $drawCount,
+            'deckCount' => $nextTrunPlayer->getDeck()->getCount(),
+            'nextHandCardNumber' => $nextHandCard?->getCardNumber(),
+        ];
+
+
         ////// TEST //////
         // $judge = 1;
         //////////////////
@@ -248,12 +271,13 @@ class DuelManager
         return [
             'judge' => $judge,
             'isHandCard' => $isHandCard,
-            'isTurnChange' => $attackResult['isTurnChange'],
-            'cardNumber' => $cardNumber,
+            'isTurnChange' => $isTurnChange,
+            'cardNumber' => $card?->getCardNumber(),
             'ability' => $attackResult['ability'],
-            'nextHnadCardNumber' => $nextHandCardNumber,
+            // 'nextHnadCardNumber' => $nextHandCard?->getCardNumber(),
             'cardCount' => $this->players[$jsonIndex]->getDeck()->getCount(),
             'drawCount' => $drawCount,
+            'nextPlayerState' => $nextPlayerState,
             'order' => null,
         ];
     }
