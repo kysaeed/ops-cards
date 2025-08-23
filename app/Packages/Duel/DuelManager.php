@@ -150,21 +150,28 @@ class DuelManager
             $enemyJsonIndex = self::Player;
         }
 
+        $turnPlayer = $this->players[$jsonIndex];
+
+        // 手札がなければデッキからカードを引く
+        // if ($turnPlayer->getHandCard()->isEmpty()) {
+        //     // デッキからカードを引く
+        //     $nextHandCard = $turnPlayer->getDeck()->draw();
+        //     $turnPlayer->getHandCard()->setCard($nextHandCard);
+        //     if ($nextHandCard) {
+        //         $drawCount = 1;
+        //     }
+        // }
+
+
         $drawCount = 0;
         $nextHandCard = null;
         $card = null;
-        if ($isHandCard) {
+        if ($isHandCard && !$turnPlayer->getHandCard()->isEmpty()) {
 logger('*** isHandCard *** ');
-            $card = $this->players[$jsonIndex]->getHandCard()->takeCard();
-            $nextHandCard = $this->players[$jsonIndex]->getDeck()->draw();
-            $this->players[$jsonIndex]->getHandCard()->setCard($nextHandCard);
-            if ($nextHandCard) {
-                $drawCount = 1;
-            }
-
+            $card = $turnPlayer->getHandCard()->takeCard();
         } else {
 logger('*** not hand card ...... *** ');
-            $card = $this->players[$jsonIndex]->getDeck()->draw();
+            $card = $turnPlayer->getDeck()->draw();
 logger('====================');
 logger($card?->getCardNumber());
 logger('====================');
@@ -226,6 +233,32 @@ logger('====================');
             }
         }
 
+        $isTurnChange = $attackResult['isTurnChange'] ?? false;
+
+        $nextTrunPlayer = $turnPlayer;
+        if ($isTurnChange) {
+            $nextTrunPlayer = $this->players[$enemyJsonIndex];
+        }
+
+        // 手札がなければデッキからカードを引く
+        $drawCount = 0;
+        $nextPlayerState = []; //次の手番のプレイヤーの状態
+        if ($nextTrunPlayer->getHandCard()->isEmpty()) {
+            // デッキからカードを引く
+            $nextHandCard = $nextTrunPlayer->getDeck()->draw();
+            $nextTrunPlayer->getHandCard()->setCard($nextHandCard);
+            if ($nextHandCard) {
+                $drawCount = 1;
+            }
+        }
+
+        $nextPlayerState = [
+            'drawCount' => $drawCount,
+            'deckCount' => $nextTrunPlayer->getDeck()->getCount(),
+            'nextHandCardNumber' => $nextHandCard?->getCardNumber(),
+        ];
+
+
         ////// TEST //////
         // $judge = 1;
         //////////////////
@@ -238,12 +271,13 @@ logger('====================');
         return [
             'judge' => $judge,
             'isHandCard' => $isHandCard,
-            'isTurnChange' => $attackResult['isTurnChange'],
-            'cardNumber' => $card->getCardNumber(),
+            'isTurnChange' => $isTurnChange,
+            'cardNumber' => $card?->getCardNumber(),
             'ability' => $attackResult['ability'],
-            'nextHnadCardNumber' => $nextHandCard?->getCardNumber(),
+            // 'nextHnadCardNumber' => $nextHandCard?->getCardNumber(),
             'cardCount' => $this->players[$jsonIndex]->getDeck()->getCount(),
             'drawCount' => $drawCount,
+            'nextPlayerState' => $nextPlayerState,
             'order' => null,
         ];
     }

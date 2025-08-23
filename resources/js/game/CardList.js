@@ -143,7 +143,8 @@ const CardList = [
           discard: {
             target: {
               isPlayer: true,
-              type: 0,
+              cardNumber: 1,
+              // type: 0,
               location: 'bench',
             },
             toDeckBottom: true,
