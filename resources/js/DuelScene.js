@@ -29,6 +29,7 @@ const DuelScene = {
         this.load.image('board', 'assets/board.png?v=3')
         this.load.image('modal', 'assets/modal.png')
         this.load.image('damage', 'assets/damage.png')
+        this.load.image('coin', 'assets/damage.png')
 
         this.load.image('desc_effect', 'assets/desc_effect.png')
 
