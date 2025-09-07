@@ -195,6 +195,10 @@ export default class Card {
 
     }
 
+    getSprite() {
+        return this.sprite
+    }
+
     showAbilityEffect(onEnd) {
         const scene = this.duel.getScene()
 

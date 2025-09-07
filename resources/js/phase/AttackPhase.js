@@ -47,7 +47,7 @@ const AttackPhase = {
 
 
                     if (stackCount < 1) {
-                        duel.getScene().damageMark.setDamage(null, fetchData.isTurnChange) // dummy param
+                        duel.getScene().damageMark.setDamage(c, ohterPlayer.getCardStack().getTopCard(), fetchData.isTurnChange) // dummy param
 
                         if (fetchData.isTurnChange) {
 

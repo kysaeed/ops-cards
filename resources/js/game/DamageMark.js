@@ -20,18 +20,15 @@ export default class DamageMark {
 
     }
 
-    setDamage(damage, isTurnChange) {
+    setDamage(attackCard, defenseCard, isTurnChange) {
 
         const scene = this.scene
-        // const centerX = 480
-        // const centerY = 280
-        const centerX = 0
-        const centerY = 0
-
+        const x = attackCard.getSprite().x + ((defenseCard.getSprite().x -attackCard.getSprite().x) * 0.5)
+        const y = attackCard.getSprite().y + ((defenseCard.getSprite().y -attackCard.getSprite().y) * 0.5)
 
         const mainEmitter = scene.add.particles(this.x, this.y, 'damage', {
-            x: centerX,
-            y: centerY,
+            x: x,
+            y: y,
             speed: { min: 500, max: 900 },
             angle: { min: 0, max: 360 },
             scale: { start: 1.0, end: 0.0 },
@@ -59,8 +56,8 @@ export default class DamageMark {
 
         if (isTurnChange) {
             const emitter = scene.add.particles(this.x, this.y, 'damage', {
-                x: centerX,
-                y: centerY,
+                x: x,
+                y: y,
                 speed: { min: 200, max: 400 },
                 angle: { min: 0, max: 360 },
                 scale: { start: 2.0, end: 0.0 },
