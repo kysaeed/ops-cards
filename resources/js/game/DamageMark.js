@@ -3,6 +3,9 @@ export default class DamageMark {
         this.scene = scene
         this.damage = scene.add.sprite(0, 0, 'damage')
 
+        this.x = x
+        this.y = y
+
         this.sprite = scene.add.container(x, y, [
             this.damage,
         ])
@@ -17,7 +20,77 @@ export default class DamageMark {
 
     }
 
-    setDamage(damage) {
+    setDamage(damage, isTurnChange) {
+
+        const scene = this.scene
+        // const centerX = 480
+        // const centerY = 280
+        const centerX = 0
+        const centerY = 0
+
+
+        const mainEmitter = scene.add.particles(this.x, this.y, 'damage', {
+            x: centerX,
+            y: centerY,
+            speed: { min: 500, max: 900 },
+            angle: { min: 0, max: 360 },
+            scale: { start: 1.0, end: 0.0 },
+            alpha: { start: 0.8, end: 0 },
+            lifespan: 300,
+            quantity: 10,
+            frequency: 30,
+            gravityY: 0,
+            blendMode: 'ADD',
+            emitZone: {
+              source: new Phaser.Geom.Circle(0, 0, 10),
+              type: 'edge',
+              quantity: 30
+            }
+          }).setDepth(1000);
+        // 1秒後に放出を停止
+        scene.time.delayedCall(100, () => {
+            mainEmitter.stop();
+        });
+
+        // 4秒後にエミッターを破棄
+        scene.time.delayedCall(2000, () => {
+            mainEmitter.destroy();
+        });
+
+        if (isTurnChange) {
+            const emitter = scene.add.particles(this.x, this.y, 'damage', {
+                x: centerX,
+                y: centerY,
+                speed: { min: 200, max: 400 },
+                angle: { min: 0, max: 360 },
+                scale: { start: 2.0, end: 0.0 },
+                alpha: { start: 1, end: 0 },
+                lifespan: 800,
+                quantity: 30,
+                frequency: 50,
+                gravityY: 0,
+                blendMode: 'ADD',
+                emitZone: {
+                    source: new Phaser.Geom.Circle(0, 0, 10),
+                    type: 'edge',
+                    quantity: 30
+                }
+            }).setDepth(1000);
+
+            // 1秒後に放出を停止
+            scene.time.delayedCall(100, () => {
+                emitter.stop();
+            });
+
+            // 4秒後にエミッターを破棄
+            scene.time.delayedCall(2000, () => {
+                emitter.destroy();
+            });
+        }
+
+    }
+
+    setDamage2(damage) {
         this.sprite.scale = 0
         this.sprite.alpha = 1.0
         this.sprite.visible = true
