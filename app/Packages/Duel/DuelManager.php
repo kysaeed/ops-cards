@@ -274,7 +274,6 @@ logger('====================');
             'isTurnChange' => $isTurnChange,
             'cardNumber' => $card?->getCardNumber(),
             'ability' => $attackResult['ability'],
-            // 'nextHnadCardNumber' => $nextHandCard?->getCardNumber(),
             'cardCount' => $this->players[$jsonIndex]->getDeck()->getCount(),
             'drawCount' => $drawCount,
             'nextPlayerState' => $nextPlayerState,

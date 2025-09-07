@@ -117,7 +117,7 @@
                 "discard": {
                     "target": {
                         "isPlayer": true,
-                        "type": 0,
+                        "cardNumber": 1,
                         "location": "bench"
                     },
                     "toDeckBottom": true
