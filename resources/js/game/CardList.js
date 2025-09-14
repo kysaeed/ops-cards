@@ -3,15 +3,6 @@
  * https://www.well-boardgame.com/challengers-rule/
  */
 
-/*
-power = (addPower) => {
-  return {
-    power: addPower,
-    text: `攻撃時：パワー +${addPower}`,
-  }
-}
-*/
-
 
 const CardTypeList = [
   {
@@ -69,7 +60,7 @@ const CardList = [
       ability: {
         attack: {
           power: 1,
-        }
+        },
       },
       text: "攻撃時：パワー +1",
     },

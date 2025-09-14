@@ -3,6 +3,7 @@ import Hero from './Hero.js'
 import CardStack from './CardStack.js'
 import Deck from './Deck.js'
 import Bench from './Bench.js'
+import Abyss from './Abyss.js'
 
 export default class Player {
     constructor(duel, id, direction, name) {
@@ -18,6 +19,8 @@ export default class Player {
         this.cardStack = new CardStack(duel, this)
 
         this.hero = new Hero(this.duel, this)
+
+        this.abyss = new Abyss(duel, this)
 
 
     }
@@ -73,6 +76,10 @@ export default class Player {
 
     getBench() {
         return this.bench
+    }
+
+    getAbyss() {
+        return this.abyss
     }
 
     getCardStack() {

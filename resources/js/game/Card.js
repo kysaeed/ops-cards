@@ -1013,14 +1013,15 @@ console.log('******** onEnterToAttackPosition()', data)
 
     }
 
-    moveToAbyss(x, y, onEnd) {
+    moveToAbyss(abyss, onEnd) {
         // const max = 6
         // const angle = Math.floor((90 + 12) + (Math.random() * max) - (max / 2))
-
-        const currentX = this.sprite.x
-        const currentY = this.sprite.y
-
+        // const currentX = this.sprite.x
+        // const currentY = this.sprite.y
         // const midX = currentX + ((x - currentX) * 0.5)
+
+        const x = abyss.getX()
+        const y = abyss.getY()
 
         const player = this.duel.getTurnPlayer()
         const angle = player.getDirection() //
