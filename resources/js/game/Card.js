@@ -1037,6 +1037,8 @@ console.log('******** onEnterToAttackPosition()', data)
         const player = this.duel.getTurnPlayer()
         const angle = player.getDirection() //
 
+        this.bringToTop()
+        // deck.bringToTop()
 
         this.duel.getScene().tweens.chain({
             targets: this.sprite,
