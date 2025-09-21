@@ -17,6 +17,9 @@ export default class Duel {
         this.cardBoard = scene.add.container(Const.Screen.Width * 0.5, Const.Screen.Height * 0.5, [])
         scene.anchor.add(this.cardBoard)
 
+        this.uiLayer = scene.add.container(Const.Screen.Width * 0.5, Const.Screen.Height * 0.5, [])
+        scene.anchor.add(this.uiLayer)
+
         this.objectManager = new ObjectManager(scene)
 
         this.playerList = []
@@ -35,6 +38,10 @@ export default class Duel {
 
     getCardBoard() {
         return this.cardBoard
+    }
+
+    getUiLayer() {
+        return this.uiLayer
     }
 
     setCurrentPhase(phase) {
