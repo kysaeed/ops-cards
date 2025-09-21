@@ -111,7 +111,7 @@ console.log('** *data *** ', data)
                                 card.showAbilityEffect(() => {
                                     const direction = player.getDirection()
 
-                                    targetCard.moveToAbyss(player.getAbyss() /* (420 * direction), (-240 * direction) - 50 */, () => {
+                                    targetCard.moveToAbyss(player.getAbyss(), () => {
                                         if (onEnd) {
                                             onEnd()
                                         }

@@ -227,6 +227,7 @@ class DeckSprite {
 
 export default class Deck {
     constructor(duel, player) {
+        this.duel = duel
         this.player = player
         this.initialCardCount = 0
 
@@ -236,6 +237,16 @@ export default class Deck {
         // const isPlyaer = (player.getPlayerId() === 0)
 
         this.sprite = new DeckSprite(duel, this.x, this.y, 20) // @todo 初期枚数
+    }
+
+    bringToTop() {
+        const board = this.duel.getCardBoard()
+        board.bringToTop(this.sprite)
+    }
+
+    sendToBack() {
+        const board = this.duel.getCardBoard()
+        board.sendToBack(this.sprite)
     }
 
     getSprite() {
