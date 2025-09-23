@@ -16,10 +16,10 @@ return new class extends Migration
     {
         Schema::create('game_session_section_steps', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(GameSessionSection::class);
+            $table->foreignIdFor(GameSessionSection::class)->constrained();
             $table->unsignedInteger('order')->index();
-            $table->foreignIdFor(Duel::class)->nullable();
-            $table->foreignIdFor(Shop::class)->nullable();
+            // $table->foreignIdFor(Duel::class)->nullable()->constrained();
+            // $table->foreignIdFor(Shop::class)->nullable()->constrained();
             $table->timestamp('compleated_at')->nullable();
             $table->timestamps();
         });

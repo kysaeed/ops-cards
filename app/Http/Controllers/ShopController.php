@@ -81,7 +81,6 @@ class ShopController extends Controller
 
     public function select(Request $request)
     {
-        $selectedCards = $request->input('selectedCards');
 
         /** @var User $user */
         $user = Auth::user();
@@ -95,7 +94,6 @@ class ShopController extends Controller
             ->first();
 
         $gameSessionSectionStep = $gameSessionSection->gameSessionSectionSteps()
-            ->whereNotNull('shop_id')
             ->active()
             ->first();
 

@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\ShopCard;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\ShopCard;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Shop extends Model
@@ -18,5 +19,9 @@ class Shop extends Model
         return $this->hasMany(ShopCard::class);
     }
 
+    public function gameSessionSectionStep(): BelongsTo
+    {
+        return $this->belongsTo(GameSessionSectionStep::class);
+    }
 
 }

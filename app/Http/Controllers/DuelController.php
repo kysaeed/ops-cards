@@ -178,7 +178,6 @@ class DuelController extends Controller
 
         $gameSessionSectionStep = $gameSessionSection->gameSessionSectionSteps()
             ->active()
-            ->whereNotNull('duel_id') //// @todo 取得してからチェック
             ->first();
 
         $duel = $gameSessionSectionStep->duel;
@@ -316,7 +315,6 @@ class DuelController extends Controller
 
             $gameSessionSectionStep = $gameSessionSection->gameSessionSectionSteps()
                 ->active()
-                ->whereNotNull('duel_id') //// @todo 取得してからチェック
                 ->first();
 
             $duel = $gameSessionSectionStep->duel;

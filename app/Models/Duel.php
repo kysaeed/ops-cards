@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use App\Models\Deck;
 use App\Models\DuelTurn;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Duel extends Model
@@ -29,8 +30,8 @@ class Duel extends Model
         return $this->hasMany(DuelTurn::class);
     }
 
-    public function gameSessionSectionStep(): HasOne
+    public function gameSessionSectionStep(): BelongsTo
     {
-        return $this->hasOne(GameSessionSectionStep::class);
+        return $this->belongsTo(GameSessionSectionStep::class);
     }
 }

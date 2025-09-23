@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class GameSessionSectionStep extends Model
 {
@@ -19,14 +20,14 @@ class GameSessionSectionStep extends Model
         'duel_id',
     ];
 
-    public function duel(): BelongsTo
+    public function duel(): HasOne
     {
-        return $this->belongsTo(Duel::class);
+        return $this->hasOne(Duel::class);
     }
 
-    public function shop(): BelongsTo
+    public function shop(): HasOne
     {
-        return $this->belongsTo(Shop::class);
+        return $this->hasOne(Shop::class);
     }
 
     public function gameSessionSection(): BelongsTo
