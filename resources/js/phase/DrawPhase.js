@@ -66,23 +66,6 @@ console.log('onEvent hand-card click!!!', data)
 
     attack(card, data, onEnd) {
 
-        /*
-        const camera = this.duel.getScene().cameras.main
-        this.duel.getScene().tweens.chain({
-            targets: camera,
-            tweens: [
-                {
-                    duration: 2000,
-                    zoom: 1.2,
-                    ease: Phaser.Math.Easing.Cubic.InOut,
-                },
-            ],
-            onComplete: () => {
-                //
-            },
-        })
-        */
-
         //
         const duel = this.duel
         card.moveToAttackPosition(() => {
@@ -180,6 +163,7 @@ console.log('attackByHandCard')
         }
 
         currentCard.setShadowParams(1.0, 1.0, 2)
+        currentCard.leaveHand()
         currentCard.bringToTop()
 
         // 攻撃実行

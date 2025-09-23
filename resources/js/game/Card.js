@@ -692,9 +692,16 @@ console.log('******** onEnterToAttackPosition()', data)
         this.sprite.scale = 0.60
         this.sprite.duration = 100
         this.sprite.angle = angle
+        this.sprite.depth = 100
+        this.cardShadow.depth = 100
 
         this.setShadowParams(0.8, 0.6, 28)
 
+    }
+
+    leaveHand() {
+        this.sprite.depth = 0
+        this.cardShadow.depth = 0
     }
 
     moveToHandPosition(onEnd) {
@@ -731,6 +738,8 @@ console.log('******** onEnterToAttackPosition()', data)
             ],
             onComplete: () => {
                 this.setShadowParams(1.0, 0.6, 28)
+                this.sprite.depth = 100
+                this.cardShadow.depth = 100
                 if (onEnd) {
                     onEnd()
                 }
@@ -1028,6 +1037,8 @@ console.log('******** onEnterToAttackPosition()', data)
         const player = this.duel.getTurnPlayer()
         const angle = player.getDirection() //
 
+        this.bringToTop()
+        // deck.bringToTop()
 
         this.duel.getScene().tweens.chain({
             targets: this.sprite,
