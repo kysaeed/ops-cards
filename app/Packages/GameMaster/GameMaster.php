@@ -32,8 +32,9 @@ class GameMaster
     /**
      * ユーザーのゲームセッションを初期化
      */
-    public function initializeGameSessionForUser(User $user): GameSession
+    public function initializeGameSessionForUser(): GameSession
     {
+        $user = $this->user;
 
         $gameSession = new GameSession();
         $user->gameSessions()->save($gameSession);
@@ -198,8 +199,10 @@ class GameMaster
 
     }
 
-    public function hasGameSessionSection(User $user): bool
+    public function hasGameSessionSection(): bool
     {
+        $user = $this->user;
+
         $gameSession = $user->gameSessions()
             ->active()
             ->first();

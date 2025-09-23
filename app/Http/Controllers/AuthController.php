@@ -25,7 +25,7 @@ class AuthController extends Controller
     {
         $gameMaster = new GameMaster($user);
         $gameMaster->closeAllGameSession();
-        $gameMaster->initializeGameSessionForUser($user);
+        $gameMaster->initializeGameSessionForUser();
     }
 
 
@@ -66,9 +66,8 @@ logger('AuthController::login() -----');
             ->active()
             ->first();
 
-        $gameMaster = new GameMaster($user);
-        if (!$gameMaster->hasGameSessionSection($user)) {
-            $gameSession = $gameMaster->initializeGameSession($user);
+        if (!$gameMaster->hasGameSessionSection()) {
+            $gameSession = $gameMaster->initializeGameSessionForUser();
         }
 
         $gameSessionSection = $gameSession->gameSessionSections()
