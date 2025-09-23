@@ -30,38 +30,125 @@ class GameMaster
     }
 
     /**
-     * ゲームセッションを初期化する
+     * ユーザーのゲームセッションを初期化
      */
-    public function initializeGameSession(): GameSession
+    public function initializeGameSessionForUser(User $user): GameSession
     {
-        return DB::transaction(function () {
 
-            $this->closeAllGameSession();
+        $gameSession = new GameSession();
+        $user->gameSessions()->save($gameSession);
+
+        $gameSessionSection = new GameSessionSection();
+        $gameSessionSection->order = 1;
+        $gameSession->gameSessionSections()
+            ->save($gameSessionSection);
+
+        $deck = $this->createInitialDeck($gameSessionSection);
 
 
-            $user = $this->user;
+        $order = 1;
 
 
-            // ゲームセッションの初期化
-            $gameSession = $this->initializeGameSessionForUser($user);
+        $gameSessionSectionsStep = new GameSessionSectionStep([
+            'order' => $order++,
+        ]);
+        $gameSessionSectionsStep->fill([
+        ]);
+        //$gameSessionSectionsStep->shop_id = $shop->id;
+        $gameSessionSection->gameSessionSectionSteps()
+            ->save($gameSessionSectionsStep);
 
-            // ゲームセクションの初期化
-            $gameSessionSection = $this->initializeGameSessionSection($gameSession);
+        $shop = $this->createShop($gameSessionSectionsStep);
 
-            // ショップステップの初期化
-            $this->initializeShopStep($gameSessionSection);
 
-            // デュエルステップの初期化
-            $this->initializeDuelSteps($gameSessionSection);
+        for ($i = 0; $i < 3; $i++) {
 
-            return $gameSession;
+            $gameSessionSectionsStep = new GameSessionSectionStep();
+            $gameSessionSectionsStep->fill([
+                // 'duel_id' => $duel->id,
+                'order' => $order++,
+            ]);
+            $gameSessionSection->gameSessionSectionSteps()
+                ->save($gameSessionSectionsStep);
 
-            // return [
-            //     'game_session_id' => $gameSession->id,
-            //     'game_session_section_id' => $gameSessionSection->id,
-            // ];
-        });
+                $duel = new Duel([
+                    //'turn' => 1,
+                    'user_id' => $user->id,
+                    'game_session_section_step_id' => $gameSessionSectionsStep->id,
+                    'turn' => 1,
+                    'deck_id' => $gameSessionSection->deck->id,
+                    'enemy_deck_id' => 2,
+                ]);
+                $duel->save();
+
+        }
+
+        return $gameSession;
     }
+
+
+
+    /**
+     * 初期デッキを作成
+     */
+    protected function createInitialDeck(GameSessionSection $gameSessionSection)
+    {
+        $deck = new Deck([
+            //'level' => 1,
+        ]);
+
+
+        $gameSessionSection->deck()->save($deck);
+
+        $defaultDeck = config('game.player.defaultDeck');
+
+        $order = 1;
+        foreach ($defaultDeck as $cardNumber) {
+
+            $deckCard = new DeckCard([
+                'card_number' => $cardNumber,
+                'order' => $order,
+            ]);
+
+            $deck->deckCards()->save($deckCard);
+
+            $order++;
+        }
+
+        return $deck;
+    }
+
+    protected function createShop(GameSessionSectionStep $gameSessionSectionStep)
+    {
+
+        // $gameSession = $user->gameSessions()
+        //     ->whereNull('compleated_at')
+        //     ->first();
+
+        // if (!$gameSession) {
+        //     $gameSession = new GameSession();
+        //     $user->gameSessions()->save($gameSession);
+        // }
+
+        $shop = new Shop([
+            'game_session_section_step_id' => $gameSessionSectionStep->id,
+        ]);
+        $shop->save();
+
+        $shopCards = [];
+        for ($i = 1; $i <= 5; $i++) {
+            $cardNumber = mt_rand(5, count($this->cardSettings));
+
+            $shopCard = new ShopCard();
+            $shopCard->card_number = $cardNumber;
+            $shopCard->order = $i;
+            $shop->shopCards()->save($shopCard);
+            $shopCards[] = $shopCard;
+        }
+
+        return $shop;
+    }
+
 
     /**
      * すべてのゲームセッションを終了する
@@ -149,126 +236,5 @@ class GameMaster
             ->exists();
     }
 
-    /**
-     * ユーザーのゲームセッションを初期化
-     */
-    public function initializeGameSessionForUser(User $user): GameSession
-    {
 
-        $gameSession = new GameSession();
-        $user->gameSessions()->save($gameSession);
-
-        $gameSessionSection = new GameSessionSection();
-        $gameSessionSection->order = 1;
-        // $gameSessionSection->deck_id = $deck->id;
-        $gameSession->gameSessionSections()
-            ->save($gameSessionSection);
-
-        $deck = $this->createInitialDeck($gameSessionSection);
-
-
-        $order = 1;
-
-
-        $gameSessionSectionsStep = new GameSessionSectionStep([
-            'order' => $order++,
-        ]);
-        $gameSessionSectionsStep->fill([
-        ]);
-        //$gameSessionSectionsStep->shop_id = $shop->id;
-        $gameSessionSection->gameSessionSectionSteps()
-            ->save($gameSessionSectionsStep);
-
-        $shop = $this->createShop($gameSessionSectionsStep);
-
-
-        for ($i = 0; $i < 3; $i++) {
-
-            $gameSessionSectionsStep = new GameSessionSectionStep();
-            $gameSessionSectionsStep->fill([
-                // 'duel_id' => $duel->id,
-                'order' => $order++,
-            ]);
-            $gameSessionSection->gameSessionSectionSteps()
-                ->save($gameSessionSectionsStep);
-
-                $duel = new Duel([
-                    //'turn' => 1,
-                    'user_id' => $user->id,
-                    'game_session_section_step_id' => $gameSessionSectionsStep->id,
-                    'turn' => 1,
-                    'deck_id' => $gameSessionSection->deck->id,
-                    'enemy_deck_id' => 2,
-                ]);
-                $duel->save();
-
-        }
-
-        return $gameSession;
-    }
-
-
-
-    /**
-     * 初期デッキを作成
-     */
-    protected function createInitialDeck(GameSessionSection $gameSessionSection)
-    {
-        $deck = new Deck([
-            //'level' => 1,
-        ]);
-
-
-        $gameSessionSection->deck()->save($deck);
-
-        $defaultDeck = [
-            1, 1, 1, 2, 3, 4,
-        ];
-
-        $order = 1;
-        foreach ($defaultDeck as $cardNumber) {
-
-            $deckCard = new DeckCard([
-                'card_number' => $cardNumber,
-                'order' => $order,
-            ]);
-
-            $deck->deckCards()->save($deckCard);
-
-            $order++;
-        }
-
-        return $deck;
-    }
-
-    protected function createShop(GameSessionSectionStep $gameSessionSectionStep)
-    {
-
-        // $gameSession = $user->gameSessions()
-        //     ->whereNull('compleated_at')
-        //     ->first();
-
-        // if (!$gameSession) {
-        //     $gameSession = new GameSession();
-        //     $user->gameSessions()->save($gameSession);
-        // }
-
-        $shop = new Shop([
-            'game_session_section_step_id' => $gameSessionSectionStep->id,
-        ]);
-        $shop->save();
-
-        $shopCards = [];
-        for ($i = 1; $i <= 5; $i++) {
-            $cardNumber = mt_rand(5, count($this->cardSettings));
-
-            $shopCard = new ShopCard();
-            $shopCard->card_number = $cardNumber;
-            $shopCard->order = $i;
-            $shop->shopCards()->save($shopCard);
-            $shopCards[] = $shopCard;
-        }
-
-        return $shop;
-    }
 }
