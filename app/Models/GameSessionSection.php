@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Deck;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Models\Deck;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class GameSessionSection extends Model
 {
@@ -15,9 +16,9 @@ class GameSessionSection extends Model
 
     protected $guarded = ['id'];
 
-    public function deck(): BelongsTo
+    public function deck(): HasOne
     {
-        return $this->belongsTo(Deck::class);
+        return $this->hasOne(Deck::class);
     }
 
     public function gameSession(): BelongsTo

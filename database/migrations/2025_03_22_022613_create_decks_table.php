@@ -1,9 +1,10 @@
 <?php
 
+use App\Models\GameSessionSection;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use App\Models\Shop;
 
 return new class extends Migration
 {
@@ -12,11 +13,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('shop_cards', function (Blueprint $table) {
+        Schema::create('decks', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Shop::class);
-            $table->integer('card_number');
-            $table->integer('order');
+            // $table->foreignIdFor(User::class)->constrained();
+            $table->foreignIdFor(GameSessionSection::class)->constrained();
+            // @todo orderを追加
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('shop_cards');
+        Schema::dropIfExists('decks');
     }
 };

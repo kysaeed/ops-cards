@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('game_sessions', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(User::class);
+            $table->foreignIdFor(User::class)->constrained();
             $table->timestamp('compleated_at')->nullable()->index('game_sessions_compleated_at_index');
             $table->timestamps();
         });

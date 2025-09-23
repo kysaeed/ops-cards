@@ -45,10 +45,10 @@ class User extends Authenticatable
     ];
 
 
-    public function decks()
-    {
-        return $this->hasMany(Deck::class);
-    }
+    // public function decks()
+    // {
+    //     return $this->hasMany(Deck::class);
+    // }
 
     public function gameSessions(): HasMany
     {

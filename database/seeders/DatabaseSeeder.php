@@ -3,12 +3,14 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
-use App\Models\User;
-use App\Models\Duel;
 use App\Models\Deck;
 use App\Models\DeckCard;
+use App\Models\Duel;
+use App\Models\GameSession;
+use App\Models\GameSessionSection;
+use App\Models\User;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -19,13 +21,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $defaultDeck = [
-            1, 1, 1, 2, 3, 4,
-        ];
+        $cardSettings = [];
+        $string = file_get_contents(resource_path('settings/cards.json'));
+        if (!empty($string)) {
+            $cardSettings = json_decode($string, true);
+        }
 
         $users = [];
-        $deckModels = [];
-        $testDeckCard = 5;
         for ($i = 1; $i <= 2; $i++) {
             $user = User::create([
                 'name' => "user{$i}",
@@ -33,54 +35,18 @@ class DatabaseSeeder extends Seeder
                 'password' => Hash::make('password'),
             ]);
 
-            $deck = new Deck([
-                'level' => 1,
+
+            $gameSession = GameSession::create([
+                'user_id' => $user->id,
             ]);
 
-            $user->decks()->save($deck);
-            $deckModels[] = $deck;
+            $gameSessionSection = GameSessionSection::create([
+                'game_session_id' => $gameSession->id,
+                'order' => 1,
+            ]);
 
-            $order = 1;
-            foreach ($defaultDeck as $cardNumber) {
+            $this->createPresetDeck($gameSessionSection, $cardSettings);
 
-                $deckCard = new DeckCard([
-                    'card_number' => $cardNumber,
-                    'order' => $order,
-                ]);
-
-                $deck->deckCards()->save($deckCard);
-
-                $order++;
-            }
-
-            for ($j = 0; $j < 5; $j++) {
-                //$cardNumber = 5 + rand(0, 12);
-                $cardNumber = $testDeckCard;
-                $testDeckCard++;
-
-                $deckCard = new DeckCard([
-                    'card_number' => $cardNumber,
-                    'order' => $order,
-                ]);
-
-                $deck->deckCards()->save($deckCard);
-
-                $order++;
-            }
-
-            /*
-            $cards = $deck->deckCards()
-                ->orderBy('order')
-                ->get();
-            $cards->shuffle();
-            $order = 1;
-
-            foreach($cards as $c) {
-                $c->order = $order;
-                $c->save();
-                $order++;
-            }
-            */
 
             $users[] = $user;
 
@@ -102,5 +68,46 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+    }
+
+    function createPresetDeck(GameSessionSection $gameSessionSection, array $cardSettings)
+    {
+        $defaultDeck = [
+            1, 1, 1, 2, 3, 4,
+        ];
+
+
+        $deck = new Deck([
+            //
+        ]);
+
+        $gameSessionSection->deck()->save($deck);
+
+        $order = 1;
+        foreach ($defaultDeck as $cardNumber) {
+
+            $deckCard = new DeckCard([
+                'card_number' => $cardNumber,
+                'order' => $order,
+            ]);
+
+            $deck->deckCards()->save($deckCard);
+
+            $order++;
+        }
+        $cardListCount = count($cardSettings);
+        for ($j = 0; $j < 5; $j++) {
+            $cardNumber = rand(5, $cardListCount - 1);
+
+            $deckCard = new DeckCard([
+                'card_number' => $cardNumber,
+                'order' => $order,
+            ]);
+
+            $deck->deckCards()->save($deckCard);
+
+            $order++;
+        }
+
     }
 }

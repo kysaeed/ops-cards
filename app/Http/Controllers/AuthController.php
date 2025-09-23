@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\DB;
 class AuthController extends Controller
 {
     protected array $cardSettings;
+    //protected GameMaster $gameMaster;
 
     public function __construct()
     {
@@ -47,40 +48,43 @@ class AuthController extends Controller
             ->first();
         if (!$gameSessionSection) {
 
-            $deck = $this->createInitialDeck($user);
-
             $gameSessionSection = new GameSessionSection();
             $gameSessionSection->order = 1;
-            $gameSessionSection->deck_id = $deck->id;
+            // $gameSessionSection->deck_id = $deck->id;
             $gameSession->gameSessionSections()
                 ->save($gameSessionSection);
+
+            $deck = $this->createInitialDeck($gameSessionSection);
         }
+
 
         $order = 1;
 
         $shopStep =  $gameSessionSection->gameSessionSectionSteps()
             ->whereNull('compleated_at')
-            ->whereNotNull('shop_id')
+            //->whereNotNull('shop_id')
             ->orderBy('order')
             ->first();
 
         if (!$shopStep) {
-            $shop = $this->createShop($user);
 
             $gameSessionSectionsStep = new GameSessionSectionStep([
                 'order' => $order++,
             ]);
             $gameSessionSectionsStep->fill([
             ]);
-            $gameSessionSectionsStep->shop_id = $shop->id;
+            //$gameSessionSectionsStep->shop_id = $shop->id;
             $gameSessionSection->gameSessionSectionSteps()
                 ->save($gameSessionSectionsStep);
+
+            $shop = $this->createShop($gameSessionSectionsStep);
+
         }
 
 
         $duelStep = $gameSessionSection->gameSessionSectionSteps()
             ->whereNull('compleated_at')
-            ->whereNotNull('duel_id')
+            //->whereNotNull('duel_id')
             ->orderBy('order')
             ->first();
 
@@ -88,26 +92,29 @@ class AuthController extends Controller
         //     ->whereNull('compleated_at')
         //     ->where('user_id', $user->id)
         //     ->first();
+
         if (!$duelStep) {
 
             for ($i = 0; $i < 3; $i++) {
 
-                $duel = new Duel([
-                    //'turn' => 1,
-                    'user_id' => $user->id,
-                    'turn' => 1,
-                    'deck_id' => $gameSessionSection->deck->id,
-                    'enemy_deck_id' => 2,
-                ]);
-                $duel->save();
-
                 $gameSessionSectionsStep = new GameSessionSectionStep();
                 $gameSessionSectionsStep->fill([
-                    'duel_id' => $duel->id,
+                    // 'duel_id' => $duel->id,
                     'order' => $order++,
                 ]);
                 $gameSessionSection->gameSessionSectionSteps()
                     ->save($gameSessionSectionsStep);
+
+                    $duel = new Duel([
+                        //'turn' => 1,
+                        'user_id' => $user->id,
+                        'game_session_section_step_id' => $gameSessionSectionsStep->id,
+                        'turn' => 1,
+                        'deck_id' => $gameSessionSection->deck->id,
+                        'enemy_deck_id' => 2,
+                    ]);
+                    $duel->save();
+
             }
 
         }
@@ -125,15 +132,15 @@ class AuthController extends Controller
         // }
     }
 
-    protected function createInitialDeck(User $user)
+    protected function createInitialDeck(GameSessionSection $gameSessionSection)
     {
-        return DB::transaction(function () use ($user) {
+        return DB::transaction(function () use ($gameSessionSection) {
             $deck = new Deck([
-                'level' => 1,
+                //'level' => 1,
             ]);
 
 
-            $user->decks()->save($deck);
+            $gameSessionSection->deck()->save($deck);
 
             $defaultDeck = [
                 1, 1, 1, 2, 3, 4,
@@ -152,22 +159,6 @@ class AuthController extends Controller
                 $order++;
             }
 
-            /*
-            for ($j = 0; $j < 5; $j++) {
-                $count = count($this->cardSettings);
-                $cardNumber = mt_rand(5, $count);
-
-                $deckCard = new DeckCard([
-                    'card_number' => $cardNumber,
-                    'order' => $order,
-                ]);
-
-                $deck->deckCards()->save($deckCard);
-
-                $order++;
-            }
-            */
-
             return $deck;
 
         });
@@ -178,10 +169,12 @@ class AuthController extends Controller
     {
 logger('179: AuthController::login() -----');
         $user = Auth::user();
+
+
+
 // $user = User::find(3);
 // Auth::login($user);
 
-        $state = 0;
         if (!$user) {
             $user = DB::transaction(function () {
                 $maxNumber = User::max('id') ?? 0;
@@ -203,6 +196,10 @@ logger('179: AuthController::login() -----');
                 return $user;
             });
         }
+
+        $gameMaster = new GameMaster($user);
+
+
 
         $gameSession = $user->gameSessions()
             ->active()
@@ -232,9 +229,11 @@ logger('217: NO gameSession....');
             ->first();
 
         $state = 0;
-        if ($gameSessionSectionStep->shop_id) {
+
+        // @todo 逆のリレーションになおす
+        if ($gameSessionSectionStep->shop) {
             $state = 1;
-        } elseif ($gameSessionSectionStep->duel_id) {
+        } elseif ($gameSessionSectionStep->duel) {
             $state = 2;
         }
 
@@ -252,7 +251,7 @@ logger('217: NO gameSession....');
         ]);
     }
 
-    protected function createShop(User $user)
+    protected function createShop(GameSessionSectionStep $gameSessionSectionStep)
     {
 
         // $gameSession = $user->gameSessions()
@@ -264,7 +263,9 @@ logger('217: NO gameSession....');
         //     $user->gameSessions()->save($gameSession);
         // }
 
-        $shop = new Shop();
+        $shop = new Shop([
+            'game_session_section_step_id' => $gameSessionSectionStep->id,
+        ]);
         $shop->save();
 
         $shopCards = [];

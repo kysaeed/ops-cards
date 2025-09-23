@@ -16,10 +16,10 @@ return new class extends Migration
     {
         Schema::create('duels', function (Blueprint $table) {
             $table->id();
-            //$table->integer('turn');
-            $table->foreignIdFor(User::class);
-            $table->foreignIdFor(Deck::class);
-            $table->foreignIdFor(Deck::class, 'enemy_deck_id');
+            $table->foreignIdFor(GameSessionSectionStep::class)->constrained();
+            $table->foreignIdFor(User::class)->constrained();
+            $table->foreignIdFor(Deck::class)->constrained();
+            $table->foreignIdFor(Deck::class, 'enemy_deck_id')->constrained('decks');
             $table->boolean('is_player_win')->nullable();
             $table->timestamps();
         });

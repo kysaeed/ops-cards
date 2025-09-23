@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('game_session_sections', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(GameSession::class);
+            $table->foreignIdFor(GameSession::class)->constrained();
             $table->unsignedInteger('order')->index();
-            $table->foreignIdFor(Deck::class);
+            // $table->foreignIdFor(Deck::class)->constrained();
             $table->timestamp('compleated_at')->nullable();
             $table->timestamps();
         });

@@ -32,17 +32,17 @@ class GameMaster
     /**
      * ゲームセッションを初期化する
      */
-    public function initializeGameSession(User $user): GameSession
+    public function initializeGameSession(): GameSession
     {
-        return DB::transaction(function () use ($user) {
+        return DB::transaction(function () {
+
+            $user = $this->user;
+
             // ゲームセッションの初期化
             $gameSession = $this->initializeGameSessionForUser($user);
 
             // ゲームセクションの初期化
             $gameSessionSection = $this->initializeGameSessionSection($gameSession);
-
-            // ゲームセクションステップの初期化?
-            // $this->initializeGameSessionSectionSteps($gameSessionSection);
 
             // ショップステップの初期化
             $this->initializeShopStep($gameSessionSection);

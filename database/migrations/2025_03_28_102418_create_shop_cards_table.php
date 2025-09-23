@@ -1,9 +1,9 @@
 <?php
 
-use App\Models\GameSessionSectionStep;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Models\Shop;
 
 return new class extends Migration
 {
@@ -12,8 +12,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('shops', function (Blueprint $table) {
+        Schema::create('shop_cards', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(Shop::class)->constrained();
+            $table->integer('card_number');
+            $table->integer('order');
             $table->timestamps();
         });
     }
@@ -23,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('shops');
+        Schema::dropIfExists('shop_cards');
     }
 };

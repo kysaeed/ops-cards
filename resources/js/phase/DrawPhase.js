@@ -70,8 +70,6 @@ console.log('onEvent hand-card click!!!', data)
         const duel = this.duel
         card.moveToAttackPosition(() => {
             card.onEnterToAttackPosition(data, () => {
-console.log('** *data *** ', data)
-
                 const ability = data.ability
                 if (ability) {
                     const enter = ability.enter
