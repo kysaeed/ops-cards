@@ -32,7 +32,7 @@ class GameMaster
     /**
      * ユーザーのゲームセッションを初期化
      */
-    public function initializeGameSessionForUser(): GameSession
+    public function initializeGameSession(): GameSession
     {
         $user = $this->user;
 
@@ -86,8 +86,6 @@ class GameMaster
 
         return $gameSession;
     }
-
-
 
     /**
      * 初期デッキを作成
@@ -239,5 +237,30 @@ class GameMaster
             ->exists();
     }
 
+    public function getActiveGameSessionSectionStep(): ?GameSessionSectionStep
+    {
+        $gameSession = $this->user->gameSessions()
+            ->active()
+            ->first();
 
+        if (!$gameSession) {
+            return null;
+        }
+
+        $gameSessionSection = $gameSession->gameSessionSections()
+            ->active()
+            ->first();
+
+        if (!$gameSessionSection) {
+            return null;
+        }
+
+        return $gameSessionSection->gameSessionSectionSteps()
+            ->with([
+                'shop',
+                'duel',
+            ])
+            ->active()
+            ->first();
+    }
 }
