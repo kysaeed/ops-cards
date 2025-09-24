@@ -50,9 +50,6 @@ logger('AuthController::login() -----');
 
                 $user->save();
 
-                $this->createInitialData($user);
-
-
                 Auth::login($user, /*true*/);
 
                 return $user;
@@ -60,6 +57,10 @@ logger('AuthController::login() -----');
         }
 
         $gameMaster = new GameMaster($user);
+
+        if (!$gameMaster->hasGameSessionSection()) {
+            $gameMaster->initializeGameSession();
+        }
 
         $gameSessionSectionStep = $gameMaster->getActiveGameSessionSectionStep();
 
