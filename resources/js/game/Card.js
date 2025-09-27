@@ -1,6 +1,6 @@
 import Const from '../Const.js'
 import Number from './Number.js'
-import DeckCutin from './CardCutin.js'
+import CardCutin from './CardCutin.js'
 
 const Bevel = Const.Bevel
 const HeightBase = 100
@@ -191,7 +191,7 @@ export default class Card {
             }
         })
 
-        this.cardCutin = new DeckCutin(duel, cardInfo)
+        this.cardCutin = new CardCutin(duel, cardInfo)
 
     }
 

@@ -4,7 +4,7 @@ import Phaser from 'phaser'
 import Const from '../Const.js'
 
 
-class DeckCutin {
+class CardCutin {
     constructor(duel, cardInfo) {
         this.duel = duel
 
@@ -116,4 +116,4 @@ class DeckCutin {
 
 }
 
-export default DeckCutin
+export default CardCutin
