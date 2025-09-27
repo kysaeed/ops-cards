@@ -337,7 +337,7 @@ console.log('******** onEnterToAttackPosition()', data)
         // const
         const attackAbility = data.ability.attack
         const add = attackAbility.power
-
+//const add = 1;
         if (add) {
             this.showAbilityEffect(() => {
 
@@ -367,36 +367,26 @@ console.log('******** onEnterToAttackPosition()', data)
     onEnterToDefense(onEnd) {
 
         this.showStatusTip(() => { // todo: 引数に表示内容を設定?
-            console.log('*** onEnterToDefense ******:')
-
-            /*
-            const ability = this.cardInfo.ability
-            if (ability) {
-                if (ability.defense) {
-                    if (!this.bufParams) {
-                        this.bufParams = {}
-                    }
-                }
-
-                if (!this.bufParams['defense']) {
-                    this.bufParams['defense'] = {}
-                }
-
-                if (ability.defense) {
-                    this.bufParams.defense.power = ability.defense.power
-                }
-            }
-            */
+console.log('*** onEnterToDefense ******:')
 
             const add = this.getBufPowerByCardAbility(Const.Card.Side.Defense)
-            this.bufParams = {
-                power: add,
-            }
+// const add = 1;
+            if (add) {
+                this.showAbilityEffect(() => {
+                    this.bufParams = {
+                        power: add,
+                    }
 
-            this.cardTip.setText(`+${add}`)
+                    this.cardTip.setText(`+${add}`)
 
-            if (onEnd) {
-                onEnd()
+                    if (onEnd) {
+                        onEnd()
+                    }
+                })
+            } else {
+                if (onEnd) {
+                    onEnd()
+                }
             }
         })
     }
