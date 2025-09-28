@@ -330,32 +330,55 @@ export default class Card {
 
     }
 
+    zoomIn(onEnd) {
+        const camera = this.duel.getScene().cameras.main
+        this.duel.getScene().tweens.chain({
+            targets: camera,
+            tweens: [
+                {
+                    duration: 200,
+                    zoom: 2.0,
+                    ease: Phaser.Math.Easing.Cubic.InOut,
+                },
+            ],
+            onComplete: () => {
+                if (onEnd) {
+                    onEnd()
+                }
+            },
+        })
+
+    }
+
     onEnterToAttackPosition(data, onEnd) {
 
 console.log('******** onEnterToAttackPosition()', data)
 
         // const
         const attackAbility = data.ability.attack
-        const add = attackAbility.power
-//const add = 1;
+        // const add = attackAbility.power
+const add = 1;
         if (add) {
-            this.showAbilityEffect(() => {
+            this.zoomIn(() => {
 
-                this.showStatusTip(() => { // todo: 引数に表示内容を設定?
+                this.showAbilityEffect(() => {
 
-                    // const player = this.duel.getTurnPlayer()
-                    // const bench = player.getBench()
-                    //const add = this.getBufPowerByCardAbility(Const.Card.Side.Attack)
+                    this.showStatusTip(() => { // todo: 引数に表示内容を設定?
 
-                    this.bufParams = {
-                        power: add,
-                    }
+                        // const player = this.duel.getTurnPlayer()
+                        // const bench = player.getBench()
+                        //const add = this.getBufPowerByCardAbility(Const.Card.Side.Attack)
 
-                    this.cardTip.setText(`+${add}`)
+                        this.bufParams = {
+                            power: add,
+                        }
 
-                    if (onEnd) {
-                        onEnd()
-                    }
+                        this.cardTip.setText(`+${add}`)
+
+                        if (onEnd) {
+                            onEnd()
+                        }
+                    })
                 })
             })
         } else {

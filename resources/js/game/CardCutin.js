@@ -11,7 +11,6 @@ class CardCutin {
         const x = Const.Screen.Width * 0.5
         const y = Const.Screen.Height * 0.5
 
-
         const scene = this.duel.getScene()
 
         this.cardChara = scene.add.sprite(0, 0, cardInfo.image)
@@ -33,10 +32,21 @@ class CardCutin {
             this.cardTextDesc,
         ])
         this.sprite.visible = false
+
+        // カットイン用のカメラに紐づける
+        if (scene.cutinCamera) {
+            // メインカメラからignoreして、カットイン用カメラでのみ表示
+            scene.cameras.main.ignore(this.sprite)
+        }
     }
 
     show(onEnd) {
         const scene = this.duel.getScene()
+
+        // カットイン表示時にメインカメラのズームをリセット
+        if (scene.resetMainCameraZoom) {
+            scene.resetMainCameraZoom()
+        }
 
         this.cardTextDesc.scale = 3.0
         this.cardTextDesc.alpha = 0.0

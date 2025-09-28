@@ -68,6 +68,10 @@ const DuelScene = {
 
     },
     create() {
+        // カットイン用のカメラを作成
+        this.cutinCamera = this.cameras.add(0, 0, Const.Screen.Width, Const.Screen.Height)
+        this.cutinCamera.setZoom(1.0) // ズームは常に1.0に固定
+
         this.anchor = this.add.container(0, 0)
         this.anchor.add(
             this.add.image(
@@ -77,6 +81,7 @@ const DuelScene = {
             )
         )
 
+        this.cutinCamera.ignore(this.anchor) // メインのゲーム要素は表示しない
         // this.add.image(400, 300, 'board')
 
         this.duel = new Duel(this)
@@ -131,12 +136,14 @@ console.log('to Next State : ', fetchData)
                     game.scale.displaySize.setAspectRatio( Const.Screen.Height/Const.Screen.Width );
                     game.scale.resize(Const.Screen.Height, Const.Screen.Width)
                     this.cameras.main.setRotation(Math.PI * 0.5)
+                    this.cutinCamera.setRotation(Math.PI * 0.5) // カットインカメラも同じ回転を適用
                     game.scale.refresh()
                 } else {
                     // [--] 横長スクリーンに表示
                     game.scale.displaySize.setAspectRatio( Const.Screen.Width/Const.Screen.Height );
                     game.scale.resize(Const.Screen.Width, Const.Screen.Height)
                     this.cameras.main.setRotation(0)
+                    this.cutinCamera.setRotation(0) // カットインカメラも同じ回転を適用
                     game.scale.refresh()
                 }
             }
@@ -185,6 +192,16 @@ console.log('to Next State : ', fetchData)
     },
     update() {
         this.duel.onUpdate()
+    },
+
+    // カットイン用のカメラを取得するメソッド
+    getCutinCamera() {
+        return this.cutinCamera
+    },
+
+    // カットイン表示時にメインカメラのズームをリセット
+    resetMainCameraZoom() {
+        this.cameras.main.setZoom(1.0)
     },
 };
 
