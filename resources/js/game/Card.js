@@ -332,12 +332,17 @@ export default class Card {
 
     zoomIn(onEnd) {
         const camera = this.duel.getScene().cameras.main
+        const cardX = this.sprite.x
+        const cardY = this.sprite.y
+
         this.duel.getScene().tweens.chain({
             targets: camera,
             tweens: [
                 {
-                    duration: 200,
-                    zoom: 2.0,
+                    duration: 800,
+                    zoom: 1.8,
+                    scrollX: cardX,
+                    scrollY: cardY,
                     ease: Phaser.Math.Easing.Cubic.InOut,
                 },
             ],
@@ -349,6 +354,36 @@ export default class Card {
         })
 
     }
+
+    zoomOut(onEnd) {
+        const camera = this.duel.getScene().cameras.main
+        this.duel.getScene().tweens.chain({
+            targets: camera,
+            tweens: [
+                {
+                    duration: 800,
+                    zoom: 1.0,
+                    scrollX: 0,
+                    scrollY: 0,
+                    ease: Phaser.Math.Easing.Cubic.InOut,
+                },
+            ],
+            onComplete: () => {
+                if (onEnd) {
+                    onEnd()
+                }
+            },
+        })
+
+
+        // const camera = this.duel.getScene().cameras.main
+        // camera.setZoom(1.0)
+        // camera.setScroll(0, 0)
+        // if (onEnd) {
+        //     onEnd()
+        // }
+    }
+
 
     onEnterToAttackPosition(data, onEnd) {
 
@@ -375,9 +410,13 @@ const add = 1;
 
                         this.cardTip.setText(`+${add}`)
 
-                        if (onEnd) {
-                            onEnd()
-                        }
+
+
+                        this.zoomOut(() => {
+                            if (onEnd) {
+                                onEnd()
+                            }
+                        })
                     })
                 })
             })

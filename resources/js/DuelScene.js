@@ -112,6 +112,9 @@ console.log('to Next State : ', fetchData)
             this.cameras.main.originX = 0.5
             this.cameras.main.originY = (Const.Screen.Height * 0.5) / Const.Screen.Width
 
+            this.cutinCamera.originX = 0.5
+            this.cutinCamera.originY = (Const.Screen.Height * 0.5) / Const.Screen.Width
+
 
             const isVertical = () => {
 
@@ -199,10 +202,6 @@ console.log('to Next State : ', fetchData)
         return this.cutinCamera
     },
 
-    // カットイン表示時にメインカメラのズームをリセット
-    resetMainCameraZoom() {
-        this.cameras.main.setZoom(1.0)
-    },
 };
 
 export default DuelScene

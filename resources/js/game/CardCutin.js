@@ -43,11 +43,6 @@ class CardCutin {
     show(onEnd) {
         const scene = this.duel.getScene()
 
-        // カットイン表示時にメインカメラのズームをリセット
-        if (scene.resetMainCameraZoom) {
-            scene.resetMainCameraZoom()
-        }
-
         this.cardTextDesc.scale = 3.0
         this.cardTextDesc.alpha = 0.0
         this.cutinTextTweens = scene.tweens.chain({
@@ -79,6 +74,11 @@ class CardCutin {
                 },
             ],
             onComplete: () => {
+                // // カットイン表示時にメインカメラのズームをリセット
+                // if (scene.resetMainCameraZoom) {
+                //     scene.resetMainCameraZoom()
+                // }
+
                 if (onEnd) {
                     onEnd()
                 }
