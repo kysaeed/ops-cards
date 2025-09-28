@@ -1,6 +1,6 @@
 import Const from '../Const.js'
 import Number from './Number.js'
-import DeckCutin from './CardCutin.js'
+import CardCutin from './CardCutin.js'
 
 const Bevel = Const.Bevel
 const HeightBase = 100
@@ -191,7 +191,7 @@ export default class Card {
             }
         })
 
-        this.cardCutin = new DeckCutin(duel, cardInfo)
+        this.cardCutin = new CardCutin(duel, cardInfo)
 
     }
 
@@ -202,55 +202,56 @@ export default class Card {
     showAbilityEffect(onEnd) {
         const scene = this.duel.getScene()
 
-        this.duel.toDark(() => { // 背景色の暗転
+        const x = this.sprite.x
+        const y = this.sprite.y
 
-            this.cardCutin.show(() => {
+        this.zoomIn(() => {
+            this.duel.toDark(() => { // 背景色の暗転
+                this.cardCutin.show(() => {
+                    this.abilityEffect.alpha = 0.0
+                    this.abilityEffect.scale = 3.0
+                    this.abilityEffect.visible = true
+                    this.abilityEffectTewwns = scene.tweens.chain({
+                        targets: this.abilityEffect,
+                        // repeat: -1,
+                        //yoyo: true,
+                        //paused: true,
+                        tweens: [
+                            {
+                                scale: 1.2,
+                                alpha: 0.8,
+                                duration: 250,
+                                ease: 'power1',
+                            },
+                            {
+                                delay: 100,
+                                scale: 5.0,
+                                duration: 300,
+                                alpha: 0.0,
+                                ease: 'power1',
+                            },
+                        ],
+                        onComplete: () => {
+                            this.abilityEffect.visible = false
 
+                            this.cardCutin.hide(() => {
+                                this.duel.show(() => {
 
-                this.abilityEffect.alpha = 0.0
-                this.abilityEffect.scale = 3.0
-                this.abilityEffect.visible = true
-                this.abilityEffectTewwns = scene.tweens.chain({
-                    targets: this.abilityEffect,
-                    // repeat: -1,
-                    //yoyo: true,
-                    //paused: true,
-                    tweens: [
-                        {
-                            scale: 1.2,
-                            alpha: 0.8,
-                            duration: 250,
-                            ease: 'power1',
-                        },
-                        {
-                            delay: 100,
-                            scale: 5.0,
-                            duration: 300,
-                            alpha: 0.0,
-                            ease: 'power1',
-                        },
-                    ],
-                    onComplete: () => {
-                        this.abilityEffect.visible = false
+                                    this.resetZoom(x, y, () => {
+                                        if (onEnd) {
+                                            onEnd()
+                                        }
+                                    })
 
-                        this.cardCutin.hide(() => {
+                                })
 
-                            this.duel.show(() => {
-                                if (onEnd) {
-                                    onEnd()
-                                }
                             })
 
-                        })
+                        },
+                    })
 
-                    },
                 })
-
-
             })
-
-
-
         })
 
     }
@@ -337,7 +338,6 @@ console.log('******** onEnterToAttackPosition()', data)
         // const
         const attackAbility = data.ability.attack
         const add = attackAbility.power
-
         if (add) {
             this.showAbilityEffect(() => {
 
@@ -367,36 +367,25 @@ console.log('******** onEnterToAttackPosition()', data)
     onEnterToDefense(onEnd) {
 
         this.showStatusTip(() => { // todo: 引数に表示内容を設定?
-            console.log('*** onEnterToDefense ******:')
-
-            /*
-            const ability = this.cardInfo.ability
-            if (ability) {
-                if (ability.defense) {
-                    if (!this.bufParams) {
-                        this.bufParams = {}
-                    }
-                }
-
-                if (!this.bufParams['defense']) {
-                    this.bufParams['defense'] = {}
-                }
-
-                if (ability.defense) {
-                    this.bufParams.defense.power = ability.defense.power
-                }
-            }
-            */
+console.log('*** onEnterToDefense ******:')
 
             const add = this.getBufPowerByCardAbility(Const.Card.Side.Defense)
-            this.bufParams = {
-                power: add,
-            }
+            if (add) {
+                this.showAbilityEffect(() => {
+                    this.bufParams = {
+                        power: add,
+                    }
 
-            this.cardTip.setText(`+${add}`)
+                    this.cardTip.setText(`+${add}`)
 
-            if (onEnd) {
-                onEnd()
+                    if (onEnd) {
+                        onEnd()
+                    }
+                })
+            } else {
+                if (onEnd) {
+                    onEnd()
+                }
             }
         })
     }
@@ -678,6 +667,64 @@ console.log('******** onEnterToAttackPosition()', data)
             }
         })
     }
+
+    zoomIn(onEnd) {
+        const scene = this.duel.getScene()
+
+        // const x = this.sprite.x
+        // const y = this.sprite.y
+        this.bringToTop()
+
+        scene.tweens.chain({
+            targets: this.sprite,
+            tweens: [
+                {
+                    x: 0,
+                    y: -10,
+                    scale: 1.2,
+                    duration: 100,
+                    angle: 0,
+                },
+                {
+                    duration: 20,
+                    angle: 0,
+                },
+            ],
+            onComplete() {
+                if (onEnd) {
+                    onEnd()
+                }
+            }
+        })
+    }
+
+    resetZoom(x, y, onEnd) {
+        const scene = this.duel.getScene()
+        const angle = Bevel + (180 * this.player.getPlayerId())
+        scene.tweens.chain({
+            targets: this.sprite,
+            tweens: [
+                {
+                    x: x,
+                    y: y,
+                    scale: 0.5,
+                    duration: 100,
+                    angle: 0,
+                },
+                {
+                    duration: 20,
+                    angle: angle,
+                },
+            ],
+            onComplete() {
+                if (onEnd) {
+                    onEnd()
+                }
+            }
+        })
+
+    }
+
 
     setToHandPosition() {
         const direction = this.player.getDirection()

@@ -90,8 +90,7 @@ console.log('onEvent hand-card click!!!', data)
 
                                 // カットインの表示をする
                                 card.showAbilityEffect(() => {
-                                    const direction = player.getDirection()
-
+                                    // const direction = player.getDirection()
                                     targetCard.moveToAbyss(player.getAbyss(), () => {
                                         if (onEnd) {
                                             onEnd()
@@ -117,10 +116,6 @@ console.log('onEvent hand-card click!!!', data)
 
                                 // カットインの表示をする
                                 card.showAbilityEffect(() => {
-// console.log(data.ability.enter.recycle)
-                                    //const direction = duel.getTurnPlayer().getDirection()
-                                    // targetCard.moveToAbyss((420 * direction), (-240 * direction) - 50, () => {
-
                                     const deck = player.getDeck()
                                     targetCard.moveToDeck(deck, () => {
                                         // @todo deckの表示枚数を１つ増やす
@@ -153,7 +148,7 @@ console.log('attackByHandCard')
         const player = duel.getTurnPlayer()
         const currentCard = player.takeHandCard()
         if (!currentCard) {
-            console.log('empty....')
+console.log('empty....')
             if (onEnd) {
                 onEnd()
             }
