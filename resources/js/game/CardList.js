@@ -162,6 +162,12 @@ const CardList = [
       image: 'ch_parade',
       type: 0,
     },
+    {
+      power: 1,
+      name: '闇',
+      image: 'ch_darkness',
+      type: 1,
+    },
     /*
     {
       power: 1,
