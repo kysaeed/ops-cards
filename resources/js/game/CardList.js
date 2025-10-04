@@ -73,7 +73,7 @@ const CardList = [
     {
       power: 4,
       name: 'ねこ',
-      image: 'cat',
+      image: 'ch_cat',
       type: 0,
     },
     {
