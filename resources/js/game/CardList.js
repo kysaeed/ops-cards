@@ -73,7 +73,7 @@ const CardList = [
     {
       power: 4,
       name: 'ねこ',
-      image: 'cat',
+      image: 'ch_cat',
       type: 0,
     },
     {
@@ -161,6 +161,12 @@ const CardList = [
       name: 'パレード',
       image: 'ch_parade',
       type: 0,
+    },
+    {
+      power: 1,
+      name: '闇',
+      image: 'ch_darkness',
+      type: 1,
     },
     /*
     {
