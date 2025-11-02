@@ -166,7 +166,18 @@ const CardList = [
       power: 1,
       name: '闇',
       image: 'ch_darkness',
+      ability: {
+        attack: {
+          power: 1,
+          by: {
+            isPlayer: true,
+            cardNumber: 1,
+            location: 'bench',
+          },
+        },
+      },
       type: 1,
+      text: "攻撃時：パワー +平地の影の枚数",
     },
     /*
     {

@@ -112,6 +112,8 @@ class ShopController extends Controller
         // todo transaction
         $order = $deck->deckCards()->max('order') ?? 0;
         foreach ($selectedCardNumbers as $cardNumber) {
+
+
             $order++;
             $deckCard = new DeckCard([
                 'card_number' => $cardNumber,

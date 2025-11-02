@@ -16,6 +16,29 @@ class Bench
         return count($this->benchItems);
     }
 
+    public function getCountByCardNumber(int $cardNumber): int
+    {
+        foreach ($this->benchItems as $benchItem) {
+            if ($benchItem->getCardNumber() === $cardNumber) {
+                return $benchItem->getCount();
+            }
+        }
+        return 0;
+    }
+
+    public function findBenchElementByNumber(int $cardNumber): ?BenchItem
+    {
+        foreach ($this->benchItems as $benchItem) {
+            $cards = $benchItem->getCards();
+            if (!$benchItem->isEmpty()) {
+                if ($benchItem->getCardNumber() === $cardNumber) {
+                    return $benchItem;
+                }
+            }
+        }
+        return null;
+    }
+
     public function addCardList(array $cardList)
     {
         foreach ($cardList as $card) {

@@ -297,7 +297,17 @@ logger('====================');
         $attackAbility = $attackCardStatus['ability']['attack'] ?? null;
         if ($attackAbility) {
             $addAttackPower = $attackAbility['power'] ?? 0;
-            $ability['attack']['power'] = $addAttackPower;
+
+            $count = 1;
+
+            $by = $attackAbility['by'] ?? null;
+            if ($by) {
+                $byCardNumber = $by['cardNumber'] ?? null;
+                $count = $this->players[0]->getBench()->getCountByCardNumber($byCardNumber);
+            }
+
+            $ability['attack']['power'] = $addAttackPower * $count;
+
             $attackCard->setAddPower($addAttackPower);
         }
 

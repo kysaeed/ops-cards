@@ -168,7 +168,7 @@ const ShopScene = {
          this.load.image('ch_parade', 'assets/ch_parade.png')
          this.load.image('ch_cat', 'assets/ch_cat.png')
          this.load.image('ch_darkness', 'assets/ch_darkness.png')
-        },
+    },
 
     create() {
 
