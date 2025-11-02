@@ -151,6 +151,7 @@ class DuelManager
         }
 
         $turnPlayer = $this->players[$jsonIndex];
+        $enemyPlayer  = $this->players[$enemyJsonIndex];
 
         // 手札がなければデッキからカードを引く
         // if ($turnPlayer->getHandCard()->isEmpty()) {
@@ -192,6 +193,8 @@ logger('====================');
 
             // $defenseCardNumber = $defenseCard['cardNumber'];
             $attackResult = $this->onAttack(
+                $turnPlayer,
+                $enemyPlayer,
                 $card,
                 $enterResult,
                 $this->players[$jsonIndex]->getCardStack(),
@@ -281,7 +284,7 @@ logger('====================');
         ];
     }
 
-    protected function onAttack(Card $attackCard, array $ability, CardStack $attackCardStack, ?Card $defenseCard)
+    protected function onAttack(Player $turnPlayer, Player $enemyPlayer, Card $attackCard, array $ability, CardStack $attackCardStack, ?Card $defenseCard)
     {
         $attackCardStatus = $attackCard->getStatus();
         $defenseCardStatus = $defenseCard->getStatus();
@@ -303,7 +306,7 @@ logger('====================');
             $by = $attackAbility['by'] ?? null;
             if ($by) {
                 $byCardNumber = $by['cardNumber'] ?? null;
-                $count = $this->players[0]->getBench()->getCountByCardNumber($byCardNumber);
+                $count = $turnPlayer->getBench()->getCountByCardNumber($byCardNumber);
             }
 
             $ability['attack']['power'] = $addAttackPower * $count;
