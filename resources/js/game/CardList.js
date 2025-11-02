@@ -73,7 +73,7 @@ const CardList = [
     {
       power: 4,
       name: 'ねこ',
-      image: 'cat',
+      image: 'ch_cat',
       type: 0,
     },
     {
@@ -161,6 +161,23 @@ const CardList = [
       name: 'パレード',
       image: 'ch_parade',
       type: 0,
+    },
+    {
+      power: 1,
+      name: '闇',
+      image: 'ch_darkness',
+      ability: {
+        attack: {
+          power: 1,
+          by: {
+            isPlayer: true,
+            cardNumber: 1,
+            location: 'bench',
+          },
+        },
+      },
+      type: 1,
+      text: "攻撃時：パワー +平地の影",
     },
     /*
     {

@@ -136,7 +136,8 @@ class GameMaster
 
         $shopCards = [];
         for ($i = 1; $i <= 5; $i++) {
-            $cardNumber = mt_rand(5, count($this->cardSettings));
+            $cardNumber = mt_rand(5, count($this->cardSettings) - 1);
+$cardNumber = 19;
 
             $shopCard = new ShopCard();
             $shopCard->card_number = $cardNumber;

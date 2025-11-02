@@ -11,6 +11,19 @@ class BenchItem
         $this->cardList = $cardList;
     }
 
+    public function getCardNumber(): ?int
+    {
+        if (empty($this->cardList)) {
+            return null;
+        }
+        return $this->cardList[0]?->getCardNumber();
+    }
+
+    public function getCount(): int
+    {
+        return count($this->cardList);
+    }
+
     public function isAcceptableCard(Card $card): bool
     {
         if (empty($this->cardList)) {
