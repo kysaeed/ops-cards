@@ -309,7 +309,8 @@ logger('====================');
                 $count = $turnPlayer->getBench()->getCountByCardNumber($byCardNumber);
             }
 
-            $ability['attack']['power'] = $addAttackPower * $count;
+            $addAttackPower *= $count;
+            $ability['attack']['power'] = $addAttackPower;
 
             $attackCard->setAddPower($addAttackPower);
         }
