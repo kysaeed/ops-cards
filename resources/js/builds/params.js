@@ -4,9 +4,14 @@ import { fileURLToPath } from 'url'
 
 import CardList from '../game/CardList.js'
 
-// console.log(CardList)
+let cardCount = 1;
+CardList.map(card => {
+    console.log(`Number:${cardCount} name:${card.name}`)
+    cardCount++;
+})
 
-const data = {}
+console.log('CardList length:', CardList.length)
+
 
 writeFileSync(
     './resources/settings/cards.json',

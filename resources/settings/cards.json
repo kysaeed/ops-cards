@@ -152,7 +152,6 @@
             "attack": {
                 "power": 1,
                 "by": {
-                    "isPlayer": true,
                     "cardNumber": 1,
                     "location": "bench"
                 }
