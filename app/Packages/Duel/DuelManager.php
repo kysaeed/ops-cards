@@ -324,22 +324,19 @@ logger('====================');
             $ability['defense']['power'] = $addDefensePower;
         }
 
-        $totalDefensePower = $defenseCard->getTotalPower();
 
         // 勝敗判定
         $judge = 0;
 
         // ターンの入れ替えをチェック
         $isTurnChange = false;
-        if ($totalAttackPower >= $totalDefensePower) {
+        if ($totalAttackPower >= $defenseCard->getTotalPower()) {
             $isTurnChange = true;
         }
 
         return [
             'judge' => $judge,
             'isTurnChange' => $isTurnChange,
-            'attackPower' => $totalAttackPower,
-            'defensePower' => $totalDefensePower,
             'ability' => $ability,
         ];
     }

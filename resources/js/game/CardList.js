@@ -170,7 +170,7 @@ const CardList = [
         attack: {
           power: 1,
           by: {
-            isPlayer: true,
+            // isPlayer: true, // @todo
             cardNumber: 1,
             location: 'bench',
           },
