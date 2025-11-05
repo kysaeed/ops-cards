@@ -179,6 +179,12 @@ const CardList = [
       type: 1,
       text: "攻撃時：パワー +平地の影",
     },
+    {
+      power: 2,
+      name: '卵',
+      image: 'ch_egg',
+      type: 0,
+    },
     /*
     {
       power: 1,
